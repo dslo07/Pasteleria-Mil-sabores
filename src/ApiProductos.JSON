@@ -5,7 +5,7 @@
     "nombre": "Torta Cuadrada de Chocolate",
     "precio": 45000,
     "moneda": "CLP",
-    "imagenURL": "https://patty.pe/producto/torta-de-chocolate-cuadrada-bajo-pedido/",
+    "imagenURL": "https://patty.pe/wp-content/uploads/2024/05/TORTA-CUADRADA-2.png",
     "descripcion": "Deliciosa torta de chocolate con capas de ganache y un toque de avellanas. Personalizable con mensajes especiales."
   },
   {
@@ -14,7 +14,7 @@
     "nombre": "Torta Cuadrada de Frutas",
     "precio": 50000,
     "moneda": "CLP",
-    "imagenURL": "https://www.pinterest.com/pin/66m-views-109k-reactions--989877193085386683/",
+    "imagenURL": "https://i.pinimg.com/1200x/6e/12/02/6e1202f87816ce16f374ba3fd22e6d2c.jpg",
     "descripcion": "Una mezcla de frutas frescas y crema chantilly sobre un suave bizcocho de vainilla, ideal para celebraciones."
   },
   {
@@ -23,7 +23,7 @@
     "nombre": "Torta Circular de Vainilla",
     "precio": 40000,
     "moneda": "CLP",
-    "imagenURL": "https://tortasdelacasa.com/produ...",
+    "imagenURL": "https://1.bp.blogspot.com/-5CbPr1SaKxI/Vx_Fb223-cI/AAAAAAAACzU/T1e_AmLeN28Qxemi89lEdKooISN3p9H9gCKgB/s1600/Vanilla%2BCake%2BSySPMS.jpg",
     "descripcion": "Bizcocho de vainilla clásico relleno con crema pastelera y cubierto con un glaseado dulce, perfecto para cualquier ocasión."
   },
   {
@@ -32,7 +32,7 @@
     "nombre": "Torta Circular de Manjar",
     "precio": 42000,
     "moneda": "CLP",
-    "imagenURL": "https://tortasgaby.com.pe/p/choc...",
+    "imagenURL": "https://vidasanaconamor.cl/cdn/shop/products/Tortabizcochomanjarcrema_503x.png?v=1628005015",
     "descripcion": "Torta tradicional chilena con manjar y nueces, un deleite para los amantes de los sabores dulces y clásicos."
   },
   {
@@ -41,7 +41,7 @@
     "nombre": "Mousse de Chocolate",
     "precio": 5000,
     "moneda": "CLP",
-    "imagenURL": "https://www.recetasnestlecam.com/rec...",
+    "imagenURL": "https://recetasdecocina.elmundo.es/wp-content/uploads/2024/11/Mousse-de-chocolate.jpg",
     "descripcion": "Postre individual cremoso y suave, hecho con chocolate de alta calidad, ideal para los amantes del chocolate."
   },
   {
@@ -50,7 +50,7 @@
     "nombre": "Tiramisú Clásico",
     "precio": 5500,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=tiramis%C3%B9+cl%C3%A1sico+imagen",
+    "imagenURL": "https://recetasdecocina.elmundo.es/wp-content/uploads/2022/08/tiramisu-postre-italiano.jpg",
     "descripcion": "Un postre italiano individual con capas de café, mascarpone y cacao, perfecto para finalizar cualquier comida."
   },
   {
@@ -59,7 +59,7 @@
     "nombre": "Torta Sin Azúcar de Naranja",
     "precio": 48000,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=torta+sin+az%C3%BAcar+de+naranja+imagen",
+    "imagenURL": "https://ruyed.cl/cdn/shop/products/9EA90019-4691-4904-BA58-66F138320066_1_201_a_f8fc46e9-08d4-4820-8c9a-f43bd8a024a2.jpg?v=1697490959&width=600",
     "descripcion": "Torta ligera y deliciosa, endulzada naturalmente, ideal para quienes buscan opciones más saludables."
   },
   {
@@ -68,7 +68,7 @@
     "nombre": "Cheesecake Sin Azúcar",
     "precio": 47000,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=cheesecake+sin+az%C3%BAcar+imagen",
+    "imagenURL": "https://www.cocinista.es/download/bancorecursos/recetas/receta-mousse-chocolate.jpg",
     "descripcion": "Suave y cremoso, este cheesecake es una opción perfecta para disfrutar sin culpa."
   },
   {
@@ -77,7 +77,7 @@
     "nombre": "Empanada de Manzana",
     "precio": 3000,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=empanada+de+manzana+imagen",
+    "imagenURL": "https://easyways.cl/storage/20210707093653empanadas-de-manzana.jpg",
     "descripcion": "Pastelería tradicional rellena de manzanas especiadas, perfecta para un dulce desayuno o merienda."
   },
   {
@@ -86,7 +86,7 @@
     "nombre": "Tarta de Santiago",
     "precio": 6000,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=tarta+de+santiago+imagen",
+    "imagenURL": "https://cdn6.recetasdeescandalo.com/wp-content/uploads/2019/04/Tarta-de-Santiago-casera.-Receta-tradicional-gallega.jpg.webp",
     "descripcion": "Tradicional tarta española hecha con almendras, azúcar y huevos, una delicia para los amantes de los postres clásicos."
   },
   {
@@ -95,7 +95,7 @@
     "nombre": "Brownie Sin Gluten",
     "precio": 4000,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=brownie+sin+gluten+imagen",
+    "imagenURL": "https://danzadefogones.com/wp-content/uploads/2014/06/Brownie-vegano-danzadefogones.com_.jpg",
     "descripcion": "Rico y denso, este brownie es perfecto para quienes necesitan evitar el gluten sin sacrificar el sabor."
   },
   {
@@ -104,7 +104,7 @@
     "nombre": "Pan Sin Gluten",
     "precio": 3500,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=pan+sin+gluten+imagen",
+    "imagenURL": "https://juanllorca.com/wp-content/uploads/2020/05/pan-sin-gluten-receta.jpg",
     "descripcion": "Suave y esponjoso, ideal para sándwiches o para acompañar cualquier comida."
   },
   {
@@ -113,7 +113,7 @@
     "nombre": "Torta Vegana de Chocolate",
     "precio": 50000,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=torta+vegana+de+chocolate+imagen",
+    "imagenURL": "https://www.hortifrut.com/wp-content/uploads/2020/09/torta-vegana-chocolate-arandanos.jpg",
     "descripcion": "Torta de chocolate húmeda y deliciosa, hecha sin productos de origen animal, perfecta para veganos."
   },
   {
@@ -122,7 +122,7 @@
     "nombre": "Galletas Veganas de Avena",
     "precio": 4500,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=galletas+veganas+de+avena+imagen",
+    "imagenURL": "https://ideavegana.com/wp-content/uploads/2018/02/galletas-avena-veganas.jpg",
     "descripcion": "Crujientes y sabrosas, estas galletas son una excelente opción para un snack saludable y vegano."
   },
   {
@@ -131,7 +131,7 @@
     "nombre": "Torta Especial de Cumpleaños",
     "precio": 55000,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=torta+especial+de+cumplea%C3%B1os+imagen",
+    "imagenURL": "https://i.pinimg.com/736x/e9/33/d0/e933d0643a956f827d496ff2da00c8f9.jpg",
     "descripcion": "Diseñada especialmente para celebraciones, personalizable con decoraciones y mensajes únicos."
   },
   {
@@ -140,7 +140,7 @@
     "nombre": "Torta Especial de Boda",
     "precio": 60000,
     "moneda": "CLP",
-    "imagenURL": "https://www.google.com/search?q=torta+especial+de+boda+imagen",
+    "imagenURL": "https://cdn0.matrimonios.cl/article-vendor/2969/3_2/960/jpeg/a7beced6-67b6-4c09-8d5d-5f520c89bcb3_8_152969-165877563874416.webp",
     "descripcion": "Elegante y deliciosa, esta torta está diseñada para ser el centro de atención en cualquier boda."
   }
 ]

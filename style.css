@@ -21,7 +21,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Pacifico", cursive;
+    font-family: "Pacifico";
 }
 
 /* estilos de la carta de productos */
@@ -69,21 +69,25 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-general {
     justify-content: center;
+    align-items: center;
     display: flex;
     background-color: var(--color-boton);
     color: var(--color-texto-boton);
-    border-radius: 20px;
-    padding: 5px;
+    border-radius: 10px;
+    padding: 5px 20px;
     text-decoration: none;
+    font-weight: 600;
 }
 
 .btn-comprar:hover {
     background-color: var(--color-boton-hover);
     font-weight: 500;
+    cursor: pointer;
 }
 .btn-general:hover {
     background-color: var(--color-boton-hover);
-    font-weight: 500;
+    font-weight: 600;
+    cursor: pointer;
 }
 /* badges */
 .badge {
@@ -110,7 +114,22 @@ h1, h2, h3, h4, h5, h6 {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
 }
-
+/*Estilos para el login del usuario*/
+.divider:after,
+.divider:before {
+content: "";
+flex: 1;
+height: 1px;
+background: #eee;
+}
+.h-custom {
+height: calc(100% - 73px);
+}
+@media (max-width: 450px) {
+.h-custom {
+height: 100%;
+}
+}   
 /* Clases para pesos de Lato */
 .lato-thin { font-family: "Lato", sans-serif; font-weight: 100; }
 .lato-light { font-family: "Lato", sans-serif; font-weight: 300; }
