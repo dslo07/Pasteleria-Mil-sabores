@@ -67,11 +67,24 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration: none;
 }
 
+.btn-general {
+    justify-content: center;
+    display: flex;
+    background-color: var(--color-boton);
+    color: var(--color-texto-boton);
+    border-radius: 20px;
+    padding: 5px;
+    text-decoration: none;
+}
+
 .btn-comprar:hover {
     background-color: var(--color-boton-hover);
     font-weight: 500;
 }
-
+.btn-general:hover {
+    background-color: var(--color-boton-hover);
+    font-weight: 500;
+}
 /* badges */
 .badge {
     margin: 8px 0px;
