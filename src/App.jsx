@@ -1,14 +1,12 @@
 import { useState } from 'react'
-
-
+import Main from './pages/Main'
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [isLogin,setIsLogin] = useState(true)
   return (
     <>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {
+        isLogin ? <Main/> : "LOGEATE PAPA"
+      }
     </>
   )
 }
