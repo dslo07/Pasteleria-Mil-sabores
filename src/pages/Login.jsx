@@ -60,7 +60,7 @@ const Login = () => {
                         </button>
                       </div>
 
-                      <a className="small text-muted" href="#!">Recuperar Contraseña</a>
+                      <Link to="/" className="small text-muted" >volver</Link>
                       <p className="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
                         ¿Aún no tienes cuenta?{' '}
                         <Link to="/registro" style={{ color: '#393f81' }}>Regístrate Aquí</Link>
