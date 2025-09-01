@@ -1,15 +1,20 @@
-import { useState } from 'react'
-
-
+import { BrowserRouter, Routes,Route } from 'react-router-dom'
+import Principal from './pages/Principal'
+import Register from './pages/Register'
+import Login from './pages/Login'
+import NotFound from './pages/NotFound'
+import Tienda from './pages/Tienda'
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Principal/>}/>
+        <Route path='/login' element={<Login/>}/>
+        <Route path='/registro' element={<Register/>}/>
+        <Route path='/tienda' element={<Tienda/>}/>
+        <Route path='*' element={<NotFound/>}/>
+       </Routes>
+    </BrowserRouter>
   )
 }
 
