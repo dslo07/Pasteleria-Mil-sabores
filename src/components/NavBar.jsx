@@ -1,5 +1,6 @@
 import React from 'react'
 import useFetch from '../hooks/useFetch'
+import { Link } from 'react-router-dom'
 function NavBar() {
     const {data: categorias, loading} = useFetch("./ApiCategorias.json")
     
@@ -40,11 +41,9 @@ function NavBar() {
                 <a className="nav-link " aria-disabled="true">Contacto</a>
                 </li>
             </ul>
-                <button className="btn btn-outline-success" type="submit">
-                <a href="pages/login.html">
+                <Link to="/login">
                     <i className="bi bi-person-circle text-success" ></i>
-                </a>
-                </button>
+                </Link>
             </div>
         </div>
     </nav>

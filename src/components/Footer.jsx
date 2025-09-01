@@ -1,14 +1,16 @@
 import React from 'react'
 import useFetch from '../hooks/useFetch'
+import metodosImg from '../img/metodos-de-pago.webp'
 
 const Footer = () => {
   const { data: categorias, loading } = useFetch("./ApiCategorias.json")
 
   return (
-    <footer className="container">
+    <footer className="container mt-5">
       <div className="row">
-        <div className="col-2" style={{ maxHeight: '100px' }}>
-          <h5>Navegacion</h5>
+        {/* Navegación */}
+        <div className="col-12 col-md-6 col-lg-2 mb-4">
+          <h5>Navegación</h5>
           <ul className="nav flex-column">
             <li className="nav-item mb-2"><a href="#" className="nav-link p-0 text-muted">Inicio</a></li>
             <li className="nav-item mb-2"><a href="#" className="nav-link p-0 text-muted">Productos</a></li>
@@ -18,39 +20,58 @@ const Footer = () => {
           </ul>
         </div>
 
-        <div className="col-2">
-          <h5>Categorias</h5>
-          <ul className="nav flex-column" >
+        {/* Categorías */}
+        <div className="col-12 col-md-6 col-lg-2 mb-4">
+          <h5>Categorías</h5>
+          <ul className="nav flex-column">
             {
-              loading ?
-                <li className="dropdown-item">Cargando...</li>
-                :
-                categorias.map(cat => (
-                  <li key={cat}><a className="dropdown-item my-2 border-bottom" href="#">{cat}</a></li>
-                ))
+              loading
+                ? <li className="dropdown-item">Cargando...</li>
+                : categorias.map(cat => (
+                    <li key={cat}>
+                      <a className="dropdown-item my-2 border-bottom" href="#">{cat}</a>
+                    </li>
+                  ))
             }
           </ul>
         </div>
 
-        <div className="col-2">
-          <h5>Metodos de pago</h5>
-          <img src="/img/metodos-de-pago.webp" alt="imagen de metodos de pago" className="img-fluid" />
+        {/* Métodos de pago */}
+        <div className="col-12 col-md-6 col-lg-3 mb-4">
+          <h5>Métodos de pago</h5>
+          <img src={metodosImg} alt="imagen de metodos de pago" className="img-fluid w-50" />
         </div>
 
-        <div className="col-4 offset-1">
+        {/* Newsletter */}
+        <div className="col-12 col-md-6 col-lg-5 mb-4">
           <form>
-            <h5>Obten las ultimas novedades de Mil Sabores</h5>
-            <div className="d-flex w-100 gap-2">
-              <input id="newsletter1" type="text" className="form-control" placeholder="Correo electronico" aria-label="Correo electronico" />
-              <button className="btn btn-primary" type="submit" style={{ backgroundColor: '#8B4513', border: '0' }}>Suscribirme</button>
+            <h5>Obtén las últimas novedades de Mil Sabores</h5>
+            <div className="d-flex flex-column flex-sm-row w-100 gap-2 mt-3">
+              <input
+                id="newsletter1"
+                type="email"
+                className="form-control"
+                placeholder="Correo electrónico"
+                aria-label="Correo electrónico"
+              />
+              <button
+                className="btn btn-primary"
+                type="submit"
+                style={{ backgroundColor: '#8B4513', border: '0' }}
+              >
+                Suscribirme
+              </button>
             </div>
           </form>
         </div>
       </div>
 
-      <div className="d-flex justify-content-between py-4 my-4 border-top">
-        <p>© 2025 Pasteleria Mil Sabores, Desarrollado por Santiago Lopez y Harold Peralta.</p>
-        <ul className="list-unstyled d-flex">
+      {/* Footer inferior */}
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-center py-4 my-4 border-top">
+        <p className="mb-2 mb-md-0 text-center text-md-start">
+          © 2025 Pastelería Mil Sabores, desarrollado por Santiago Lopez y Harold Peralta.
+        </p>
+        <ul className="list-unstyled d-flex justify-content-center mb-0">
           <li className="ms-3"><a className="link-dark" href="#"><svg className="bi" width="24" height="24"><use xlinkHref="#twitter"></use></svg></a></li>
           <li className="ms-3"><a className="link-dark" href="#"><svg className="bi" width="24" height="24"><use xlinkHref="#instagram"></use></svg></a></li>
           <li className="ms-3"><a className="link-dark" href="#"><svg className="bi" width="24" height="24"><use xlinkHref="#facebook"></use></svg></a></li>

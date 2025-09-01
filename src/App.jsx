@@ -1,13 +1,18 @@
-import { useState } from 'react'
-import Main from './pages/Main'
+import { BrowserRouter, Routes,Route } from 'react-router-dom'
+import Principal from './pages/Principal'
+import Register from './pages/Register'
+import Login from './pages/Login'
+import NotFound from './pages/NotFound'
 function App() {
-  const [isLogin,setIsLogin] = useState(true)
   return (
-    <>
-      {
-        isLogin ? <Main/> : "LOGEATE PAPA"
-      }
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Principal/>}/>
+        <Route path='/login' element={<Login/>}/>
+        <Route path='/registro' element={<Register/>}/>
+        <Route path='*' element={<NotFound/>}/>
+       </Routes>
+    </BrowserRouter>
   )
 }
 
