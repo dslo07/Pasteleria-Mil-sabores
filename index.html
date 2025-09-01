@@ -1,187 +1,22 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mil Sabores</title>
+    <!-- FavIcon -->
     <link rel="shortcut icon" href="src/img/image.png" type="image/x-icon">
-
+    <!-- Estilos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <!-- fuentes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Pacifico&display=swap" rel="stylesheet">
-</head>
-<body>
-<!-- NavBar de la web--> 
- <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container">
-    <img src="src/img/nombre-logo.png" alt="nombre de la empresa" height="50">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Inicio</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Productos
-          </a>
-          <ul class="dropdown-menu" id="categorias-menu">
-            <!-- categorias de productos van aqui -->
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Blog</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " aria-disabled="true">Nosotros</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " aria-disabled="true">Contacto</a>
-        </li>
-      </ul>
-        <button class="btn btn-outline-success" type="submit">
-          <a href="pages/login.html">
-            <i class="bi bi-person-circle text-success" ></i>
-          </a>
-        </button>
-    </div>
-  </div>
-</nav>
-<!--header de la pagina web -->
-<header class="container">
-  <div class="row flex-lg-row-reverse align-items-center g-5 py-5 text-center text-lg-start">
-    
-    <!-- Columna de imagen -->
-    <div class="col-12 col-sm-8 col-lg-6 d-flex justify-content-center align-items-center">
-      <img src="src/img/logo-sin-fondo.png" class="img-fluid mx-auto d-block" alt="Logo Pastelería" style="max-width: 400px; height: auto;" loading="lazy">
-    </div>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Pacifico&display=swap" rel="stylesheet">
 
-    <!-- Columna de texto -->
-    <div class="col-lg-6">
-      <h1 class="display-5 fw-bold lh-1 mb-3">
-        Buscamos ofrecer una experiencia de compra moderna.
-      </h1>
-      <p class="lead">
-        Te ofrecemos una experiencia dulce y memorable,
-        proporcionando tortas y productos de repostería de alta calidad para todas las ocasiones.
-      </p>
-      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-        <button type="button" class="btn btn-general inline-block  cursor-pointer">Contactar</button>
-      </div>
-    </div>
-    
-  </div>
-</header>
-
-  <!-- seccion de productos -->
-<section >
-  <div class="container ">
-
-    <div class="d-flex justify-content-between">
-      <div>
-        <h2 class="display-5 fw-bold lh-1 mb-3">Nuestros Productos</h2>
-        <p>Explora nuestra selección de productos más destacados, cuidadosamente elegidos para ti. <br/>
-            ¡Encuentra calidad, buen precio y diseño en un solo lugar, y lleva tu compra al siguiente nivel hoy mismo! 
-        </p>
-      </div>
-      <div class="d-flex align-items-end">
-        <button class="btn btn-general" id="ver-todos-btn" style="margin-bottom: 16px;" >Ver todos</button>
-      </div>
-    </div>
-
-
-
-<!-- grid de productos -->
-    <div class="row">
-      <div class="productos-grid" id="productos-container">
-        <!-- aqui se cargan las tarjetas de productos -->
-      </div>
-    </div>
-  </div>
-<!-- grid de imagenes -->
-<div class=" my-5">
-  <div class=" row g-0">
-    <!-- info -->
-    <div class="col-md-4 d-flex flex-column justify-content-center align-items-center text-center p-4" style="background-color: #ffc0cb79;">
-      <img src="src/img/logo-sin-fondo.png" alt="">
-      <h2 class="my-3 fs-3 fw-bold">Mil Sabores</h2>
-      <p class="mb-4">Endulza tu día hoy <br/> ¡Haz tu pedido ahora y disfruta de la frescura de nuestros postres!</p>
-      <a href="#" class="btn btn-lg px-4" style="background-color: #8B4513; color: white; border-radius: 5px;">
-        COMPRA ONLINE
-      </a>
-    </div>
-
-    <!-- imagenes -->
-    <div class="col-md-8">
-      <div class="row g-0" style="height: 100%;">
-        <div class="col-6">
-          <img src="https://www.pasteleriaelparron.cl/wp-content/uploads/2019/03/IMG_8535-scaled.jpg" alt="Torta 1" class="img-fluid w-100 h-100" style="object-fit: cover;">
-        </div>
-        <div class="col-6">
-          <img src="https://www.pasteleriaelparron.cl/wp-content/uploads/2019/03/IMG_8597-scaled.jpg" alt="Torta 2" class="img-fluid w-100 h-100" style="object-fit: cover;">
-        </div>
-
-    </div>
-
-  </div>
-</div>
-</section>
-<!-- footer de la pagina -->
-
-  <footer class="container">
-    <div class="row">
-      <div class="col-2" style="max-height:100px ;">
-        <h5>Navegacion</h5>
-        <ul class="nav flex-column">
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Ininio</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Productos</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Blog</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Nosotros</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Contacto</a></li>
-        </ul>
-      </div>
-
-      <div class="col-2">
-        <h5>Categorias</h5>
-        <ul class="nav flex-column" id="categorias-footer">
-          
-        </ul>
-      </div>
-
-      <div class="col-2">
-        <h5>Metodos de pago</h5>
-        <img src="src/img/metodos-de-pago.webp" alt="imagen de metodos de pago" class="img-fluid">
-      </div>
-
-      <div class="col-4 offset-1">
-        <form>
-          <h5>Obten las ultimas novedades de Mil Sabores</h5>
-          <div class="d-flex w-100 gap-2">
-            <input id="newsletter1" type="text" class="form-control" placeholder="Correo electronico" aria-label="Correo electronico">
-            <button class="btn btn-primary" type="submit" style="background-color: #8B4513; border: 0px;">Suscribirme</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-between py-4 my-4 border-top">
-      <p>© 2025 Pasteleria Mil Sabores, Desarrollado por Santaigo Lopez y Harold Peralta.</p>
-      <ul class="list-unstyled d-flex">
-        <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"></use></svg></a></li>
-        <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>
-        <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
-      </ul>
-    </div>
-  </footer>
-<script src="main.js"></script>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-</body>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
