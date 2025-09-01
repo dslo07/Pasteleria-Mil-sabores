@@ -3,6 +3,7 @@ import Principal from './pages/Principal'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
+import Tienda from './pages/Tienda'
 function App() {
   return (
     <BrowserRouter>
@@ -10,6 +11,7 @@ function App() {
         <Route path='/' element={<Principal/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/registro' element={<Register/>}/>
+        <Route path='/tienda' element={<Tienda/>}/>
         <Route path='*' element={<NotFound/>}/>
        </Routes>
     </BrowserRouter>

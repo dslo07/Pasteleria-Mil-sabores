@@ -35,14 +35,16 @@ function NavBar() {
                 <a className="nav-link" href="#">Blog</a>
                 </li>
                 <li className="nav-item">
-                <a className="nav-link " aria-disabled="true">Nosotros</a>
+                <a className="nav-link" href="#" aria-disabled="true">Nosotros</a>
                 </li>
                 <li className="nav-item">
-                <a className="nav-link " aria-disabled="true">Contacto</a>
+                <a className="nav-link" href="#" aria-disabled="true">Contacto</a>
                 </li>
             </ul>
                 <Link to="/login">
-                    <i className="bi bi-person-circle text-success" ></i>
+                    <button className='btn btn-outline-success'>
+                        <i className="bi bi-person-circle text-success" ></i>
+                    </button>
                 </Link>
             </div>
         </div>
