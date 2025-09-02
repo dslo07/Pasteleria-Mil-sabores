@@ -49,7 +49,7 @@ const Login = () => {
                         <input
                           type="password"
                           id="form2Example27"
-                          placeholder="**********"
+                          placeholder="***********"
                           className="form-control form-control-lg"
                         />
                       </div>
