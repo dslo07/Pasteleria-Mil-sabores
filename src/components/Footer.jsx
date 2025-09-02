@@ -28,8 +28,8 @@ const Footer = () => {
               loading
                 ? <li className="dropdown-item">Cargando...</li>
                 : categorias.map(cat => (
-                    <li key={cat}>
-                      <a className="dropdown-item my-2 border-bottom" href="#">{cat}</a>
+                    <li key={cat.Nombre}>
+                      <a className="dropdown-item my-2 border-bottom" href="#">{cat.Nombre}</a>
                     </li>
                   ))
             }
