@@ -1,12 +1,12 @@
 import React from 'react'
-
+import { logoPasteleria } from '../img/logo-sin-fondo.png'
 const Header = () => {
   return (
     <header className="container">
       <div className="row flex-lg-row-reverse align-items-center g-5 py-5 text-center text-lg-start">
         
         <div className="col-12 col-sm-8 col-lg-6 d-flex justify-content-center align-items-center">
-          <img src="src/img/logo-sin-fondo.png" className="img-fluid mx-auto d-block" alt="Logo Pastelería" style={{maxWidth: "400px", height: "auto"}}  />
+          <img src={logoPasteleria} className="img-fluid mx-auto d-block" alt="Logo Pastelería" style={{maxWidth: "400px", height: "auto"}}  />
         </div>
 
         <div className="col-lg-6">
