@@ -2,6 +2,7 @@ import { useContext, useState } from 'react'
 import { carContext } from '../context/carrito/carContext';
 import { Link } from 'react-router-dom'
 import useFetch from '../hooks/useFetch'
+import { logoPasteleria } from '../img/nombre-logo.png'
 function NavBar() {
     const [isLogin,setIsLogin] = useState(true)
     const { total } = useContext(carContext)
@@ -10,7 +11,7 @@ function NavBar() {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container">
-            <img src="src/img/nombre-logo.png" alt="nombre de la empresa" height="50"/>
+            <img src={logoPasteleria} alt="nombre de la empresa" height="50"/>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
             </button>
