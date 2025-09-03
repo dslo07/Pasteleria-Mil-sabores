@@ -1,8 +1,9 @@
 import React from 'react'
-import NavBar from '../components/NavBar'
+import NavBar from '../components/UserCompo/NavBar'
 import useFetch from '../hooks/useFetch'
-import CardProd from '../components/CardProd'
-import Footer from '../components/Footer'
+import CardProd from '../components/UserCompo/CardProd'
+import Footer from '../components/UserCompo/Footer'
+
 const Tienda = () => {
 
   const {data: productos,loading} = useFetch("./ApiProductos.json")
@@ -14,7 +15,7 @@ const Tienda = () => {
     <>
       <NavBar/>
       <section className='container '>
-   <div className="card shadow-sm p-4 my-4">
+      <div className="card shadow-sm p-4 my-4">
       <h5 className="card-title text-center  mb-3">Filtro de Productos</h5>
       <div className="row g-3">
                 <div className="col-md-3">

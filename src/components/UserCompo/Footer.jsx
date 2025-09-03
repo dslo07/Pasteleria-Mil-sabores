@@ -1,6 +1,6 @@
 import React from 'react'
-import useFetch from '../hooks/useFetch'
-import metodosImg from '../img/metodos-de-pago.webp'
+import useFetch from '../../hooks/useFetch'
+import metodosImg from '../..//img/metodos-de-pago.webp'
 
 const Footer = () => {
   const { data: categorias, loading } = useFetch("./ApiCategorias.json")

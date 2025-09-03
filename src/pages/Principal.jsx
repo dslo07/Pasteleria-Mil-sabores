@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes,Route } from 'react-router-dom'
-import NavBar from '../components/NavBar'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import ProductosMain from '../components/ProductosMain'
-import Slider from '../components/Slider'
+import NavBar from '../components/UserCompo/NavBar'
+import Footer from '../components/UserCompo/Footer'
+import Header from '../components/UserCompo/Header'
+import ProductosMain from '../components/UserCompo/ProductosMain'
+import Slider from '../components/UserCompo/Slider'
 
 const Main = () => {
 

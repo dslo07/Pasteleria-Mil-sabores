@@ -1,5 +1,5 @@
 import React from 'react'
-import { logoPasteleria } from '../img/logo-sin-fondo.png'
+import logoPasteleria from '../../img/logo-sin-fondo.png'
 const Header = () => {
   return (
     <header className="container">
