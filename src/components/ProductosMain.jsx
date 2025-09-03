@@ -1,4 +1,5 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
+
 import useFetch from '../hooks/useFetch';
 import CardProd from './CardProd';
 function ProductosMain() {
@@ -17,9 +18,11 @@ function ProductosMain() {
             </p>
           </div>
           <div className="d-flex align-items-end">
-            <button className="btn btn-general" id="ver-todos-btn" style={{ marginBottom: '16px' }}>
-              Ver todos
-            </button>
+              <Link to="/tienda">
+                  <button className="btn btn-general text-decoration-none" id="ver-todos-btn" style={{ marginBottom: '16px' }}>
+                      Ver todos
+                  </button>
+              </Link>
           </div>
         </div>
 
@@ -29,7 +32,7 @@ function ProductosMain() {
               loading ? (
                 <p>Cargando productos...</p>
               ) : (
-                productos.map((prod) => (
+                productos.slice(0,4).map((prod) => (
                   <div key={prod.codigo}>
                     <CardProd producto={prod} />
                   </div>

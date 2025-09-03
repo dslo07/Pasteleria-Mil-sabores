@@ -21,7 +21,7 @@ function CardProd({ producto }) {
           </span>
           <div className="d-flex gap-2">
             <button className="btn btn-comprar w-100 cursor-pointer">Ver Producto</button>
-            <button className="btn btn-outline-danger py-1 px-2">
+            <button className="btn btn-outline-danger py-1 px-2" title='Agregar al carrito'>
               <i className="bi bi-basket3-fill color-red"></i>
             </button>
           </div>

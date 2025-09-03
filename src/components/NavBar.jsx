@@ -1,7 +1,10 @@
-import React from 'react'
-import useFetch from '../hooks/useFetch'
+import { useContext, useState } from 'react'
+import { carContext } from '../context/carrito/carContext';
 import { Link } from 'react-router-dom'
+import useFetch from '../hooks/useFetch'
 function NavBar() {
+    const [isLogin,setIsLogin] = useState(true)
+    const { total } = useContext(carContext)
     const {data: categorias, loading} = useFetch("./ApiCategorias.json")
     
   return (
@@ -26,7 +29,7 @@ function NavBar() {
                         <li className="dropdown-item">Cargando...</li>
                     :
                         categorias.map((cat, index) => (
-                        <li key={index}><a className="dropdown-item my-2 border-bottom " href="#">{cat}</a></li>
+                        <li key={index}><a className="dropdown-item my-2 border-bottom " href="#">{cat.Nombre}</a></li>
                         ))
                     }
                 </ul>
@@ -35,14 +38,23 @@ function NavBar() {
                 <a className="nav-link" href="#">Blog</a>
                 </li>
                 <li className="nav-item">
-                <a className="nav-link " aria-disabled="true">Nosotros</a>
+                <a className="nav-link" href="#" aria-disabled="true">Nosotros</a>
                 </li>
                 <li className="nav-item">
-                <a className="nav-link " aria-disabled="true">Contacto</a>
+                <a className="nav-link" href="#" aria-disabled="true">Contacto</a>
                 </li>
             </ul>
+            
                 <Link to="/login">
-                    <i className="bi bi-person-circle text-success" ></i>
+                    <button className='btn btn-outline-success'>
+                        <i className="bi bi-person-circle text-success" ></i>
+                    </button>
+                </Link>
+                
+                <Link to="/my-car">
+                    <button className='btn btn-outline-success'>
+                        <i class="bi bi-basket3-fill"></i>
+                    </button>
                 </Link>
             </div>
         </div>
