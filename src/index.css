@@ -129,7 +129,15 @@ height: calc(100% - 73px);
 .h-custom {
 height: 100%;
 }
-}   
+}
+
+/*generales*/
+  .separador {
+      border-top: 1px solid #ccc; /* Light gray line */
+      margin-top: 3rem; /* Add space above */
+      margin-bottom: 3rem; /* Add space below */
+    }
+
 /* Clases para pesos de Lato */
 .lato-thin { font-family: "Lato", sans-serif; font-weight: 100; }
 .lato-light { font-family: "Lato", sans-serif; font-weight: 300; }
