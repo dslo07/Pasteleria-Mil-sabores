@@ -1,15 +1,14 @@
 import { useContext, useState } from 'react'
-import { carContext } from '../context/carrito/carContext';
+import { userContext } from '../../context/user/userContext';
 import { Link } from 'react-router-dom'
-import useFetch from '../hooks/useFetch'
-import { logoPasteleria } from '../img/nombre-logo.png'
+import useFetch from '../../hooks/useFetch'
+import logoPasteleria  from '../../img/nombre-logo.png'
 function NavBar() {
-    const [isLogin,setIsLogin] = useState(true)
-    const { total } = useContext(carContext)
-    const {data: categorias, loading} = useFetch("./ApiCategorias.json")
+    const { isLogin } = useContext(userContext)
+    const { data: categorias, loading } = useFetch("./ApiCategorias.json")
     
-  return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+    return (
+    <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
         <div className="container">
             <img src={logoPasteleria} alt="nombre de la empresa" height="50"/>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,18 +44,19 @@ function NavBar() {
                 <a className="nav-link" href="#" aria-disabled="true">Contacto</a>
                 </li>
             </ul>
-            
-                <Link to="/login">
+            {
+                isLogin ?
+                (<Link to="/my-car">
+                    <button className='btn btn-outline-success'>
+                        <i className="bi bi-basket3-fill"></i>
+                    </button>
+                </Link>):
+                (<Link to="/login">
                     <button className='btn btn-outline-success'>
                         <i className="bi bi-person-circle text-success" ></i>
                     </button>
-                </Link>
-                
-                <Link to="/my-car">
-                    <button className='btn btn-outline-success'>
-                        <i class="bi bi-basket3-fill"></i>
-                    </button>
-                </Link>
+                </Link>) 
+            }
             </div>
         </div>
     </nav>

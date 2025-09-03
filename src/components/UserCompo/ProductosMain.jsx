@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import useFetch from '../hooks/useFetch';
+import useFetch from '../../hooks/useFetch';
 import CardProd from './CardProd';
 function ProductosMain() {
     const {data: productos, loading} = useFetch("./ApiProductos.json")
