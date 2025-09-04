@@ -6,7 +6,7 @@ const Footer = () => {
   const { data: categorias, loading } = useFetch("./ApiCategorias.json")
 
   return (
-    <footer className="container mt-5">
+    <footer className="p-4 bg-white">
       <div className="row">
         {/* Navegación */}
         <div className="col-12 col-md-6 col-lg-2 mb-4">

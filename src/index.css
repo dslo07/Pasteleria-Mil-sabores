@@ -59,6 +59,7 @@ h1, h2, h3, h4, h5, h6 {
 /* botones */
 .btn-comprar {
     justify-content: center;
+    align-items: center;
     display: flex;
     background-color: var(--color-boton);
     color: var(--color-texto-boton);
@@ -102,6 +103,14 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 400;
 }
 
+
+/* Span para cardCar */
+.spanCant {
+  display: inline-block; /* o block */
+  background-color: #f8d996;
+  padding: 1px 10px;
+  border: 1px solid var(--color-boton) !important;
+}
 /* Ajustes responsive */
 @media (max-width: 768px) {
     .productos-grid {
@@ -137,6 +146,33 @@ height: 100%;
       margin-top: 3rem; /* Add space above */
       margin-bottom: 3rem; /* Add space below */
     }
+/*scroll bar de carrito de compras */
+.custom-scroll::-webkit-scrollbar {
+  width: 10px;              /* ancho de la barra */
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #FFC0CB;       /* fondo del track */
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #8B4513;          /* color del scroll */
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;          /* color cuando pasas el mouse */
+}
+
+/* Para Firefox */
+.custom-scroll {
+  scrollbar-width: thin;           /* ancho del scroll */
+  scrollbar-color: #888 #f1f1f1;   /* thumb y track */
+}
+
+
+
 
 /* Clases para pesos de Lato */
 .lato-thin { font-family: "Lato", sans-serif; font-weight: 100; }

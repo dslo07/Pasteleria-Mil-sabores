@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
 const Slider = () => {
   return (
     <div className="my-5">
@@ -13,13 +13,13 @@ const Slider = () => {
             <p className="mb-4">
               Endulza tu día hoy <br /> ¡Haz tu pedido ahora y disfruta de la frescura de nuestros postres!
             </p>
-            <a
-              href="#"
+            <Link
+              to="/tienda"
               className="btn btn-lg px-4"
               style={{ backgroundColor: "#8B4513", color: "white", borderRadius: "5px" }}
             >
               COMPRA ONLINE
-            </a>
+            </Link>
           </div>
 
           <div className="col-md-8">

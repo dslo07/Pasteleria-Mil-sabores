@@ -14,6 +14,7 @@ const Tienda = () => {
   return (
     <>
       <NavBar/>
+      <div className='separador'></div>
       <section className='container '>
       <div className="card shadow-sm p-4 my-4">
       <h5 className="card-title text-center  mb-3">Filtro de Productos</h5>

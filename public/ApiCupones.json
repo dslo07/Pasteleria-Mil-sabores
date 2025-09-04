@@ -1,0 +1,22 @@
+[
+  {
+    "codigo": "BIENVENIDA10",
+    "descuento": 10000
+  },
+  {
+    "codigo": "PRIMAVERA15",
+    "descuento": 15000
+  },
+  {
+    "codigo": "DULCE20",
+    "descuento": 20000
+  },
+  {
+    "codigo": "FIESTAS25",
+    "descuento": 25000
+  },
+  {
+    "codigo": "CUMPLE50",
+    "descuento": 50000
+  }
+]
