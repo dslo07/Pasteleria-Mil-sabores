@@ -103,6 +103,14 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 400;
 }
 
+
+/* Span para cardCar */
+.spanCant {
+  display: inline-block; /* o block */
+  background-color: #f8d996;
+  padding: 1px 10px;
+  border: 1px solid var(--color-boton) !important;
+}
 /* Ajustes responsive */
 @media (max-width: 768px) {
     .productos-grid {

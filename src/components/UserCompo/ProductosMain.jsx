@@ -18,8 +18,8 @@ function ProductosMain() {
             </p>
           </div>
           <div className="d-flex align-items-end">
-              <Link to="/tienda">
-                  <button className="btn btn-general text-decoration-none" id="ver-todos-btn" style={{ marginBottom: '16px' }}>
+              <Link to="/tienda" className=' text-decoration-none'>
+                  <button className="btn btn-general" id="ver-todos-btn" style={{ marginBottom: '16px' }}>
                       Ver todos
                   </button>
               </Link>

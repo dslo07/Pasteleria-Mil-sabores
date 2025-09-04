@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { carContext } from './carContext';
+import useFetch from '../../hooks/useFetch';
 
 const StateCar = ({ children }) => {
   const [productos,setProductos] = useState([])
@@ -9,7 +10,8 @@ const StateCar = ({ children }) => {
     codigo:"",
     descuento:0
   })
-
+  // traer cupones 
+  const listaCupones = useFetch("./ApiCupones");
   useEffect(()=>{
     let suma = productos.reduce((acc, prod) => acc + prod.precio, 0)
 
@@ -30,9 +32,11 @@ const StateCar = ({ children }) => {
       alert("El producto ya esta en el carrito")
     }
   }
-
+  const aplicarCupon = () => {
+    
+  }
   return (
-    <carContext.Provider value={{productos,total,costo,cupon, agregarProd}}>
+    <carContext.Provider value={{productos,total,costo,cupon,setCupon, agregarProd, aplicarCupon}}>
       {children}
     </carContext.Provider>
   )

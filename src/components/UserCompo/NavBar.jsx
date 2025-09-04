@@ -1,11 +1,13 @@
 import { useContext } from 'react'
 import { userContext } from '../../context/user/userContext';
+import { carContext } from '../../context/carrito/carContext';
 import { Link } from 'react-router-dom'
 import useFetch from '../../hooks/useFetch'
 import logoPasteleria from '../../img/nombre-logo.png'
 
 function NavBar() {
   const { isLogin } = useContext(userContext)
+  const { total } = useContext(carContext);
   const { data: categorias, loading } = useFetch("./ApiCategorias.json")
 
   return (
@@ -59,8 +61,9 @@ function NavBar() {
 
           {isLogin ? (
             <Link to="/my-car">
-              <button className='btn btn-outline-success'>
+              <button className='btn btn-outline-success d-flex gap-2 text-decoration-none'>
                 <i className="bi bi-basket3-fill"></i>
+                <span className='text-decoration-none'>{ total }</span>
               </button>
             </Link>
           ) : (

@@ -15,7 +15,7 @@ const CardCar = ({producto}) => {
             <p className="fs-6">{producto.descripcion}.</p>
             <div>
               <div  className='d-flex justify-content-between'>
-                <p>Cant: {2}</p>
+                <p className='spanCant rounded' >Cant: {1}</p>
                 <span> {useConvert(producto.precio)} </span>
               </div>
               <div className='d-flex justify-content-between'>
