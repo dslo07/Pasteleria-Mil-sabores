@@ -4,6 +4,10 @@
     "descuento": 10000
   },
   {
+    "codigo": "FELICES50",
+    "descuento": 50
+    },
+  {
     "codigo": "PRIMAVERA15",
     "descuento": 15000
   },
