@@ -1,4 +1,6 @@
 import React from 'react'
+import { FaPlusCircle } from "react-icons/fa";
+import { CgMathMinus } from "react-icons/cg";
 
 const CardCar = ({producto}) => {
   return (
@@ -11,6 +13,16 @@ const CardCar = ({producto}) => {
           <div className="card-body">
             <h5 className="card-title fs-6">{producto.categoria}</h5>
             <p className="fs-6">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            <div>
+              <span>
+                ${producto.precio}
+                
+                </span>
+              <div className='d-flex gap-2'>
+                <button className='btn btn-comprar text-center px-2 py-1'> <FaPlusCircle/> </button>
+                <button className='btn btn-comprar text-center px-2 py-1'> <CgMathMinus/> </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

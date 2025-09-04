@@ -1,32 +1,59 @@
 import React, { useContext } from 'react'
 import NavBar from '../components/UserCompo/NavBar'
 import {carContext} from '../context/carrito/carContext'
-import CardCar from '../components/UserCompo/CardCar'
+import CarManager from '../components/UserCompo/carManager'
+
 const Carrito = () => {
   const { productos,total } = useContext(carContext)
   
   
   return (
     <>
-    <div >
       <NavBar/>
-    </div>
-      <section >
-        <div className='separador'></div>
-        <div className='container'>
-          <h1>Mi carrito de compras</h1>
-          <div className='row d-flex'>
-            <div className='col-8 overflow-auto border p-2'  style={{ maxHeight: "400px",maxWidth:"500px" }}>
-                {
-                  productos.map((prod)=>(<CardCar key={prod.codigo} producto={prod}/>))
-                }
-            </div>
-            <div className='col-2'>
-                <h1>total </h1>
+     <section>
+  <div className="separador"></div>
+  <div className="container">
+    <h1>Mi carrito de compras</h1>
+    <div className="row d-flex">
+      {/* Lista de productos */}
+      <div className="col-12 col-md-6 overflow-auto custom-scroll p-2" style={{ maxHeight: "400px" }}>
+        {
+          <CarManager productos={productos}/>
+        }
+
+      </div>
+      {/* Total */}
+      <div className="col-12 col-md-6 mt-3 mt-md-0 ">
+        <h1>Resumen de la compra</h1>
+        <div>
+          <div className='d-flex justify-content-between py-2 border-bottom border-2'>
+            <p className='m-0'>Total de productos:</p>
+            <span>3</span>
+          </div>
+          <div className='d-flex justify-content-between py-2 border-bottom border-2'>
+            <p className='m-0'>Descuento aplicado:</p>
+            <span>3</span>
+          </div>
+          <div className='d-flex justify-content-between py-2 border-bottom border-2'>
+            <p className='m-0'>Total de la compra:</p>
+            <span>3</span>
+          </div>
+          <div className='d-flex justify-content-between py-2 border-bottom border-2'>
+            <p className='m-0'>Aplicar cupon:</p>
+            <div className='d-flex gap-2'>
+              <input type="text" placeholder='Ingrese su cupon'/>
+              <button className='btn btn-comprar rounded'> Aplicar</button>
             </div>
           </div>
+          <div className='w-100 mt-3'>
+            <button className='btn btn-comprar p-2 rounded'>Comprar</button>
+          </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</section>
+
     </>
   )
 }
