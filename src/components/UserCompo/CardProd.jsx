@@ -1,6 +1,8 @@
-import React from 'react';
-
+import React, {useContext} from 'react';
+import { carContext } from '../../context/carrito/carContext';
+import { useConvert } from '../../hooks/useConvert';
 function CardProd({ producto }) {
+  const { agregarProd } = useContext(carContext);
   return (
     <div className="card-Producto h-100 d-flex flex-column">
       <img
@@ -17,12 +19,18 @@ function CardProd({ producto }) {
         </div>
         <div className="mt-auto d-flex flex-column gap-2">
           <span className="badge-precio fw-medium">
-            Precio: ${producto.precio} {producto.moneda}
+            Precio: {useConvert(producto.precio)} {producto.moneda}
           </span>
           <div className="d-flex gap-2">
             <button className="btn btn-comprar w-100 cursor-pointer">Ver Producto</button>
-            <button className="btn btn-outline-danger py-1 px-2" title='Agregar al carrito'>
-              <i className="bi bi-basket3-fill color-red"></i>
+            <button className="btn btn-outline-danger py-1 px-2" title='Agregar al carrito' onClick={ () => agregarProd(producto)}>
+              
+              {
+                producto.inCar ? 
+                  <i class="bi bi-bag-check-fill color-red"></i>
+                :
+                  <i className="bi bi-basket3-fill color-red"></i>
+              }
             </button>
           </div>
         </div>

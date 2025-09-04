@@ -2,11 +2,9 @@ import React, { useContext } from 'react'
 import NavBar from '../components/UserCompo/NavBar'
 import {carContext} from '../context/carrito/carContext'
 import CarManager from '../components/UserCompo/carManager'
-
+import { useConvert } from '../hooks/useConvert'
 const Carrito = () => {
-  const { productos,total } = useContext(carContext)
-  
-  
+  const { productos,total,costo,cupon } = useContext(carContext);
   return (
     <>
       <NavBar/>
@@ -28,15 +26,15 @@ const Carrito = () => {
         <div>
           <div className='d-flex justify-content-between py-2 border-bottom border-2'>
             <p className='m-0'>Total de productos:</p>
-            <span>3</span>
+            <span>{total}</span>
           </div>
           <div className='d-flex justify-content-between py-2 border-bottom border-2'>
             <p className='m-0'>Descuento aplicado:</p>
-            <span>3</span>
+            <span>{useConvert(cupon.descuento)}</span>
           </div>
           <div className='d-flex justify-content-between py-2 border-bottom border-2'>
             <p className='m-0'>Total de la compra:</p>
-            <span>3</span>
+            <span>{useConvert(costo)}</span>
           </div>
           <div className='d-flex justify-content-between py-2 border-bottom border-2'>
             <p className='m-0'>Aplicar cupon:</p>
