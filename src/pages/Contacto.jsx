@@ -1,12 +1,12 @@
 import React from 'react'
 import NavBar from '../components/UserCompo/NavBar'
-
+import Footer from '../components/UserCompo/Footer'
 const Contacto = () => {
   return (
     <>
       <NavBar></NavBar>
-       
-    <div className="container py-5 mt-4">
+      
+    <div className="container py-5 mt-5">
       <div className="row g-4">
         {/* Sección de Contacto */}
         <div className="col-lg-6">
@@ -103,7 +103,7 @@ const Contacto = () => {
         </div>
       </div>
     </div>
-  
+   <Footer/>
     </>
   )
 }
