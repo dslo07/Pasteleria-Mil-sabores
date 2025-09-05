@@ -33,7 +33,7 @@ function Register() {
                           type="text"
                           id="nombres"
                           placeholder="Tus nombres"
-                          className="form-control form-control-lg"
+                          className="form-control "
                         />
                       </div>
 
@@ -47,7 +47,7 @@ function Register() {
                               type="text"
                               id="apellidoPaterno"
                               placeholder="Apellido Paterno"
-                              className="form-control form-control-lg"
+                              className="form-control "
                             />
                           </div>
                           <div className="col-md-6">
@@ -58,7 +58,7 @@ function Register() {
                               type="text"
                               id="apellidoMaterno"
                               placeholder="Apellido Materno"
-                              className="form-control form-control-lg"
+                              className="form-control"
                             />
                           </div>
                         </div>
@@ -72,7 +72,7 @@ function Register() {
                           type="email"
                           id="correo"
                           placeholder="tucorreo@gmail.com"
-                          className="form-control form-control-lg"
+                          className="form-control "
                         />
                       </div>
 
@@ -84,7 +84,18 @@ function Register() {
                           type="password"
                           id="contrasena"
                           placeholder="**********"
-                          className="form-control form-control-lg"
+                          className="form-control"
+                        />
+                      </div>
+
+                      <div className="form-outline mb-2">
+                        <label className="form-label" htmlFor="contrasena">
+                          Fecha de nacimiento:
+                        </label>
+                        <input
+                          type="date"
+                          id="nacimiento"
+                          className="form-control "
                         />
                       </div>
 
