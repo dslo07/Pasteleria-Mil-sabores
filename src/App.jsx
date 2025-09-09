@@ -14,7 +14,8 @@ import DashBoard from './pages/Admin/DashBoard'
 import AdminProd from './pages/Admin/AdminProd'
 import AdminUsers from './pages/Admin/AdminUsers'
 import AdminOrders from './pages/Admin/AdminOrders'
-
+// Toast (alert)
+import toast, { Toaster } from 'react-hot-toast';
 function App() {
   return (
     <>
@@ -39,7 +40,18 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
-
+    <Toaster 
+      position="top-center" 
+      reverseOrder={false}
+      //configuracion
+      toastOptions={{
+        duration: 1200,
+        removeDelay: 500,
+        style: {
+          background: '#8B4513',
+          color: '#fff',
+        }
+      }}/>
     </>
   )
 }
