@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import NavBar from '../components/UserCompo/NavBar'
-import { CarContext } from '../context/carrito/CarContext'
+import { carContext } from '../context/carrito/carContext'
 import CarManager from '../components/UserCompo/CarManager'
 import { useConvert } from '../hooks/useConvert'
 const Carrito = () => {
