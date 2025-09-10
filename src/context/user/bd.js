@@ -1,11 +1,8 @@
 import pg from 'pg';
+import { config } from 'dotenv';
+config();
+
 const { Pool } = pg;
-
-// ⚠️ IMPORTANTE: NO pongas la URI directo aquí, guárdala en un archivo .env
-// Ejemplo en tu .env:
-// DATABASE_URL=postgresql://usuario:password@aws-1-sa-east-1.pooler.supabase.com:6543/postgres
-
-DATABASE_URL='postgresql://postgres.favyjewyfjotapexlbwt:j@VEpwUJ)anT?)b1i)RPXp%!2kspp>@aws-1-sa-east-1.pooler.supabase.com:6543/postgres'
 
 let pool;
 

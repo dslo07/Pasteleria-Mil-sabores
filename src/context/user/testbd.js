@@ -1,4 +1,4 @@
-import pool from 'src/context/user/bd.js';
+import pool from './bd.js';
 
 (async () => {
   try {
@@ -10,3 +10,6 @@ import pool from 'src/context/user/bd.js';
     pool.end(); // cerrar pool
   }
 })();
+
+
+
