@@ -27,7 +27,7 @@ function CardProd({ producto }) {
               
               {
                 producto.inCar ? 
-                  <i class="bi bi-bag-check-fill color-red"></i>
+                  <i className="bi bi-bag-check-fill color-red"></i>
                 :
                   <i className="bi bi-basket3-fill color-red"></i>
               }
