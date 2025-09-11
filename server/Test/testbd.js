@@ -1,4 +1,3 @@
-// server/testDb.js
 import pool from '../bd.js';
 
 (async () => {
@@ -11,3 +10,6 @@ import pool from '../bd.js';
     await pool.end();
   }
 })();
+
+
+// Ejecuta con: node server\Test\testbd.js

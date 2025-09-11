@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
+import 'dotenv/config';     
 import { Link } from 'react-router-dom';
 import logo from '../img/nombre-logo.png';
+import { GiConsoleController } from 'react-icons/gi';
 
-const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
+const API = process.env.VITE_API_URL ?? 'http://localhost:5173';
+
+if (!process.env.DATABASE_URL) { 
+  console.error('VITE API URL no está definido. Revisa tu .env');
+  process.exit(1);
+}
 
 function Register() {
   const [form, setForm] = useState({
@@ -11,10 +18,10 @@ function Register() {
     apellidoMaterno: '',
     correo: '',
     contrasena: '',
-    nacimiento: '' 
+    nacimiento: ''
   });
-
   const [msg, setMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const onChange = (e) => {
     const { id, value } = e.target;
@@ -24,21 +31,20 @@ function Register() {
   const onSubmit = async (e) => {
     e.preventDefault();
     setMsg('');
-
-    // valida mínimos
+    setLoading(true);
+/*
     if (!form.nombres || !form.apellidoPaterno || !form.correo || !form.contrasena) {
       setMsg('Completa los campos obligatorios.');
+      setLoading(false);
       return;
     }
-
-    // Mapeo desde tus IDs → nombres que espera el backend/tabla
+*/
     const payload = {
       nombre_usuario: form.nombres,
       appat_usuario: form.apellidoPaterno,
       apmat_usuario: form.apellidoMaterno,
       correo_usuario: form.correo,
       contrasena_usuario: form.contrasena
-      // nacimiento: PENDIENTE en backend
     };
 
     try {
@@ -47,10 +53,24 @@ function Register() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Error al registrar');
-      setMsg('Usuario registrado con éxito');
 
+      const text = await res.text();
+      let data = null;
+
+      try { 
+        data = text ? JSON.parse(text) : null;
+      }catch 
+      { 
+        console.log('No JSON'); 
+      }
+
+      if (!res.ok) {
+        const msg = (data && (data.error || data.message)) || text || 'Error al registrar';
+        console.log('Error en registro:', res.status, msg, data, text, data.API);
+        throw new Error(msg);
+      }
+
+      setMsg('Usuario registrado con éxito');
       setForm({
         nombres: '',
         apellidoPaterno: '',
@@ -60,7 +80,9 @@ function Register() {
         nacimiento: ''
       });
     } catch (err) {
-      setMsg('FALLO' + err.message);
+      setMsg('FALLO: ' + (err.message ?? 'Error desconocido'));
+    } finally {
+      setLoading(false);
     }
   };
 

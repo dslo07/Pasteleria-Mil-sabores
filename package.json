@@ -8,12 +8,13 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "testdb": "node testbd.js"
+    "testdb": "node server/Test/testbd.js"
   },
   "dependencies": {
-    "dotenv": "^16.6.1",
-    "pg": "^8.16.3",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.2",
+    "express": "^5.1.0",
     "pg": "^8.16.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
