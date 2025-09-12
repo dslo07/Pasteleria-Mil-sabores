@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
-import 'dotenv/config';     
 import { Link } from 'react-router-dom';
 import logo from '../img/nombre-logo.png';
-import { GiConsoleController } from 'react-icons/gi';
-
-const API = process.env.VITE_API_URL ?? 'http://localhost:5173';
-
-if (!process.env.DATABASE_URL) { 
-  console.error('VITE API URL no está definido. Revisa tu .env');
-  process.exit(1);
-}
+import { supabase } from '../Lib/supabase';
 
 function Register() {
   const [form, setForm] = useState({
@@ -32,56 +24,54 @@ function Register() {
     e.preventDefault();
     setMsg('');
     setLoading(true);
-/*
-    if (!form.nombres || !form.apellidoPaterno || !form.correo || !form.contrasena) {
-      setMsg('Completa los campos obligatorios.');
-      setLoading(false);
-      return;
+
+try {
+  const { data, error } = await supabase.auth.signUp({
+    email: form.correo,
+    password: form.contrasena,
+    options: {
+      data: {
+        nombres: form.nombres,
+        apellidoPaterno: form.apellidoPaterno,
+        apellidoMaterno: form.apellidoMaterno,
+        nacimiento: form.nacimiento || null
+      },
+      emailRedirectTo: window.location.origin + '/login'
     }
-*/
-    const payload = {
-      nombre_usuario: form.nombres,
-      appat_usuario: form.apellidoPaterno,
-      apmat_usuario: form.apellidoMaterno,
-      correo_usuario: form.correo,
-      contrasena_usuario: form.contrasena
-    };
+  });
 
-    try {
-      const res = await fetch(`${API}/api/usuario`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+  if (error) throw error;
+
+  // ⚡ insertar en tu tabla Usuario (si el registro en Auth fue bien)
+  if (data.user) {
+    const { error: insertError } = await supabase
+      .from('usuario')
+      .insert({
+        nombre_usuario: form.nombres,
+        appat_usuario: form.apellidoPaterno,
+        apmat_usuario: form.apellidoMaterno,
+        correo_usuario: form.correo,
+        contrasena_usuario: form.contrasena 
       });
 
-      const text = await res.text();
-      let data = null;
+    if (insertError) throw insertError;
+  }
 
-      try { 
-        data = text ? JSON.parse(text) : null;
-      }catch 
-      { 
-        console.log('No JSON'); 
-      }
+  setMsg('Registro creado. Revisa tu email para confirmar la cuenta.');
+  setForm({
+    nombres: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    correo: '',
+    contrasena: '',
+    nacimiento: ''
+  });
 
-      if (!res.ok) {
-        const msg = (data && (data.error || data.message)) || text || 'Error al registrar';
-        console.log('Error en registro:', res.status, msg, data, text, data.API);
-        throw new Error(msg);
-      }
+} catch (err) {
+  setMsg('FALLO: ' + (err.message ?? 'Error desconocido'));
+}
 
-      setMsg('Usuario registrado con éxito');
-      setForm({
-        nombres: '',
-        apellidoPaterno: '',
-        apellidoMaterno: '',
-        correo: '',
-        contrasena: '',
-        nacimiento: ''
-      });
-    } catch (err) {
-      setMsg('FALLO: ' + (err.message ?? 'Error desconocido'));
-    } finally {
+    finally {
       setLoading(false);
     }
   };

@@ -5,12 +5,14 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
+    "server": "node server/app.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "testdb": "node server/Test/testbd.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
