@@ -1,7 +1,7 @@
 import { useContext } from 'react'
-import NavBar from '../components/UserCompo/NavBar'
-import ArticuloCard from '../components/UserCompo/ArticuloCard'
-import Footer from '../components/UserCompo/Footer'
+import NavBar from '../../components/UserCompo/NavBar'
+import ArticuloCard from '../../components/UserCompo/ArticuloCard'
+import Footer from '../../components/UserCompo/Footer'
 function Blog() {
   return (
     <>

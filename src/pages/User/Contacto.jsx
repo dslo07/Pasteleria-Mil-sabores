@@ -1,6 +1,6 @@
 import React from 'react'
-import NavBar from '../components/UserCompo/NavBar'
-import Footer from '../components/UserCompo/Footer'
+import NavBar from '../../components/UserCompo/NavBar'
+import Footer from '../../components/UserCompo/Footer'
 const Contacto = () => {
   return (
     <>
