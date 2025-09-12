@@ -14,6 +14,8 @@ import DashBoard from './pages/Admin/DashBoard'
 import AdminProd from './pages/Admin/AdminProd'
 import AdminUsers from './pages/Admin/AdminUsers'
 import AdminOrders from './pages/Admin/AdminOrders'
+import AdminStats from './pages/Admin/AdminStats'
+
 // Toast (alert)
 import toast, { Toaster } from 'react-hot-toast';
 function App() {
@@ -34,6 +36,7 @@ function App() {
         <Route path='*' element={<NotFound/>}/>
         {/*rutas del Admin*/}
         <Route path='/admin' element={<DashBoard/>}>
+          <Route path='estadisticas' element={<AdminStats/>}/>
           <Route path='productos' element={<AdminProd/>}/>
           <Route path='usuarios'   element={<AdminUsers/>}/>
           <Route path='ordenes'   element={<AdminOrders/>}/>

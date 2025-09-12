@@ -14,6 +14,7 @@
     --color-badge-borde: #FFC0CB;
 }
 
+
 /* tipografía */
 body {
     font-family: "Lato", sans-serif;
@@ -141,6 +142,10 @@ height: 100%;
 }
 
 /*generales*/
+.text-brown{
+    color: var(--color-boton) !important;
+}
+
   .separador {
       border-top: 1px solid #ccc; /* Light gray line */
       margin-top: 3rem; /* Add space above */
@@ -200,3 +205,14 @@ height: 100%;
 .lato-regular-italic { font-family: "Lato", sans-serif; font-weight: 400; font-style: italic; }
 .lato-bold-italic { font-family: "Lato", sans-serif; font-weight: 700; font-style: italic; }
 .lato-black-italic { font-family: "Lato", sans-serif; font-weight: 900; font-style: italic; }
+
+
+
+/* estilos admin */
+.bg-dash{
+    background-color:var(--color-boton-hover);
+}
+.nav-link.active {
+  background-color: var(--color-boton) !important; /* tu color de fondo */
+  color: #fff !important;              /* color del texto */
+}
