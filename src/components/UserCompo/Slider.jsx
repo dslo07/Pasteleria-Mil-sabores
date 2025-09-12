@@ -9,7 +9,7 @@ const Slider = () => {
             style={{ backgroundColor: "#ffc0cb79" }}
           >
             <img src="src/img/logo-sin-fondo.png" alt="Mil Sabores Logo"  style={{width:"400px"}}/>
-            <h2 className="my-3 fs-3 fw-bold">Mil Sabores</h2>
+            <h2 className="my-3 fs-3 ">Mil Sabores</h2>
             <p className="mb-4">
               Endulza tu día hoy <br /> ¡Haz tu pedido ahora y disfruta de la frescura de nuestros postres!
             </p>

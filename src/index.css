@@ -146,6 +146,21 @@ height: 100%;
       margin-top: 3rem; /* Add space above */
       margin-bottom: 3rem; /* Add space below */
     }
+
+.bg-header, .bg-blog{
+    height: 80vh !important;
+    background-size:cover;
+    background-position-y: left;
+}
+.bg-header{
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0, 0, 0, 0.61)), 
+                    url('../src/img/bg-header.jpg');
+}
+.bg-blog{
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0, 0, 0, 0.61)), 
+                    url('../src/img/bg-blog.jpg');
+}
+
 /*scroll bar de carrito de compras */
 .custom-scroll::-webkit-scrollbar {
   width: 10px;              /* ancho de la barra */
