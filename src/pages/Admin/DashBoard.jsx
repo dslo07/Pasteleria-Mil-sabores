@@ -13,7 +13,7 @@ const DashBoard = () =>{
           <h1 className="fs-2 text-brown">Bienvenido {userName}</h1>
           <p className="m-0 text-brown">Gestiona usuarios, productos y blog</p>
         </div>
-        <div className="p-3 border vh-100">
+        <div className="p-3 ">
           <Outlet />
         </div>
       </section>

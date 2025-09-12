@@ -17,18 +17,18 @@ const SideBar = () => {
 
       {/* Menú */}
       <ul className="nav nav-pills flex-column mb-auto">
-        <li className="nav-item">
+        {/* <li className="nav-item">
           <NavLink
             to="/admin/estadisticas "
             className={({ isActive }) =>
-              "nav-link d-flex align-items-center active  " + (isActive ? "active" : "text-white")
+              "nav-link d-flex align-items-center" + (isActive ? "active" : "text-white")
             }
             aria-current="page"
           >
             <ImStatsDots className="ml-2"/>
             Estadisticas
           </NavLink>
-        </li>
+        </li> */}
         <li className="nav-item">
           <NavLink
             to="/admin/productos"

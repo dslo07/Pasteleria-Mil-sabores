@@ -36,7 +36,7 @@ function App() {
         <Route path='*' element={<NotFound/>}/>
         {/*rutas del Admin*/}
         <Route path='/admin' element={<DashBoard/>}>
-          <Route path='estadisticas' element={<AdminStats/>}/>
+          <Route index element={<AdminStats/>}/>
           <Route path='productos' element={<AdminProd/>}/>
           <Route path='usuarios'   element={<AdminUsers/>}/>
           <Route path='ordenes'   element={<AdminOrders/>}/>
