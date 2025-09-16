@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import SideBar from "../../components/AdminCompo/SideBar";
 const DashBoard = () =>{
-  const userName = "Cristiano Ronaldo"
+  const userName = "Santiago López"
   return(
     <main className="d-flex vh-100">
       <SideBar />
