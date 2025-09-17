@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import NavBar from '../components/UserCompo/NavBar'
+import NavBar from '../../components/UserCompo/NavBar'
 function NotFound() {
   const navigate = useNavigate()
   return (

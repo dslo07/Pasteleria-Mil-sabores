@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo  from '../img/nombre-logo.png'
+import logo  from '../../img/nombre-logo.png'
 const Login = () => {
   return (
     <section  className='vh-100' style={{ backgroundColor: '#FFC0CB' }}>

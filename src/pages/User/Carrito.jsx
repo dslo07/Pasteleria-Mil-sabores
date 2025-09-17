@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
-import NavBar from '../components/UserCompo/NavBar'
-import { carContext } from '../context/carrito/carContext'
-import CarManager from '../components/UserCompo/CarManager'
-import { useConvert } from '../hooks/useConvert'
+import NavBar from '../../components/UserCompo/NavBar'
+import {carContext} from '../../context/carrito/carContext'
+import CarManager from '../../components/UserCompo/CarManager'
+import { useConvert } from '../../hooks/useConvert'
 const Carrito = () => {
   const { productos,total,costo,cupon, setCupon} = useContext(carContext);
   return (
@@ -57,3 +57,4 @@ const Carrito = () => {
 }
 
 export default Carrito
+

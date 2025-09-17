@@ -6,12 +6,10 @@ function ProductosMain() {
     const {data: productos, loading} = useFetch("./ApiProductos.json")
     
   return (
-    <section>
-      <div className="container">
-
+    <section className="container py-5">
         <div className="d-flex justify-content-between">
           <div>
-            <h2 className="display-5 fw-bold lh-1 mb-3">Nuestros Productos</h2>
+            <h2 className="lh-1 mb-3">Nuestros Productos</h2>
             <p>
               Explora nuestra selección de productos más destacados, cuidadosamente elegidos para ti. <br />
               ¡Encuentra calidad, buen precio y diseño en un solo lugar, y lleva tu compra al siguiente nivel hoy mismo!
@@ -41,9 +39,7 @@ function ProductosMain() {
             }
           </div>
         </div>
-      </div>
 
-      
     </section>
   )
 }

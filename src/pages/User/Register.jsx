@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../img/nombre-logo.png';
-import { supabase } from '../Lib/supabase';
+import logo from '../../img/nombre-logo.png';
 
 function Register() {
   const [form, setForm] = useState({

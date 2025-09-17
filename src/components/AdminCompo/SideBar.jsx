@@ -1,24 +1,34 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import logotipo from "../../img/image.png";
+import nombrelogo from "../../img/nombre-logo.png";
+import { ImStatsDots } from "react-icons/im";
+import { FaCartShopping } from "react-icons/fa6";
 
 const SideBar = () => {
   return (
     <div
-      className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark h-100"
+      className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dash h-100"
       style={{ width: "280px" }}
     >
       {/* Logo y nombre */}
-      <a className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-        <svg className="bi me-2" width="40" height="32">
-          <use xlinkHref="#bootstrap"></use>
-        </svg>
-        <span className="fs-4">Mil Sabores</span>
-      </a>
+        <img src={nombrelogo} alt="nombre de la empres" width={"200px "} />
       <hr />
 
       {/* Menú */}
       <ul className="nav nav-pills flex-column mb-auto">
+        {/* <li className="nav-item">
+          <NavLink
+            to="/admin/estadisticas "
+            className={({ isActive }) =>
+              "nav-link d-flex align-items-center" + (isActive ? "active" : "text-white")
+            }
+            aria-current="page"
+          >
+            <ImStatsDots className="ml-2"/>
+            Estadisticas
+          </NavLink>
+        </li> */}
         <li className="nav-item">
           <NavLink
             to="/admin/productos"
@@ -27,9 +37,7 @@ const SideBar = () => {
             }
             aria-current="page"
           >
-            <svg className="bi me-2" width="16" height="16">
-              <use xlinkHref="#home"></use>
-            </svg>
+            <FaCartShopping className="ml-2" />
             Productos
           </NavLink>
         </li>
@@ -56,7 +64,7 @@ const SideBar = () => {
             <svg className="bi me-2" width="16" height="16">
               <use xlinkHref="#table"></use>
             </svg>
-            Ordenes
+            Blog
           </NavLink>
         </li>
       </ul>

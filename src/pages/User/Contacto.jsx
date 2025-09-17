@@ -1,6 +1,6 @@
 import React from 'react'
-import NavBar from '../components/UserCompo/NavBar'
-import Footer from '../components/UserCompo/Footer'
+import NavBar from '../../components/UserCompo/NavBar'
+import Footer from '../../components/UserCompo/Footer'
 const Contacto = () => {
   return (
     <>
@@ -11,7 +11,7 @@ const Contacto = () => {
         {/* Sección de Contacto */}
         <div className="col-lg-6">
           <div className="card shadow-sm border-0 rounded-3 p-4">
-            <h1 className="fw-bold text-dark fs-2 mb-2">
+            <h1 className="text-dark fs-2 mb-2">
               Contactanos.
             </h1>
             <p className="text-muted mb-2">
