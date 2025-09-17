@@ -1,9 +1,48 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import logo  from '../../img/nombre-logo.png'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import logo from '../img/nombre-logo.png';
+import useFetch from '../hooks/useFetch';
+
 const Login = () => {
+  const navigate = useNavigate();
+  const { data: usuarios } = useFetch("/ApiUsuarios.json"); // en public/
+
+  const [correo, setCorreo] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [msg, setMsg] = useState('');
+
+  const validarUsuario = (correo, contrasena) => {
+    if (!usuarios || usuarios.length === 0) {
+      setMsg("No se pudo cargar la base de usuarios");
+      return;
+    }
+
+    const encontrado = usuarios.find(
+      user => user.correo === correo && user.contrasena === contrasena
+    );
+
+    if (encontrado) {
+      setMsg("✅ Usuario correcto");
+
+      // si tiene propiedad isAdmin = true
+      if (encontrado.isAdmin) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
+
+    } else {
+      setMsg("❌ Usuario o contraseña incorrectos");
+    }
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    validarUsuario(correo, contrasena);
+  };
+
   return (
-    <section  className='vh-100' style={{ backgroundColor: '#FFC0CB' }}>
+    <section className='vh-100' style={{ backgroundColor: '#FFC0CB' }}>
       <div className="container py-1 h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col col-xl-10">
@@ -18,50 +57,51 @@ const Login = () => {
                   />
                 </div>
                 <div className="col-md-6 col-lg-7 d-flex align-items-center">
-                  <div className="card-body  text-black">
+                  <div className="card-body text-black">
 
-                    <form>
+                    <form onSubmit={onSubmit}>
                       <div className="d-flex align-items-center justify-content-center">
-                          <i className="fas fa-cubes fa-2x me-3" style={{ color: '#8B4513' }}></i>
-                          <img src={logo} height="80px" alt="Logo" />
-                        </div>
+                        <img src={logo} height="80px" alt="Logo" />
+                      </div>
 
-                      <h5 className="fw-normal mb-3 pb-3" style={{ letterSpacing: '1px' }}>
+                      <h5 className="fw-normal mb-3 pb-3">
                         Ingresa los datos de tu cuenta
                       </h5>
 
                       <div className="form-outline mb-4">
-                        <label className="form-label" htmlFor="form2Example17">
-                          Correo Electrónico:
-                        </label>
+                        <label htmlFor="correo">Correo Electrónico:</label>
                         <input
                           type="email"
-                          id="form2Example17"
-                          placeholder="tucorreo@gmail.com"
+                          id="correo"
                           className="form-control form-control-lg"
+                          value={correo}
+                          onChange={(e) => setCorreo(e.target.value)}
+                          required
                         />
                       </div>
 
                       <div className="form-outline mb-4">
-                        <label className="form-label" htmlFor="form2Example27">
-                          Contraseña:
-                        </label>
+                        <label htmlFor="contrasena">Contraseña:</label>
                         <input
                           type="password"
-                          id="form2Example27"
-                          placeholder="***********"
+                          id="contrasena"
                           className="form-control form-control-lg"
+                          value={contrasena}
+                          onChange={(e) => setContrasena(e.target.value)}
+                          required
                         />
                       </div>
 
+                      {msg && <p className="text-center text-danger">{msg}</p>}
+
                       <div className="pt-1 mb-4">
-                        <button className="btn-general border-0" type="button">
+                        <button className="btn-general border-0" type="submit">
                           Iniciar Sesión
                         </button>
                       </div>
 
-                      <Link to="/" className="small text-muted" >volver</Link>
-                      <p className="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
+                      <Link to="/" className="small text-muted">volver</Link>
+                      <p className="mb-5 pb-lg-2">
                         ¿Aún no tienes cuenta?{' '}
                         <Link to="/registro" style={{ color: '#393f81' }}>Regístrate Aquí</Link>
                       </p>
