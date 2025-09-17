@@ -1,0 +1,11 @@
+[
+    {
+  "nombre": "Harold",
+  "apellido_paterno": "Peralta",
+  "apellido_materno": "Marte",
+  "correo": "ha.peralta@duocuc.cl",
+  "contrasena": "Hola1234",
+  "fecha_nacimiento": "2000-05-15",
+  "isAdmin": false
+}
+]
