@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { userContext } from './userContext'
 const StateUser = ({ children }) => {
-  const [isLogin,setIsLogin] = useState(true)
-;
-  
+
+  const [isLogin,setIsLogin] = useState(false)
+
   return (
     <userContext.Provider value={{isLogin}} >
       {children}
