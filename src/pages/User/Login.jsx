@@ -6,7 +6,6 @@ import useFetch from '../../hooks/useFetch';
 const Login = () => {
   const navigate = useNavigate();
   const { data: usuarios } = useFetch("/ApiUsuarios.json"); // en public/
-
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [msg, setMsg] = useState('');
@@ -23,14 +22,12 @@ const Login = () => {
 
     if (encontrado) {
       setMsg("Redirigiendo...");
+      localStorage.setItem("usuario", JSON.stringify(encontrado));
 
-      // si tiene propiedad isAdmin = true
       if (encontrado.isAdmin) {
         navigate('/admin');
       } else {
-        setTimeout(()=>{
-          navigate('/');
-        },[1000])
+        setTimeout(() => { navigate('/'); }, 1000);
       }
 
     } else {
