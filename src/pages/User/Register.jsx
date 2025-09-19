@@ -174,13 +174,13 @@ try {
                         />
                       </div>
 
-                      <div className="pt-1 mb-4">
+                      <div className="pt-1 mb-2">
                         <button className="btn-general border-0" type="submit">
                           Registrarme
                         </button>
                       </div>
 
-                      <p className="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
+                      <p className="mb-2 pb-lg-2" style={{ color: '#393f81' }}>
                         <Link to="/login" style={{ color: '#393f81' }}>Ya tengo cuenta</Link>
                       </p>
                     </form>

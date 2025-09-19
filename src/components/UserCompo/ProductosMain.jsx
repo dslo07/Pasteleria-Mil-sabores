@@ -12,7 +12,7 @@ function ProductosMain() {
             <h2 className="lh-1 mb-3">Nuestros Productos</h2>
             <p>
               Explora nuestra selección de productos más destacados, cuidadosamente elegidos para ti. <br />
-              ¡Encuentra calidad, buen precio y diseño en un solo lugar, y lleva tu compra al siguiente nivel hoy mismo!
+              <span className='d-none d-md-flex'>¡Encuentra calidad, buen precio y diseño en un solo lugar, y lleva tu compra al siguiente nivel hoy mismo!</span>
             </p>
           </div>
           <div className="d-flex align-items-end">

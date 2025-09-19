@@ -1,5 +1,6 @@
 import React from 'react'
 import logoPasteleria from '../../img/logo-sin-fondo.png'
+import { Link } from 'react-router-dom'
 const Header = () => {
   return (
     <header className='bg-header d-flex align-items-center py-5 mt-5'>
@@ -15,7 +16,9 @@ const Header = () => {
               proporcionando tortas y productos de repostería de alta calidad para todas las ocasiones.
             </p>
             <div className="d-grid gap-2 d-md-flex justify-content-md-start">
-              <button type="button" className="btn btn-general inline-block  cursor-pointer">Contactar</button>
+              <Link to="/contacto" className=' text-decoration-none'>
+                <button type="button" className="btn btn-general inline-block  cursor-pointer">Contactar</button>
+              </Link>
             </div>
           </div>
           

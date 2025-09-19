@@ -22,7 +22,7 @@ function CardProd({ producto }) {
             Precio: {useConvert(producto.precio)} {producto.moneda}
           </span>
           <div className="d-flex gap-2">
-            <button className="btn btn-comprar w-100 cursor-pointer">Ver Producto</button>
+            <button className="btn btn-comprar w-100 cursor-pointer">Ver <span className='d-none d-md-flex'>Producto</span></button>
             <button className="btn btn-outline-danger py-1 px-2" title='Agregar al carrito' onClick={ () => agregarProd(producto)}>
               
               {

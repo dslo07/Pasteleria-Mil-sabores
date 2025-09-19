@@ -101,22 +101,24 @@ function NavBar() {
               </NavLink>
             </li>
           </ul>
+        <div className='d-flex gap-2 flex-row-reverse'>
 
-          {/* Botón carrito o login */}
-          {isLogin ? (
-            <NavLink to="/my-car">
-              <button className="btn btn-outline-success d-flex gap-2 text-decoration-none">
-                <i className="bi bi-basket3-fill"></i>
-                <span className="text-decoration-none">{total}</span>
-              </button>
-            </NavLink>
-          ) : (
+            {/* Botón carrito o login */}
+            {!isLogin && (
             <NavLink to="/login">
-              <button className="btn btn-outline-success">
-                <i className="bi bi-person-circle text-success"></i>
-              </button>
-            </NavLink>
-          )}
+                <button className="btn btn-outline-success">
+                  <i className="bi bi-person-circle text-success"></i>
+                </button>
+              </NavLink>
+            ) }
+                <NavLink to="/my-car">
+                  <button className="btn btn-outline-success d-flex gap-2 text-decoration-none">
+                    <i className="bi bi-basket3-fill"></i>
+                    <span className="text-decoration-none">{total}</span>
+                  </button>
+                </NavLink>
+        </div>
+
         </div>
       </div>
     </nav>

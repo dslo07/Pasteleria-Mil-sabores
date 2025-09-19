@@ -2,8 +2,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import logotipo from "../../img/image.png";
 import nombrelogo from "../../img/nombre-logo.png";
-import { ImStatsDots } from "react-icons/im";
+import { IoStatsChart } from "react-icons/io5";
 import { FaCartShopping } from "react-icons/fa6";
+import { FaUserCircle } from "react-icons/fa";
+import { RiNewsFill } from "react-icons/ri";
 
 const SideBar = () => {
   return (
@@ -12,58 +14,56 @@ const SideBar = () => {
       style={{ width: "280px" }}
     >
       {/* Logo y nombre */}
-        <img src={nombrelogo} alt="nombre de la empres" width={"200px "} />
+      <img src={nombrelogo} alt="nombre de la empresa" width="200px" />
       <hr />
 
       {/* Menú */}
       <ul className="nav nav-pills flex-column mb-auto">
-        {/* <li className="nav-item">
+        <li className="nav-item">
           <NavLink
-            to="/admin/estadisticas "
+            to="/admin"
             className={({ isActive }) =>
-              "nav-link d-flex align-items-center" + (isActive ? "active" : "text-white")
+              "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")
             }
             aria-current="page"
           >
-            <ImStatsDots className="ml-2"/>
-            Estadisticas
+            <IoStatsChart className="me-2" />
+            Estadísticas
           </NavLink>
-        </li> */}
+        </li>
+
         <li className="nav-item">
           <NavLink
             to="/admin/productos"
             className={({ isActive }) =>
               "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")
             }
-            aria-current="page"
           >
-            <FaCartShopping className="ml-2" />
-            Productos
+            <FaCartShopping className="me-2" />
+            Control de Stock
           </NavLink>
         </li>
-        <li>
+
+        <li className="nav-item">
           <NavLink
             to="/admin/usuarios"
             className={({ isActive }) =>
               "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")
             }
           >
-            <svg className="bi me-2" width="16" height="16">
-              <use xlinkHref="#speedometer2"></use>
-            </svg>
+            <FaUserCircle className="me-2" />
             Usuarios
           </NavLink>
         </li>
-        <li>
+
+        <li className="nav-item">
           <NavLink
-            to="/admin/ordenes"
+            to="/admin/blog"
             className={({ isActive }) =>
               "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")
             }
           >
-            <svg className="bi me-2" width="16" height="16">
-              <use xlinkHref="#table"></use>
-            </svg>
+            <RiNewsFill className="me-2" />
             Blog
           </NavLink>
         </li>

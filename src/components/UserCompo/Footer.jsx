@@ -1,12 +1,52 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useFetch from '../../hooks/useFetch'
 import metodosImg from '../..//img/metodos-de-pago.webp'
-
+import emailjs from "emailjs-com";
+import { VITE_EmailApiKey,VITE_ServicesID,VITE_TempleteID } from '../../../env';
+import AlertModal from '../AlerModal';
 const Footer = () => {
-  const { data: categorias, loading } = useFetch("./ApiCategorias.json")
+  const { data: categorias, loading } = useFetch("./ApiCategorias.json");
+  const [email, setEmail] = useState("");
+  const [modal,setModal] = useState(false);
+  let tituloModal = "Te hemos enviado un correo de confirmación!"
+  let descModal = "¡Suscríbete y recibe nuestras últimas novedades, ofertas exclusivas y recetas especiales directamente en tu correo! No te pierdas ninguna actualización de Mil Sabores."
+  
+  const showModal = () => {
+    setModal(true); // ✅ Solo se llama en un evento, no en el render
+  };
+  
+   const handleSubmit = (e) => {
+    e.preventDefault();
+    showModal();
+
+    emailjs
+        .send(
+          VITE_ServicesID,    // lo obtienes de EmailJS
+          VITE_TempleteID,   // lo configuras en EmailJS
+          { user_email: email },
+          VITE_EmailApiKey     // tu public key de EmailJS
+        )
+        .then(
+          (result) => {
+            console.log("Email enviado!", result.text);
+            showModal()
+          },
+          (error) => {
+            tituloModal = "Ha ocurrido un error"
+            descModal = error.text
+            showModal()
+          }
+        );
+   }
+  
+
 
   return (
     <footer className="p-4 bg-white">
+      { modal && 
+      <AlertModal setModal={setModal} 
+                  titulo={tituloModal}
+                  desc={ descModal}/>}
       <div className="row">
         {/* Navegación */}
         <div className="col-12 col-md-6 col-lg-2 mb-4">
@@ -44,7 +84,7 @@ const Footer = () => {
 
         {/* Newsletter */}
         <div className="col-12 col-md-6 col-lg-5 mb-4">
-          <form>
+          <form onSubmit={handleSubmit}>
             <h5>Obtén las últimas novedades de Mil Sabores</h5>
             <div className="d-flex flex-column flex-sm-row w-100 gap-2 mt-3">
               <input
