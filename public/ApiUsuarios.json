@@ -1,11 +1,57 @@
 [
-    {
-  "nombre": "Harold",
-  "apellido_paterno": "Peralta",
-  "apellido_materno": "Marte",
-  "correo": "ha.peralta@duocuc.cl",
-  "contrasena": "Hola1234",
-  "fecha_nacimiento": "2000-05-15",
-  "isAdmin": false
-}
+  {
+    "nombre": "Harold",
+    "apellido_paterno": "Peralta",
+    "apellido_materno": "Marte",
+    "correo": "harold@admin.cl",
+    "contrasena": "admin777",
+    "fecha_nacimiento": "2000-05-15",
+    "isAdmin": true,
+    "rol": "Admin",
+    "estado": true
+  },
+  {
+    "nombre": "Santiago",
+    "apellido_paterno": "López",
+    "apellido_materno": "Marulanda",
+    "correo": "santiago@admin.cl",
+    "contrasena": "admin777",
+    "fecha_nacimiento": "1999-11-20",
+    "isAdmin": true,
+    "rol": "Admin",
+    "estado": true
+  },
+  {
+    "nombre": "Valentina",
+    "apellido_paterno": "Rojas",
+    "apellido_materno": "Muñoz",
+    "correo": "valentina@tienda.cl",
+    "contrasena": "vendedor2024",
+    "fecha_nacimiento": "2001-03-10",
+    "isAdmin": false,
+    "rol": "Vendedor",
+    "estado": true
+  },
+  {
+    "nombre": "Carlos",
+    "apellido_paterno": "Gonzales",
+    "apellido_materno": "Hernández",
+    "correo": "ca.carlos@duocuc.cl",
+    "contrasena": "pass456",
+    "fecha_nacimiento": "1998-08-05",
+    "isAdmin": false,
+    "rol": "Usuario",
+    "estado": false
+  },
+  {
+    "nombre": "Vicente",
+    "apellido_paterno": "García",
+    "apellido_materno": "Morales",
+    "correo": "vicente@empresa.cl",
+    "contrasena": "vend789",
+    "fecha_nacimiento": "1997-01-25",
+    "isAdmin": false,
+    "rol": "Vendedor",
+    "estado": true
+  }
 ]

@@ -1,9 +1,9 @@
 import React from "react";
-import CardUserTabla from "../../components/AdminCompo/CardUserTabla";
+import CompoContent from "../../components/AdminCompo/CompoContent";
 const AdminProd = () => {
   return(
     <div>
-      <CardUserTabla/>
+      <CompoContent tipo={"Producto"}/>
     </div>
   )
 }

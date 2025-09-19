@@ -22,13 +22,15 @@ const Login = () => {
     );
 
     if (encontrado) {
-      setMsg("✅ Usuario correcto");
+      setMsg("Redirigiendo...");
 
       // si tiene propiedad isAdmin = true
       if (encontrado.isAdmin) {
         navigate('/admin');
       } else {
-        navigate('/dashboard');
+        setTimeout(()=>{
+          navigate('/');
+        },[1000])
       }
 
     } else {
@@ -94,7 +96,13 @@ const Login = () => {
                         />
                       </div>
 
-                      {msg && <p className="text-center text-danger">{msg}</p>}
+                        <p className={
+                          usuarios && usuarios.length > 0 && msg.includes("Redirigiendo")
+                            ? "text-center text-success"
+                            : "text-center text-danger"
+                        }>
+                          {msg}
+                        </p>
 
                       <div className="pt-1 mb-2">
                         <button className="btn-general border-0" type="submit">

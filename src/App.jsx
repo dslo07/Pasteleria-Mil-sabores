@@ -13,7 +13,7 @@ import Nosotros from './pages/User/Nosotros'
 import DashBoard from './pages/Admin/DashBoard'
 import AdminProd from './pages/Admin/AdminProd'
 import AdminUsers from './pages/Admin/AdminUsers'
-import AdminOrders from './pages/Admin/AdminOrders'
+import AdminBlog from './pages/Admin/AdminBlog'
 import AdminStats from './pages/Admin/AdminStats'
 
 // Toast (alert)
@@ -39,10 +39,12 @@ function App() {
           <Route index element={<AdminStats/>}/>
           <Route path='productos' element={<AdminProd/>}/>
           <Route path='usuarios'   element={<AdminUsers/>}/>
-          <Route path='ordenes'   element={<AdminOrders/>}/>
+          <Route path='blog'   element={<AdminBlog  />}/>
         </Route>
       </Routes>
     </BrowserRouter>
+
+
     <Toaster 
       position="top-center" 
       reverseOrder={false}

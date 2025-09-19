@@ -3,10 +3,10 @@ import React from "react";
 const CardStats = ({ titulo, img, stats, desc }) => {
   return(
     <>
-      <div className="p-3 col-3 border rounded">
+      <div className="p-3 col-3 border rounded card-hover">
           <div className="d-flex justify-content-between">
             <span className="fw-semibold ">{titulo}</span>
-            <img src={img} alt="icono"/>
+            {img} 
           </div>
           <div>
             <h2 className="display-5">{stats}</h2>
