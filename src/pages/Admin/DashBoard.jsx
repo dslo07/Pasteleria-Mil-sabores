@@ -13,9 +13,9 @@ const DashBoard = () => {
         <SideBar />
       </div>
 
-      {/* Botón toggle para abrir sidebar en mobile */}
+      {/* Botón toggle fijo arriba a la derecha de la pantalla */}
       <button
-        className="btn btn-dark d-md-none position-fixed m-2"
+        className="btn btn-comprar  d-md-none position-fixed top-0 end-0 m-3"
         type="button"
         data-bs-toggle="offcanvas"
         data-bs-target="#sidebarMobile"
