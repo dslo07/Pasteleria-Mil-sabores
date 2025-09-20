@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { carContext } from '../../context/carrito/carContext';
 import { useConvert } from '../../hooks/useConvert';
-
+import { useNavigate } from 'react-router-dom';
 function CardProd({ producto }) {
   const { agregarProd, productos } = useContext(carContext);
-
+  const navigate = useNavigate();
   // Revisar si el producto ya está en el carrito
   const enCarrito = productos.some(p => p.codigo === producto.codigo);
 
@@ -27,7 +27,7 @@ function CardProd({ producto }) {
             Precio: {useConvert(producto.precio)} {producto.moneda}
           </span>
           <div className="d-flex gap-2">
-            <button className="btn btn-comprar w-100">
+            <button className="btn btn-comprar w-100" onClick={()=>navigate(`/producto/${producto.codigo}`, {state:{producto}} )}>
               Ver <span className="d-none d-md-flex">Producto</span>
             </button>
             <button
