@@ -1,7 +1,10 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import CardCar from './CardCar'
+import { carContext } from '../../context/carrito/carContext'
 
-export const CarManager = ({ productos }) => {
+export const CarManager = () => {
+    const { productos } = useContext(carContext);
+  
   return (
     <div>
       {
@@ -13,7 +16,7 @@ export const CarManager = ({ productos }) => {
       <div className='d-flex justify-content-center aling-items-center'>
         <div>
             <iframe src="https://lottie.host/embed/5e40b073-b377-4478-90b6-3063979e9173/1flk4fzWIT.lottie"></iframe>
-            <h2>No tienes carritos aun </h2>
+            <h2 className='normal-text'>No tienes productos aun </h2>
         </div>
       </div>
         }

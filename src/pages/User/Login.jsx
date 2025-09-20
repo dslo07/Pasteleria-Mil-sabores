@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../img/nombre-logo.png';
 import useFetch from '../../hooks/useFetch';
-
+import {userContext} from '../../context/user/userContext'
 const Login = () => {
   const navigate = useNavigate();
-  const { data: usuarios } = useFetch("/ApiUsuarios.json"); // en public/
+
+  const { setIsLogin } = useContext(userContext)
+  const { data: usuarios } = useFetch("/ApiUsuarios.json"); 
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [msg, setMsg] = useState('');
+
+  const crearCache = (encontrado)=>{
+      setIsLogin(true)
+      localStorage.setItem("usuario", JSON.stringify(encontrado));
+  }
 
   const validarUsuario = (correo, contrasena) => {
     if (!usuarios || usuarios.length === 0) {
@@ -22,8 +29,7 @@ const Login = () => {
 
     if (encontrado) {
       setMsg("Redirigiendo...");
-      localStorage.setItem("usuario", JSON.stringify(encontrado));
-
+      crearCache(encontrado)
       if (encontrado.isAdmin) {
         navigate('/admin');
       } else {
