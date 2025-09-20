@@ -15,6 +15,10 @@ import AdminProd from './pages/Admin/AdminProd'
 import AdminUsers from './pages/Admin/AdminUsers'
 import AdminBlog from './pages/Admin/AdminBlog'
 import AdminStats from './pages/Admin/AdminStats'
+//crud de admin
+import CrearProd from './pages/Admin/CRUD/CrearProd'
+import CrearUser from './pages/Admin/CRUD/CrearUser'
+import CrearArticulo from './pages/Admin/CRUD/CrearArticulo'
 
 // Toast (alert)
 import toast, { Toaster } from 'react-hot-toast';
@@ -38,8 +42,11 @@ function App() {
         <Route path='/admin' element={<DashBoard/>}>
           <Route index element={<AdminStats/>}/>
           <Route path='productos' element={<AdminProd/>}/>
+          <Route path='productos/crear-producto' element={<CrearProd/>}/>
           <Route path='usuarios'   element={<AdminUsers/>}/>
+          <Route path='usuarios/crear-usuario' element={<CrearUser/>}/>
           <Route path='blog'   element={<AdminBlog  />}/>
+          <Route path='blog/crear-blog' element={<CrearArticulo/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

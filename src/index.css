@@ -227,7 +227,9 @@ height: 100%;
     box-shadow: var(--card-shadow-hover);
     cursor:pointer;
 }
-
+.bg-brown{
+    
+}
 
 .tag-rol,.tag-estado,.tag-inactivo {
     border:  1px solid  ;
