@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 import NavBar from '../../components/UserCompo/NavBar'
-import {carContext} from '../../context/carrito/carContext'
 import CarManager from '../../components/UserCompo/CarManager'
+import { carContext } from '../../context/carrito/carContext'
 import { useConvert } from '../../hooks/useConvert'
 const Carrito = () => {
-  const { productos,total,costo,cupon, setCupon} = useContext(carContext);
+  const { productos,total,costo,cupon, setCupon,comprar} = useContext(carContext);
   return (
     <>
       <NavBar/>
@@ -15,9 +15,8 @@ const Carrito = () => {
     <div className="row d-flex">
       {/* Lista de productos */}
       <div className="col-12 col-md-6 overflow-auto custom-scroll p-2" style={{ maxHeight: "400px" }}>
-        {
-          <CarManager productos={productos}/>
-        }
+      
+          <CarManager />
 
       </div>
       {/* Total */}
@@ -44,7 +43,7 @@ const Carrito = () => {
             </div>
           </div>
           <div className='w-100 mt-3'>
-            <button className='btn btn-comprar p-2 rounded'>Comprar</button>
+            <button className='btn btn-comprar p-2 rounded' onClick={comprar}>Comprar</button>
           </div>
         </div>
       </div>

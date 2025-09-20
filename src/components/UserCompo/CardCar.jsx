@@ -29,7 +29,7 @@ const CardCar = ({producto}) => {
                   <button className='btn btn-comprar text-center px-2 py-1'  onClick={ () => controlCantidad("resta",producto)} > <CgMathMinus/> </button>
                 </div>
                 <div>
-                  <button className='btn btn-comprar text-center px-2 py-1' onClick={() => quitarProducto(producto.id) }>Quitar</button>
+                  <button className='btn btn-comprar text-center px-2 py-1' onClick={() => quitarProducto(producto.codigo) }>Quitar</button>
                 </div>
               </div>
             </div>
