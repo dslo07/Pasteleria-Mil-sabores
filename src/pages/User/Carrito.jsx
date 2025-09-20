@@ -4,7 +4,7 @@ import CarManager from '../../components/UserCompo/CarManager'
 import { carContext } from '../../context/carrito/carContext'
 import { useConvert } from '../../hooks/useConvert'
 const Carrito = () => {
-  const { productos,total,costo,cupon, setCupon} = useContext(carContext);
+  const { productos,total,costo,cupon, setCupon,comprar} = useContext(carContext);
   return (
     <>
       <NavBar/>
@@ -43,7 +43,7 @@ const Carrito = () => {
             </div>
           </div>
           <div className='w-100 mt-3'>
-            <button className='btn btn-comprar p-2 rounded'>Comprar</button>
+            <button className='btn btn-comprar p-2 rounded' onClick={comprar}>Comprar</button>
           </div>
         </div>
       </div>

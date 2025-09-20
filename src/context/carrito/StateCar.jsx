@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { carContext } from './carContext';
+import { userContext } from '../../context/user/userContext';
 import useFetch from '../../hooks/useFetch';
 import toast from 'react-hot-toast';
 
 const StateCar = ({ children }) => {
+  const {isLogin} = useContext(userContext)
   // cargar desde localStorage al inicio
   const [productos, setProductos] = useState(() => {
     const stored = localStorage.getItem('carrito');
@@ -82,6 +84,27 @@ const StateCar = ({ children }) => {
     }
   };
 
+
+//==== queda pendiente validar qye si no hay productos no se puede comprar
+const comprar = () => {
+  if (isLogin) {
+    toast.promise(
+      new Promise((resolve) => setTimeout(resolve, 1200)),
+      {
+        loading: 'Procesando compra...',
+        success: 'Compra realizada con éxito!',
+        error: 'Error en la compra'
+      }
+    ).then(() => {
+      setProductos([]); 
+      setCupon({ codigo: '', descuento: 0 });  
+    });
+  } else {
+    toast.error("Para comprar debe estar logeado");
+  }
+};
+
+
   return (
     <carContext.Provider
       value={{
@@ -94,6 +117,7 @@ const StateCar = ({ children }) => {
         aplicarCupon,
         controlCantidad,
         quitarProducto,
+        comprar
       }}
     >
       {children}
