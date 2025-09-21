@@ -3,7 +3,7 @@ import useFetch from '../../hooks/useFetch';
 import CardProd from './CardProd';
 
 function ProductosMain() {
-  const { data, loading, error } = useFetch("./ApiProductos.json");
+  const { data, loading, error } = useFetch("/ApiProductos.json");
   const productos = Array.isArray(data) ? data : [];
 
   return (
@@ -25,7 +25,7 @@ function ProductosMain() {
               id="ver-todos-btn"
               style={{ marginBottom: "16px" }}
             >
-              Ver todos
+              Ver Tienda
             </button>
           </Link>
         </div>
@@ -33,7 +33,7 @@ function ProductosMain() {
 
       <div className="productos-grid mt-4">
         {loading && <p>Cargando productos...</p>}
-        {error && <p>Error al cargar productos.</p>}
+        {error && <p>Error al cargar productos.</p> }
         {!loading && !error && productos.length === 0 && (
           <p>No hay productos disponibles.</p>
         )}

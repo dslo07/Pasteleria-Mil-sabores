@@ -1,12 +1,14 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, {use, useContext} from "react";
 import SideBar from "../../components/AdminCompo/SideBar";
+import { Outlet } from "react-router-dom";
 import { FaBars } from "react-icons/fa6";
-
+import { userContext } from '../../context/user/userContext'
 const DashBoard = () => {
-  const userName = "Santiago López";
+  const usuario = JSON.parse(localStorage.getItem("usuario"))
+  const userName = `${usuario.nombre} ${usuario.apellido_paterno}`;
 
-  return (
+  
+  return (  
     <main className="d-flex vh-100 position-relative">
       {/* Sidebar fijo en desktop */}
       <div className="d-none d-md-block">

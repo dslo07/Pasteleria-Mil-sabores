@@ -9,6 +9,7 @@ import Carrito from './pages/User/Carrito'
 import Blog from './pages/User/Blog'
 import Contacto from './pages/User/Contacto'
 import Nosotros from './pages/User/Nosotros'
+import VistaProducto from './components/UserCompo/VistaProducto'
 //Rutas para el admin
 import DashBoard from './pages/Admin/DashBoard'
 import AdminProd from './pages/Admin/AdminProd'
@@ -17,6 +18,7 @@ import AdminBlog from './pages/Admin/AdminBlog'
 import AdminStats from './pages/Admin/AdminStats'
 //crud de admin
 import CrearProd from './pages/Admin/CRUD/CrearProd'
+import EditarProd from './pages/Admin/CRUD/EditarProd'
 import CrearUser from './pages/Admin/CRUD/CrearUser'
 import CrearArticulo from './pages/Admin/CRUD/CrearArticulo'
 
@@ -36,6 +38,7 @@ function App() {
         <Route path='/blog' element={<Blog/>}/>
         <Route path='/nosotros' element={<Nosotros/>}/>
         <Route path='/tienda' element={<Tienda/>}/>
+        <Route path='/producto/:id' element={<VistaProducto/>}/>
         <Route path='/my-car' element={<Carrito/>}/>
         <Route path='*' element={<NotFound/>}/>
         {/*rutas del Admin*/}
@@ -43,6 +46,7 @@ function App() {
           <Route index element={<AdminStats/>}/>
           <Route path='productos' element={<AdminProd/>}/>
           <Route path='productos/crear-producto' element={<CrearProd/>}/>
+          <Route path="productos/editar-producto/:id" element={<EditarProd />} />
           <Route path='usuarios'   element={<AdminUsers/>}/>
           <Route path='usuarios/crear-usuario' element={<CrearUser/>}/>
           <Route path='blog'   element={<AdminBlog  />}/>
