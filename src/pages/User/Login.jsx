@@ -6,17 +6,28 @@ import { loginUsuario } from '../../services/UsuarioServices';
 const Login = () => {
   const navigate = useNavigate();
 
-  // 👇 hooks dentro del componente
-  const [correo, setCorreo] = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const [msg, setMsg] = useState("");
+      const [correo, setCorreo] = useState("");
+      const [contrasena, setContrasena] = useState("");
+      const [msg, setMsg] = useState("");
 
   const onSubmit = async (e) => {
-    setMsg("Login satisfactorio");
     e.preventDefault();
     try {
       const user = await loginUsuario({ correo, contrasena }); 
-     setTimeout(() => navigate("/"), 2000);
+      setMsg("Login satisfactorio");
+      console.log(user.rol.rol_id);
+      
+      // 1 es de cliente y 2 es de admin
+      if (user.rol.rol_id === 1) {
+        navigate("/"); // Redirigir a la pagina principal
+      }
+      else if (user.rol.rol_id === 2) {
+        navigate("/admin"); // Redirigir a la pagina de admin
+      }
+      else {
+        navigate("/"); // Redirigir a la pagina principal
+      }
+
     } catch (err) {
       setMsg("Error: " + err.message);
     }
