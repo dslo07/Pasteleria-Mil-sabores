@@ -21,7 +21,6 @@ const StateCar = ({ children }) => {
 
   // traer cupones
   const { data: listaCupones} = useFetch('/ApiCupones.json');
-   console.log(listaCupones);
    
   // recalcular totales
   useEffect(() => {
