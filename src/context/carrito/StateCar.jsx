@@ -26,6 +26,7 @@ const StateCar = ({ children }) => {
   useEffect(() => {
     let suma = productos.reduce(
       (acc, prod) => acc + prod.precio * prod.cantInCar,
+      0
     );
 
     if (cupon?.descuento > 0) {
@@ -76,17 +77,11 @@ const StateCar = ({ children }) => {
   const aplicarCupon = (codigo) => {
     const cuponValido = listaCupones?.find((c) => c.codigo === codigo);
 
-    if (cuponValido) {
-      setCupon(cuponValido); 
-      toast.success('Cupón aplicado!');
-    } else {
-      setCupon({ codigo: '', descuento: 0 }); 
-      toast.error('Cupón inválido');
-    }
+      //vacio por el momento
   };
 
 
-//==== queda pendiente validar qye si no hay productos no se puede comprar
+//==== queda pendiente validar que si no hay productos agregados no se puede comprar
 const comprar = () => {
   if (isLogin) {
     toast.promise(
