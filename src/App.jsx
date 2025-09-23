@@ -7,6 +7,7 @@ import NotFound from './pages/User/NotFound'
 import Tienda from './pages/User/Tienda'
 import Carrito from './pages/User/Carrito'
 import Blog from './pages/User/Blog'
+import PerfilUsuario from './pages/User/PerfilUsuario'
 import Contacto from './pages/User/Contacto'
 import Nosotros from './pages/User/Nosotros'
 import VistaProducto from './components/UserCompo/VistaProducto'
@@ -34,6 +35,7 @@ function App() {
         <Route path='/' element={<Principal/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/registro' element={<Register/>}/>
+        <Route path='/mi-perfil' element={<PerfilUsuario/>}/>
         <Route path='/contacto' element={<Contacto/>}/>
         <Route path='/blog' element={<Blog/>}/>
         <Route path='/nosotros' element={<Nosotros/>}/>
