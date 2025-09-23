@@ -1,49 +1,25 @@
-import React, { useState,useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import logo from '../../img/nombre-logo.png';
-import useFetch from '../../hooks/useFetch';
-import {userContext} from '../../context/user/userContext'
+import { loginUsuario } from '../../services/UsuarioServices';
+
 const Login = () => {
   const navigate = useNavigate();
 
-  const { setIsLogin } = useContext(userContext)
-  const { data: usuarios } = useFetch("/ApiUsuarios.json"); 
-  const [correo, setCorreo] = useState('');
-  const [contrasena, setContrasena] = useState('');
-  const [msg, setMsg] = useState('');
+  // 👇 hooks dentro del componente
+  const [correo, setCorreo] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [msg, setMsg] = useState("");
 
-  const crearCache = (encontrado)=>{
-      setIsLogin(true)
-      localStorage.setItem("usuario", JSON.stringify(encontrado));
-  }
-
-  const validarUsuario = (correo, contrasena) => {
-    if (!usuarios || usuarios.length === 0) {
-      setMsg("No se pudo cargar la base de usuarios");
-      return;
-    }
-
-    const encontrado = usuarios.find(
-      user => user.correo === correo && user.contrasena === contrasena
-    );
-
-    if (encontrado) {
-      setMsg("Redirigiendo...");
-      crearCache(encontrado)
-      if (encontrado.isAdmin) {
-        navigate('/admin');
-      } else {
-        setTimeout(() => { navigate('/'); }, 1000);
-      }
-
-    } else {
-      setMsg("❌ Usuario o contraseña incorrectos");
-    }
-  };
-
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
+    setMsg("Login satisfactorio");
     e.preventDefault();
-    validarUsuario(correo, contrasena);
+    try {
+      const user = await loginUsuario({ correo, contrasena }); 
+     setTimeout(() => navigate("/"), 2000);
+    } catch (err) {
+      setMsg("Error: " + err.message);
+    }
   };
 
   return (
@@ -69,6 +45,9 @@ const Login = () => {
                         <img src={logo} height="80px" alt="Logo" />
                       </div>
 
+                    {msg && <div className="alert alert-info py-2 my-2">{msg}</div>}
+
+                    
                       <h5 className="fw-normal mt-3 pb-3">
                         Ingresa los datos de tu cuenta
                       </h5>
@@ -98,14 +77,6 @@ const Login = () => {
                           required
                         />
                       </div>
-
-                        <p className={
-                          usuarios && usuarios.length > 0 && msg.includes("Redirigiendo")
-                            ? "text-center text-success"
-                            : "text-center text-danger"
-                        }>
-                          {msg}
-                        </p>
 
                       <div className="pt-1 mb-2">
                         <button className="btn-general border-0" type="submit">

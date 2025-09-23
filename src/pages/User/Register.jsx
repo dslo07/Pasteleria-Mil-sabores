@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../img/nombre-logo.png';
-
+import { registrarUsuario } from '../../services/UsuarioServices';
+import { useNavigate } from "react-router-dom";
+  
 function Register() {
+const navigate = useNavigate();
+
   const [form, setForm] = useState({
     nombres: '',
     apellidoPaterno: '',
@@ -12,7 +16,6 @@ function Register() {
     nacimiento: ''
   });
   const [msg, setMsg] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const onChange = (e) => {
     const { id, value } = e.target;
@@ -21,61 +24,22 @@ function Register() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setMsg('');
-    setLoading(true);
 
-try {
-  const { data, error } = await supabase.auth.signUp({
-    email: form.correo,
-    password: form.contrasena,
-    options: {
-      data: {
-        nombres: form.nombres,
-        apellidoPaterno: form.apellidoPaterno,
-        apellidoMaterno: form.apellidoMaterno,
-        nacimiento: form.nacimiento || null
-      },
-      emailRedirectTo: window.location.origin + '/login'
-    }
-  });
-
-  if (error) throw error;
-
-  // ⚡ insertar en tu tabla Usuario (si el registro en Auth fue bien)
-  if (data.user) {
-    const { error: insertError } = await supabase
-      .from('usuario')
-      .insert({
-        nombre_usuario: form.nombres,
-        appat_usuario: form.apellidoPaterno,
-        apmat_usuario: form.apellidoMaterno,
-        correo_usuario: form.correo,
-        contrasena_usuario: form.contrasena 
-      });
-
-    if (insertError) throw insertError;
+  if (!form.nombres || !form.apellidoPaterno || !form.correo || !form.contrasena || !form.nacimiento) {
+    setMsg("Debes completar todos los campos obligatorios sino quieres tener problemas. 🔫🔫🔫");
+    return;
   }
 
-  setMsg('Registro creado. Revisa tu email para confirmar la cuenta.');
-  setForm({
-    nombres: '',
-    apellidoPaterno: '',
-    apellidoMaterno: '',
-    correo: '',
-    contrasena: '',
-    nacimiento: ''
-  });
-
-} catch (err) {
-  setMsg('FALLO: ' + (err.message ?? 'Error desconocido'));
-}
-
-    finally {
-      setLoading(false);
+    try {
+      await registrarUsuario(form);  
+      setMsg("registrado con exito padre, redirigiendo a login...");
+      setTimeout(() => { navigate("/login"); }, 2000);
+    } catch (err) {
+      setMsg("Error: " + err.message);
     }
   };
 
-  return (
+   return (
     <section className="vh-100" style={{ backgroundColor: '#FFC0CB' }}>
       <div className="container py-1 h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
@@ -164,7 +128,7 @@ try {
                       </div>
 
                       <div className="form-outline mb-2">
-                        <label className="form-label" htmlFor="nacimiento">Fecha de nacimiento</label>
+                        <label className="form-label" htmlFor="nacimiento">Fecha de nacimiento*</label>
                         <input
                           type="date"
                           id="nacimiento"
