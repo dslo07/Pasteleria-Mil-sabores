@@ -67,6 +67,9 @@ router.post("/login", async (req, res) => {
     const rol_usuario = await/*Esperar y unicar la Query a la bd*/  client.query(`select id_rol as rol_id from usuario_rol where id_usuario = $1`,
         [usuario.rows[0].user_id]);
 
+    // const datos_cliente = await client.query(`select id_cliente as client_id from cliente_usuario where id_usuario = $1`,
+    //     [usuario.rows[0].user_id]);
+
     await client.query("COMMIT");
     res.status(200).json({ msg: "Login exitoso", user: usuario.rows[0], rol: rol_usuario.rows[0] /*El .rows[0] es como lista empiza en 0 recuerdar */}); 
     // Cuando la repuesta sea 200 ok pasara eb formato Json mensaje y la variable user 
