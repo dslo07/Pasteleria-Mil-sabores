@@ -2,21 +2,36 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../../img/nombre-logo.png';
 import { loginUsuario } from '../../services/UsuarioServices';
+import {userContext} from '../../context/user/userContext';
 
 const Login = () => {
   const navigate = useNavigate();
 
-  // 👇 hooks dentro del componente
-  const [correo, setCorreo] = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const [msg, setMsg] = useState("");
+      const [correo, setCorreo] = useState("");
+      const [contrasena, setContrasena] = useState("");
+      const [msg, setMsg] = useState("");
+      //const { setIsLogin } = userContext(userContext);
+
 
   const onSubmit = async (e) => {
-    setMsg("Login satisfactorio");
     e.preventDefault();
     try {
       const user = await loginUsuario({ correo, contrasena }); 
-     setTimeout(() => navigate("/"), 2000);
+      setMsg("Login satisfactorio");
+      console.log(user.rol.rol_id);
+      
+      // 1 es de cliente y 2 es de admin
+      if (user.rol.rol_id === 1) {
+        navigate("/"); // Redirigir a la pagina principal
+        // setIsLogin(true)
+      }
+      else if (user.rol.rol_id === 2) {
+        navigate("/admin"); // Redirigir a la pagina de admin
+      }
+      else {
+        navigate("/"); // Redirigir a la pagina principal
+      }
+
     } catch (err) {
       setMsg("Error: " + err.message);
     }
