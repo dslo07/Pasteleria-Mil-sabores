@@ -26,7 +26,6 @@ const StateCar = ({ children }) => {
   useEffect(() => {
     let suma = productos.reduce(
       (acc, prod) => acc + prod.precio * prod.cantInCar,
-      0
     );
 
     if (cupon?.descuento > 0) {
@@ -78,10 +77,10 @@ const StateCar = ({ children }) => {
     const cuponValido = listaCupones?.find((c) => c.codigo === codigo);
 
     if (cuponValido) {
-      setCupon(cuponValido); // ✅ guardamos el cupón en el estado
+      setCupon(cuponValido); 
       toast.success('Cupón aplicado!');
     } else {
-      setCupon({ codigo: '', descuento: 0 }); // limpiamos si no existe
+      setCupon({ codigo: '', descuento: 0 }); 
       toast.error('Cupón inválido');
     }
   };

@@ -6,7 +6,7 @@ const PerfilUsuario = ()=>{
   const [mostrar,setMostrar] = useState(false)
     const usuario = {
     nombre: "Santiago",
-    apellidoPat: "lopex",
+    apellidoPat: "lopez",
     apellidoMat: "marulanda",
     rut: "12.123.456-7",
     nacimiento: "nacimiento",
@@ -18,14 +18,12 @@ const PerfilUsuario = ()=>{
       <NavBar/>
       <div className="container mt-5 p-4">
   <div className="row g-4">
-    {/* Form Section */}
     <div className="col-md-7 d-none d-md-inline">
       <div className="card shadow-sm rounded-4 p-4">
         <h1 className="mb-3">Bienvenido, {usuario.nombre}</h1>
         <p className="text-muted mb-4">Editar información personal</p>
 
         <form>
-          {/* Nombres */}
           <div className="mb-3">
             <label htmlFor="inputNombres" className="form-label">Nombres</label>
             <input
@@ -37,7 +35,6 @@ const PerfilUsuario = ()=>{
             />
           </div>
 
-          {/* Apellidos */}
           <div className="row mb-3">
             <div className="col-md-6">
               <label htmlFor="inputAPPat" className="form-label">Apellido Paterno</label>
@@ -61,7 +58,6 @@ const PerfilUsuario = ()=>{
             </div>
           </div>
 
-          {/* RUT y Nacimiento */}
           <div className="row mb-3">
             <div className="col-md-6">
               <label htmlFor="inputRut" className="form-label">RUT</label>
@@ -85,7 +81,6 @@ const PerfilUsuario = ()=>{
             </div>
           </div>
 
-          {/* Dirección */}
           <div className="mb-3">
             <label htmlFor="inputDireccion" className="form-label">Dirección</label>
             <input
@@ -104,7 +99,6 @@ const PerfilUsuario = ()=>{
       </div>
     </div>
 
-    {/* Profile Picture Section */}
     <div className="col-md-5">
       <div className="card shadow-sm rounded-4 text-center p-4">
         <img
