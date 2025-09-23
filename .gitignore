@@ -23,3 +23,5 @@ node_modules
 *.sw?
 .gitignore
 env.js
+.env
+Footer.jsx
