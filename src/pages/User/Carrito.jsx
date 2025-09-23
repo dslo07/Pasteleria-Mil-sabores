@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import NavBar from '../../components/UserCompo/NavBar'
 import CarManager from '../../components/UserCompo/CarManager'
 import { carContext } from '../../context/carrito/carContext'
 import { useConvert } from '../../hooks/useConvert'
 const Carrito = () => {
-  const { productos,total,costo,cupon, setCupon,comprar} = useContext(carContext);
+  const { total,costo,cupon ,comprar,aplicarCupon} = useContext(carContext);
+  const [codigoCupon,setCodigoCupon] = useState("")
   return (
     <>
       <NavBar/>
@@ -38,8 +39,8 @@ const Carrito = () => {
           <div className='d-flex justify-content-between py-2 border-bottom border-2'>
             <p className='m-0'>Aplicar cupon:</p>
             <div className='d-flex gap-2'>
-              <input type="text" placeholder='Ingrese su cupon'/>
-              <button className='btn btn-comprar rounded' > Aplicar</button>
+              <input type="text" placeholder='Ingrese su cupon' onChange={(e)=>setCodigoCupon(e.target.value)}/>
+              <button className='btn btn-comprar rounded' onClick={aplicarCupon(codigoCupon)}>Aplicar</button>
             </div>
           </div>
           <div className='w-100 mt-3'>
