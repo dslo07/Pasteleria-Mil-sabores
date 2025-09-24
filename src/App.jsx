@@ -46,6 +46,7 @@ function App() {
         {/*rutas del Admin*/}
         <Route path='/admin' element={<DashBoard/>}>
           <Route index element={<AdminStats/>}/>
+          <Route path='admin-perfil' element={<PerfilUsuario/>}/>
           <Route path='productos' element={<AdminProd/>}/>
           <Route path='productos/crear-producto' element={<CrearProd/>}/>
           <Route path="productos/editar-producto/:id" element={<EditarProd />} />

@@ -10,7 +10,7 @@ const Login = () => {
       const [correo, setCorreo] = useState("");
       const [contrasena, setContrasena] = useState("");
       const [msg, setMsg] = useState("");
-      const { isLogin, setIsLogin } = useContext(userContext);
+      const { setIsLogin } = useContext(userContext);
 
 
   const onSubmit = async (e) => {

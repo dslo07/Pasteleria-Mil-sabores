@@ -73,17 +73,12 @@ const SideBar = () => {
 
       {/* Link a vista de usuario */}
       <div>
-        <NavLink
-          to="/tienda"
-          className="d-flex align-items-center text-white text-decoration-none"
-        >
-          <img
-            src={logotipo}
-            alt=""
-            width="32"
-            height="32"
-            className="rounded-circle me-2"
-          />
+        <NavLink to="/admin/admin-perfil" className="d-flex align-items-center text-white text-decoration-none">
+          <img src={logotipo} alt="" width="32" height="32" className="rounded-circle me-2"/>
+          <strong>Volver a tienda</strong>
+        </NavLink>
+        <NavLink to="/tienda" className="d-flex align-items-center text-white text-decoration-none">
+          <img src={logotipo} alt="" width="32" height="32" className="rounded-circle me-2"/>
           <strong>Volver a tienda</strong>
         </NavLink>
       </div>

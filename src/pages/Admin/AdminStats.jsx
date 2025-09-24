@@ -12,8 +12,8 @@ const AdminStats = () =>{
       <div>
         <h2 className="">Resumen:</h2>
       </div>
-      <div className="row d-flex gap-4   px-3" >
-          <CardStats titulo={"Clientes Registrados"} img={<FaUsers />} stats={90} desc={"Clientes Con Cuenta"}/>
+      <div className="row d-flex gap-2 px-3" >
+          <CardStats titulo={"Registrados"} img={<FaUsers />} stats={90} desc={"Clientes Con Cuenta"}/>
           <CardStats titulo={"Productos"} img={<FaCartShopping />} stats={15} desc={"En el catalogo"}/>
           <CardStats titulo={"Cuentas Admin"} img={<RiAdminFill />} stats={4} desc={"Cuentas Creadas"}/>
           <CardStats titulo={"Stock Total"} img={<FaBox />} stats={25} desc={"Productos En El Inventario"}/>

@@ -7,7 +7,7 @@ import { userContext } from '../../context/user/userContext'
 
 const DashBoard = () => {
   const usuario = JSON.parse(localStorage.getItem("usuario"))
-  const userName = "Harold"//`${usuario.nombre} ${usuario.apellido_paterno}`;
+  const userName = "santiago"//`${usuario.nombre} ${usuario.apellido_paterno}`;
 
   return (  
     <main className="d-flex vh-100 position-relative">
