@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../../img/nombre-logo.png';
 import { loginUsuario } from '../../services/UsuarioServices';
-import {userContext } from '../../context/user/userContext';
+import { userContext } from '../../context/user/userContext';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,23 +10,23 @@ const Login = () => {
       const [correo, setCorreo] = useState("");
       const [contrasena, setContrasena] = useState("");
       const [msg, setMsg] = useState("");
-      //const { setIsLogin } = userContext(userContext);
+      const { isLogin, setIsLogin } = useContext(userContext);
 
 
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
       const user = await loginUsuario({ correo, contrasena }); 
-      setMsg("Login satisfactorio");
       
-      // console.log(user.datos_cliente.nombre);
-      console.log(user.rol.rol_id);
-      //localStorage.setItem("Cliente_datos"), json.stringify(user);
+      // localStorage.setItem("DatosUsuario", Json.stringify(user));
 
+
+      setMsg("Login satisfactorio");
+        setIsLogin(true)
+      
       // 1 es de cliente y 2 es de admin
       if (user.rol.rol_id === 1) {
         navigate("/"); // Redirigir a la pagina principal
-        // setIsLogin(true)
       }
       else if (user.rol.rol_id === 2) {
         navigate("/admin"); // Redirigir a la pagina de admin
