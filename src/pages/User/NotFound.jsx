@@ -6,7 +6,6 @@ function NotFound() {
   const navigate = useNavigate()
   return (
     <>
-    <NavBar/>
       <div className='vw-100 vh-100 d-flex justify-content-center align-items-center '>
         <div>
           <div className='d-flex justify-content-center'> 

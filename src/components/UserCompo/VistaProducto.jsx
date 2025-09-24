@@ -14,7 +14,6 @@ const VistaProducto = () => {
 
   return (
     <>
-      <NavBar />
       <div className="separador"></div>
       <div className="container py-5">
         <div className="row g-5">
@@ -52,7 +51,6 @@ const VistaProducto = () => {
         {/* Productos relacionados */}
         <ProductosMain />
       </div>
-      <Footer />
     </>
   );
 };

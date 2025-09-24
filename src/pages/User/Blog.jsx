@@ -8,7 +8,6 @@ function Blog() {
   
   return (
     <>
-      <NavBar/>
       <header className="bg-blog px-5" style={{ height: '50vh' }}>
         <div className='d-flex justify-content-center align-items-center h-100'>
             <h1 className='text-white display-1'>Blog mil sabores</h1>
@@ -38,7 +37,6 @@ function Blog() {
         </div>
       </div>
 
-      <Footer/>
     </>
   )
 }

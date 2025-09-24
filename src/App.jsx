@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes,Route, Router } from 'react-router-dom'
 //Rutas para el uso Usuario
+import Layout from './pages/User/Layout'
 import Principal from './pages/User/Principal'
 import Register from './pages/User/Register'
 import Login from './pages/User/Login'
@@ -32,17 +33,19 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/*rutas del usuario*/}
-        <Route path='/' element={<Principal/>}/>
-        <Route path='/login' element={<Login/>}/>
-        <Route path='/registro' element={<Register/>}/>
-        <Route path='/mi-perfil' element={<PerfilUsuario/>}/>
-        <Route path='/contacto' element={<Contacto/>}/>
-        <Route path='/blog' element={<Blog/>}/>
-        <Route path='/nosotros' element={<Nosotros/>}/>
-        <Route path='/tienda' element={<Tienda/>}/>
-        <Route path='/producto/:id' element={<VistaProducto/>}/>
-        <Route path='/my-car' element={<Carrito/>}/>
-        <Route path='*' element={<NotFound/>}/>
+        <Route path='/' element={<Layout/>}>
+          <Route index element={<Principal/>}/>
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/registro' element={<Register/>}/>
+          <Route path='/mi-perfil' element={<PerfilUsuario/>}/>
+          <Route path='/contacto' element={<Contacto/>}/>
+          <Route path='/blog' element={<Blog/>}/>
+          <Route path='/nosotros' element={<Nosotros/>}/>
+          <Route path='/tienda' element={<Tienda/>}/>
+          <Route path='/producto/:id' element={<VistaProducto/>}/>
+          <Route path='/my-car' element={<Carrito/>}/>
+          <Route path='*' element={<NotFound/>}/>
+        </Route>
         {/*rutas del Admin*/}
         <Route path='/admin' element={<DashBoard/>}>
           <Route index element={<AdminStats/>}/>
