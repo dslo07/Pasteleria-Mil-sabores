@@ -33,10 +33,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/*rutas del usuario*/}
-        <Route path='/' element={<Layout/>}>
-          <Route index element={<Principal/>}/>
           <Route path='/login' element={<Login/>}/>
           <Route path='/registro' element={<Register/>}/>
+        <Route path='/' element={<Layout/>}>
+          <Route index element={<Principal/>}/>
           <Route path='/mi-perfil' element={<PerfilUsuario/>}/>
           <Route path='/contacto' element={<Contacto/>}/>
           <Route path='/blog' element={<Blog/>}/>
