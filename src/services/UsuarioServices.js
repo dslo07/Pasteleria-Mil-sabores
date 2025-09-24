@@ -28,5 +28,5 @@ export async function loginUsuario({ correo, contrasena }) {
     throw new Error(error.error || "Error al iniciar sesión");
   }
 
-  return await res.json(); // { msg, user }
+  return await res.json();
 }

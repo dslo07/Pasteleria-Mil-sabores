@@ -21,7 +21,7 @@ function CardProdTabla({ producto, eliminarProd }) {
             Precio: {useConvert(producto.precio)} {producto.moneda}
           </span>
           <div className="d-flex gap-2">
-            <Link to={`/admin/productos/editar-producto/${producto.codigo}`}>
+            <Link to={`/admin/productos/editar-producto/${producto.codigo}`} className='text-decoration-none'>
               <button className="btn btn-comprar w-100">
                 Editar 
               </button>

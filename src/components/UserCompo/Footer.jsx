@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import useFetch from '../../hooks/useFetch'
 import metodosImg from '../..//img/metodos-de-pago.webp'
 import emailjs from "emailjs-com";
+import { VITE_EmailApiKey,VITE_ServicesID,VITE_TempleteID } from '../../../env.js';
+
 import AlertModal from '../AlerModal';
 const Footer = () => {
   const { data: categorias, loading } = useFetch("./ApiCategorias.json");

@@ -3,11 +3,12 @@ import SideBar from "../../components/AdminCompo/SideBar";
 import { Outlet } from "react-router-dom";
 import { FaBars } from "react-icons/fa6";
 import { userContext } from '../../context/user/userContext'
+
+
 const DashBoard = () => {
   const usuario = JSON.parse(localStorage.getItem("usuario"))
-  const userName = `${usuario.nombre} ${usuario.apellido_paterno}`;
+  const userName = "Harold"//`${usuario.nombre} ${usuario.apellido_paterno}`;
 
-  
   return (  
     <main className="d-flex vh-100 position-relative">
       {/* Sidebar fijo en desktop */}

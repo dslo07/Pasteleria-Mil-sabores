@@ -4,6 +4,7 @@ import { userContext } from '../../context/user/userContext';
 import { carContext } from '../../context/carrito/carContext';
 import useFetch from '../../hooks/useFetch';
 import logoPasteleria from '../../img/nombre-logo.png';
+import { FaUserCheck } from "react-icons/fa6";
 
 function NavBar() {
   const { isLogin } = useContext(userContext);
@@ -104,19 +105,27 @@ function NavBar() {
         <div className='d-flex gap-2 flex-row-reverse'>
 
             {/* Botón carrito o login */}
-            {!isLogin && (
+            {isLogin ? (
+                <div className='d-flex gap-2'>
+                  <NavLink to="/my-car">
+                    <button className="btn btn-outline-success d-flex gap-2 text-decoration-none">
+                      <i className="bi bi-basket3-fill"></i>
+                      <span className="text-decoration-none">{total}</span>
+                    </button>
+                  </NavLink>
+                  <NavLink to="/mi-perfil">
+                    <button className="btn btn-outline-success d-flex gap-2 text-decoration-none">
+                      <FaUserCheck/>
+                    </button>
+                  </NavLink>
+                </div>
+            ) : (  
             <NavLink to="/login">
                 <button className="btn btn-outline-success">
                   <i className="bi bi-person-circle text-success"></i>
                 </button>
               </NavLink>
-            ) }
-                <NavLink to="/my-car">
-                  <button className="btn btn-outline-success d-flex gap-2 text-decoration-none">
-                    <i className="bi bi-basket3-fill"></i>
-                    <span className="text-decoration-none">{total}</span>
-                  </button>
-                </NavLink>
+            )}
         </div>
 
         </div>
