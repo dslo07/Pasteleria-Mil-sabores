@@ -10,7 +10,7 @@ const Login = () => {
       const [correo, setCorreo] = useState("");
       const [contrasena, setContrasena] = useState("");
       const [msg, setMsg] = useState("");
-      const { setIsLogin } = useContext(userContext);
+      const { isLogin, setIsLogin } = useContext(userContext);
 
 
   const onSubmit = async (e) => {
@@ -18,12 +18,11 @@ const Login = () => {
     try {
       const user = await loginUsuario({ correo, contrasena }); 
       setMsg("Login satisfactorio");
-      console.log(user.rol.rol_id);
+        setIsLogin(true)
       
       // 1 es de cliente y 2 es de admin
       if (user.rol.rol_id === 1) {
         navigate("/"); // Redirigir a la pagina principal
-        setIsLogin(true)
       }
       else if (user.rol.rol_id === 2) {
         navigate("/admin"); // Redirigir a la pagina de admin
