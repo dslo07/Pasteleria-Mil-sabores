@@ -67,8 +67,21 @@ router.post("/login", async (req, res) => {
     const rol_usuario = await/*Esperar y unicar la Query a la bd*/  client.query(`select id_rol as rol_id from usuario_rol where id_usuario = $1`,
         [usuario.rows[0].user_id]);
 
-    // const datos_cliente = await client.query(`select id_cliente as client_id from cliente_usuario where id_usuario = $1`,
-    //     [usuario.rows[0].user_id]);
+//     const datos_cliente = await client.query(`SELECT
+//     c.nombres_cliente,
+//     c.appat_cliente,
+//     c.apmat_cliente,
+//     c.rut_cliente,
+//     dc.fecha_nacimiento,
+// (d.calle_direccion || ' ' || d.comuna_direccion || ' ' || d.numero_direccion || ' ' || d.region_direccion) AS direccion_cliente
+// FROM usuario
+// as u JOIN cliente_usuario as cs on (u.id_usuario = cs.id_usuario)
+// JOIN cliente as c on (c.id_cliente = cs.id_cliente)
+// JOIN datos_cliente as dc on (c.id_cliente = dc.id_cliente)
+// LEFT JOIN direccion_cliente as direc on (c.id_cliente = direc.id_cliente)
+// LEFT JOIN direccion as d on (d.id_direccion = direc.id_direccion)
+// WHERE u.id_usuario = $1;`,
+//         [usuario.rows[0].user_id]);
 
     await client.query("COMMIT");
     res.status(200).json({ msg: "Login exitoso", user: usuario.rows[0], rol: rol_usuario.rows[0] /*El .rows[0] es como lista empiza en 0 recuerdar */}); 

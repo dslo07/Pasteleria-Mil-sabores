@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from '../../img/nombre-logo.png';
 import { loginUsuario } from '../../services/UsuarioServices';
 import {userContext} from '../../context/user/userContext';
-import { json } from 'express';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,9 +18,9 @@ const Login = () => {
     try {
       const user = await loginUsuario({ correo, contrasena }); 
       setMsg("Login satisfactorio");
-      //console.log(user.rol.rol_id);
-
-      localStorage.setItem("Cliente_datos"), json.stringify(user);
+      // console.log(user.datos_cliente.nombre);
+      console.log(user.rol.rol_id);
+      //localStorage.setItem("Cliente_datos"), json.stringify(user);
 
       // 1 es de cliente y 2 es de admin
       if (user.rol.rol_id === 1) {
