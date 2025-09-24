@@ -18,6 +18,7 @@ const Login = () => {
     try {
       const user = await loginUsuario({ correo, contrasena }); 
       setMsg("Login satisfactorio");
+      
       // console.log(user.datos_cliente.nombre);
       console.log(user.rol.rol_id);
       //localStorage.setItem("Cliente_datos"), json.stringify(user);
