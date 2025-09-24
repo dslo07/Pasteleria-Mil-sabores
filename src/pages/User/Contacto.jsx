@@ -4,7 +4,6 @@ import Footer from '../../components/UserCompo/Footer'
 const Contacto = () => {
   return (
     <>
-      <NavBar></NavBar>
       
     <div className="container py-5 mt-5">
       <div className="row g-4">
@@ -103,7 +102,6 @@ const Contacto = () => {
         </div>
       </div>
     </div>
-   <Footer/>
     </>
   )
 }

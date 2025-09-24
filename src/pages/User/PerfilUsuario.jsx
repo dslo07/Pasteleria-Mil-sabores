@@ -15,7 +15,7 @@ const PerfilUsuario = ()=>{
 
   return(
     <>
-      <NavBar/>
+      {/* <NavBar/> */}
       <div className="container mt-5 p-4">
   <div className="row g-4">
     <div className="col-md-7 d-none d-md-inline">
@@ -138,7 +138,7 @@ const PerfilUsuario = ()=>{
       {
         mostrar && <ModalPerfilUser usuario={usuario}/>
       }
-      <Footer/>
+      {/* <Footer/> */}
     </>
   )
 } 

@@ -34,7 +34,6 @@ const Tienda = () => {
 
   return (
     <>
-      <NavBar />
       <div className='separador'></div>
       <section className='container '>
         <div className="card shadow-sm p-4 my-4">
@@ -121,7 +120,6 @@ const Tienda = () => {
           </div>
         </div>
       </section>
-      <Footer />
     </>
   )
 }
