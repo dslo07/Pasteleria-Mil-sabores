@@ -114,7 +114,7 @@ function NavBar() {
                     </button>
                   </NavLink>
                   <NavLink to="/mi-perfil">
-                    <button className="btn btn-outline-success d-flex gap-2 text-decoration-none">
+                    <button className="btn btn-outline-success d-flex gap-2 text-decoration-none p-2">
                       <FaUserCheck/>
                     </button>
                   </NavLink>
