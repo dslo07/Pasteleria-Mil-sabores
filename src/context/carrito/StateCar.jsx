@@ -77,17 +77,17 @@ const StateCar = ({ children }) => {
   const aplicarCupon = (codigo) => {
     const cuponValido = listaCupones?.find((c) => c.codigo === codigo);
 
-    // if (cuponValido) {
-    //   setCupon(cuponValido); // ✅ guardamos el cupón en el estado
-    //   toast.success('Cupón aplicado!');
-    // } else {
-    //   setCupon({ codigo: '', descuento: 0 }); // limpiamos si no existe
-    //   toast.error('Cupón inválido');
-    // }
+    if (cuponValido) {
+      setCupon(cuponValido); // ✅ guardamos el cupón en el estado
+      toast.success('Cupón aplicado!');
+    } else {
+      setCupon({ codigo: '', descuento: 0 }); // limpiamos si no existe
+      toast.error('Cupón inválido');
+    }
   };
 
 
-//==== queda pendiente validar qye si no hay productos no se puede comprar
+//==== queda pendiente validar que si no hay productos agregados no se puede comprar
 const comprar = () => {
   if (isLogin) {
     toast.promise(
