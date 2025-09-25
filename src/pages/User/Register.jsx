@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import logo from '../../img/nombre-logo.png';
 import { registrarUsuario } from '../../services/UsuarioServices';
 import { useNavigate } from "react-router-dom";
+import { supabase } from '../../Lib/supabase';
   
 function Register() {
 const navigate = useNavigate();
@@ -29,8 +30,21 @@ const navigate = useNavigate();
     setMsg("Debes completar todos los campos obligatorios sino quieres tener problemas. 🔫🔫🔫");
     return;
   }
-
     try {
+      const { correo, contrasena } = form;
+
+      const { data, error } = await supabase.auth.signUp({
+        email: correo,
+        password: contrasena,
+        options: {
+          // data: { }, // guarda nombres, apellidos, nacimiento en user_metadata
+          emailRedirectTo: `${window.location.origin}/http://localhost:5173/`,
+        },
+      });
+
+      if (error) throw error;
+
+      setMsg("✅ Cuenta creada. Revisa tu correo para confirmar tu cuenta.");
       await registrarUsuario(form);  
       setMsg("registrado con exito padre, redirigiendo a login...");
       setTimeout(() => { navigate("/login"); }, 2000);

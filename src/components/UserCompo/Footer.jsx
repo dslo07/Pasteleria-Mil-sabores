@@ -21,10 +21,10 @@ const Footer = () => {
     showModal();
 
     emailjs.send(
-      import.meta.env.VITE_ServicesID, 
-      import.meta.env.VITE_TempleteID,   
+      VITE_ServicesID, 
+      VITE_TempleteID,   
       { user_email: email },
-      import.meta.env.VITE_EmailApiKey   
+      VITE_EmailApiKey   
     ).then(
           (result) => {
             console.log("Email enviado!", result.text);

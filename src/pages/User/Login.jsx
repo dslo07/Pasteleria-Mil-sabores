@@ -17,7 +17,13 @@ const Login = () => {
     e.preventDefault();
     try {
       const user = await loginUsuario({ correo, contrasena }); 
-      
+       var usuario = {
+        id: user.user.id_usuario,
+        correo: correo,
+        rol: { id: user.rol.rol_id, nombre: user.rol.nombre_rol }
+       }
+
+       
       // localStorage.setItem("DatosUsuario", Json.stringify(user));
 
 
