@@ -14,7 +14,7 @@ function CardProdTabla({ producto, eliminarProd }) {
           <div className="d-flex justify-content-between align-items-center gap-2">
             <span className="badge">{producto.categoria}</span>
           </div>
-          <h5 className="fs-3">{producto.nombre}</h5>
+          <h5 >{producto.nombre}</h5>
         </div>
         <div className="mt-auto d-flex flex-column gap-2">
           <span className="badge-precio fw-medium">

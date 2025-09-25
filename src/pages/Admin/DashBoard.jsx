@@ -55,7 +55,7 @@ const DashBoard = () => {
         {/* Header del dashboard */}
         <header className="d-flex justify-content-between align-items-center p-3 bg-white border-bottom shadow-sm sticky-top">
           <div>
-            <h1 className="fs-3 fw-bold text-dark mb-0">
+            <h1 className="fs-3 text-dark mb-0">
               Bienvenido, {userName}
             </h1>
             <p className="text-muted small mb-0">
@@ -69,7 +69,7 @@ const DashBoard = () => {
               width="45"
               className="rounded-circle border shadow-sm"
             />
-            <span className="fw-semibold">Mi Perfil</span>
+            <span >Mi Perfil</span>
           </NavLink>
         </header>
 
