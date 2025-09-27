@@ -49,7 +49,7 @@ const StateCar = ({ children }) => {
       const newProd = { ...prod, inCar: true, cantInCar: 1 };
       setProductos([...productos, newProd]);
     } else {
-      toast.error("El producto ya está en el carrito.");
+  //    toast.error("El producto ya está en el carrito.");
     }
   };
 
