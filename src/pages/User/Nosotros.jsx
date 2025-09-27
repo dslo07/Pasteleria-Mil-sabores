@@ -6,11 +6,9 @@ import Footer from '../../components/UserCompo/Footer'
 function Nosotros() {
   return (
     <>
-      <NavBar/>
       <div className='separador'></div>
       <InfoEmpresa/>
       <Slider/>
-      <Footer/>
     </>
   )
 }

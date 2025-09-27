@@ -20,51 +20,35 @@ const SideBar = () => {
       {/* Menú */}
       <ul className="nav nav-pills flex-column mb-auto">
         <li className="nav-item">
-          <NavLink
-            to="/admin"
-            className={({ isActive }) =>
-              "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")
-            }
-            aria-current="page"
-          >
-            <IoStatsChart className="me-2" />
-            Estadísticas
+          <NavLink  to="/admin"  className={({ isActive }) => "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")}>
+            Dashboard
           </NavLink>
         </li>
 
         <li className="nav-item">
-          <NavLink
-            to="/admin/productos"
-            className={({ isActive }) =>
-              "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")
-            }
-          >
+          <NavLink to="/admin/productos" className={({ isActive }) => "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")}>
             <FaCartShopping className="me-2" />
             Control de Stock
           </NavLink>
         </li>
 
         <li className="nav-item">
-          <NavLink
-            to="/admin/usuarios"
-            className={({ isActive }) =>
-              "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")
-            }
-          >
+          <NavLink to="/admin/usuarios" className={({ isActive }) => "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")}>
             <FaUserCircle className="me-2" />
             Usuarios
           </NavLink>
         </li>
 
         <li className="nav-item">
-          <NavLink
-            to="/admin/blog"
-            className={({ isActive }) =>
-              "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")
-            }
-          >
+          <NavLink to="/admin/blog" className={({ isActive }) =>  "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")}>
             <RiNewsFill className="me-2" />
             Blog
+          </NavLink>
+        </li>
+        <li className="nav-item d-lg-none">
+          <NavLink to="/admin/admin-perfil" className={({ isActive }) =>  "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")}>
+            <RiNewsFill className="me-2" />
+            Mi Perfil
           </NavLink>
         </li>
       </ul>
@@ -73,17 +57,9 @@ const SideBar = () => {
 
       {/* Link a vista de usuario */}
       <div>
-        <NavLink
-          to="/tienda"
-          className="d-flex align-items-center text-white text-decoration-none"
-        >
-          <img
-            src={logotipo}
-            alt=""
-            width="32"
-            height="32"
-            className="rounded-circle me-2"
-          />
+
+        <NavLink to="/tienda" className="d-flex align-items-center text-white text-decoration-none">
+          <img src={logotipo} alt="" width="32" height="32" className="rounded-circle me-2"/>
           <strong>Volver a tienda</strong>
         </NavLink>
       </div>

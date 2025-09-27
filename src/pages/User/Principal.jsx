@@ -9,11 +9,9 @@ const Main = () => {
 
   return (
     <>
-      <NavBar/>
       <Header/>
       <ProductosMain/>
       <Slider/>
-      <Footer/>
     </>
   )
 }

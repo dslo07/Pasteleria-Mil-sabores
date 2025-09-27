@@ -8,7 +8,6 @@ const Carrito = () => {
   const [codigoCupon,setCodigoCupon] = useState("")
   return (
     <>
-      <NavBar/>
      <section>
   <div className="separador"></div>
   <div className="container">

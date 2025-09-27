@@ -4,18 +4,27 @@ import Footer from '../../components/UserCompo/Footer'
 import ModalPerfilUser from "../../components/UserCompo/ModalPerfilUser";
 const PerfilUsuario = ()=>{
   const [mostrar,setMostrar] = useState(false)
-    const usuario = {
+  const [usuario,setUsuario] = useState({
     nombre: "Santiago",
-    apellidoPat: "lopez",
-    apellidoMat: "marulanda",
+    apellidoPat: "Lopez",
+    apellidoMat: "Marulanda",
+    correo:"Santiago@admin.cl",
     rut: "12.123.456-7",
-    nacimiento: "nacimiento",
+    nacimiento: "25-06-2025",
     direccion: "direccion",
+    comprar: 5
+  })
+  const handleChange = (e)=>{
+    const { name, value } = e.target
+    setUsuario({
+      ...usuario,
+      [name] : value
+    })
   }
 
   return(
     <>
-      <NavBar/>
+      {/* <NavBar/> */}
       <div className="container mt-5 p-4">
   <div className="row g-4">
     <div className="col-md-7 d-none d-md-inline">
@@ -29,9 +38,9 @@ const PerfilUsuario = ()=>{
             <input
               type="text"
               className="form-control"
-              id="inputNombres"
+              name="nombre"
               value={usuario.nombre}
-              onChange={() => {}}
+              onChange={(e) => {handleChange(e)}}
             />
           </div>
 
@@ -41,9 +50,9 @@ const PerfilUsuario = ()=>{
               <input
                 type="text"
                 className="form-control"
-                id="inputAPPat"
+                name="apellidoPat"
                 value={usuario.apellidoPat}
-                onChange={() => {}}
+                onChange={(e) => {handleChange(e)}}
               />
             </div>
             <div className="col-md-6">
@@ -51,9 +60,9 @@ const PerfilUsuario = ()=>{
               <input
                 type="text"
                 className="form-control"
-                id="inputAPMat"
+                name="apellidoMat"
                 value={usuario.apellidoMat}
-                onChange={() => {}}
+                onChange={(e) => {handleChange(e)}}
               />
             </div>
           </div>
@@ -64,9 +73,9 @@ const PerfilUsuario = ()=>{
               <input
                 type="text"
                 className="form-control"
-                id="inputRut"
+                name="rut"
                 value={usuario.rut}
-                onChange={() => {}}
+                onChange={(e) => {handleChange(e)}}
               />
             </div>
             <div className="col-md-6">
@@ -74,9 +83,9 @@ const PerfilUsuario = ()=>{
               <input
                 type="date"
                 className="form-control"
-                id="inputNacimiento"
+                name="nacimiento"
                 value={usuario.nacimiento}
-                onChange={() => {}}
+                onChange={(e) => {handleChange(e)}}
               />
             </div>
           </div>
@@ -86,13 +95,13 @@ const PerfilUsuario = ()=>{
             <input
               type="text"
               className="form-control"
-              id="inputDireccion"
+              name="direccion"
               value={usuario.direccion}
-              onChange={() => {}}
+              onChange={(e) => {handleChange(e)}}
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-100 mt-3">
+          <button type="submit" className="btn btn-comprar w-100 mt-3">
             Confirmar cambios
           </button>
         </form>
@@ -100,7 +109,7 @@ const PerfilUsuario = ()=>{
     </div>
 
     <div className="col-md-5">
-      <div className="card shadow-sm rounded-4 text-center p-4">
+      <div className="card shadow-sm rounded-4 text-center px-4">
         <img
           src="https://avatars.githubusercontent.com/u/147568951?s=400&u=2f8703b990535553a8b915da8db89f4a11115349&v=4"
           alt={`Foto de perfil de ${usuario.nombre}`}
@@ -108,10 +117,10 @@ const PerfilUsuario = ()=>{
           width="120"
         />
 
-        <h4 className="fw-bold mb-0">{usuario.nombre}</h4>
-        <p className="text-muted small">{usuario.correo}</p>
+        <h4 className="fw-bold mb-0">{usuario.nombre}  {usuario.apellidoPat}</h4>
+        <p className="text-muted mb-0 text-lg ">{usuario.correo}</p>
 
-        <hr className="my-3" />
+        <hr />
 
         <ul className="list-unstyled text-start px-3">
           <li className="mb-2">
@@ -124,7 +133,7 @@ const PerfilUsuario = ()=>{
           </li>
           <li className="mb-2">
             <i className="bi bi-bag-check me-2 text-success"></i>
-            <strong>Compras:</strong> 5
+            <strong>Compras:</strong> {usuario.comprar}
           </li>
         </ul>
 
@@ -138,7 +147,7 @@ const PerfilUsuario = ()=>{
       {
         mostrar && <ModalPerfilUser usuario={usuario}/>
       }
-      <Footer/>
+      {/* <Footer/> */}
     </>
   )
 } 

@@ -105,16 +105,16 @@ function NavBar() {
         <div className='d-flex gap-2 flex-row-reverse'>
 
             {/* Botón carrito o login */}
-            {isLogin ? (
-                <div className='d-flex gap-2'>
                   <NavLink to="/my-car">
                     <button className="btn btn-outline-success d-flex gap-2 text-decoration-none">
                       <i className="bi bi-basket3-fill"></i>
                       <span className="text-decoration-none">{total}</span>
                     </button>
                   </NavLink>
+            {isLogin ? (
+                <div className='d-flex gap-2'>
                   <NavLink to="/mi-perfil">
-                    <button className="btn btn-outline-success d-flex gap-2 text-decoration-none">
+                    <button className="btn btn-outline-success d-flex gap-2 text-decoration-none p-2">
                       <FaUserCheck/>
                     </button>
                   </NavLink>

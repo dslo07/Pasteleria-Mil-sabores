@@ -19,13 +19,14 @@ function EditarProd() {
 
   if (!producto) return <p>Producto no encontrado</p>;
 
-  // Manejar cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProducto({ ...producto, [name]: value });
   };
 
   // Guardar cambios en localStorage
+
+  //solo los guarda en el localstorage falta hacer que se renderice los cambios
   const handleGuardar = () => {
     const productos = JSON.parse(localStorage.getItem("productos")) || [];
     const index = productos.findIndex(p => p.codigo === producto.codigo);
@@ -43,7 +44,13 @@ function EditarProd() {
 
   return (
     <div className="container my-4">
-      <h2 className="mb-4">Editar Producto</h2>
+      <div className="d-flex justify-content-between">
+        <h2 className="mb-4">Editar Producto</h2>
+        <div>
+          <button className=" btn btn-comprar" onClick={()=>navigate(-1)}> Volver</button>
+        </div>
+        
+      </div>
       <div className="row g-4">
         {/* Columna izquierda: Imagen */}
         <div className="col-12 col-md-4">
