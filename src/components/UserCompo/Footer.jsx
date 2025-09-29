@@ -1,9 +1,47 @@
 import React from 'react'
 import useFetch from '../../hooks/useFetch'
 import metodosImg from '../..//img/metodos-de-pago.webp'
-
+import emailjs from "emailjs-com";
+import AlertModal from '../AlerModal';
 const Footer = () => {
-  const { data: categorias, loading } = useFetch("./ApiCategorias.json")
+  const serviceID = import.meta.env.VITE_ServicesID;
+  const templateID = import.meta.env.VITE_TempleteID;
+  const publicKey = import.meta.env.VITE_EmailApiKey;
+
+  const { data: categorias, loading } = useFetch("./ApiCategorias.json");
+  const [email, setEmail] = useState("");
+  const [modal,setModal] = useState(false);
+  let tituloModal = "Te hemos enviado un correo de confirmación!"
+  let descModal = "¡Suscríbete y recibe nuestras últimas novedades, ofertas exclusivas y recetas especiales directamente en tu correo! No te pierdas ninguna actualización de Mil Sabores."
+  
+  const showModal = () => {
+    setModal(true); // ✅ Solo se llama en un evento, no en el render
+  };
+  
+   const handleSubmit = (e) => {
+    e.preventDefault();
+    showModal();
+
+        emailjs.send(
+          serviceID,
+          templateID,
+          { user_email: email },
+          publicKey
+        )
+        .then(
+          (result) => {
+            console.log("Email enviado!", result.text);
+            showModal()
+          },
+          (error) => {
+            tituloModal = "Ha ocurrido un error"
+            descModal = error.text
+            showModal()
+          }
+        );
+   }
+  
+
 
   return (
     <footer className="p-4 bg-white">
