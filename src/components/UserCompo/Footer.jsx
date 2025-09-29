@@ -15,7 +15,7 @@ const Footer = () => {
   let descModal = "¡Suscríbete y recibe nuestras últimas novedades, ofertas exclusivas y recetas especiales directamente en tu correo! No te pierdas ninguna actualización de Mil Sabores."
   
   const showModal = () => {
-    setModal(true); // ✅ Solo se llama en un evento, no en el render
+    setModal(true); 
   };
   
    const handleSubmit = (e) => {
