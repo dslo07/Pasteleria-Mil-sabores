@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { userContext } from './userContext'
-
 const StateUser = ({ children }) => {
+
   const [isLogin,setIsLogin] = useState(false)
+
   return (
-    <userContext.Provider value={{isLogin}} >
+    <userContext.Provider value={{isLogin,setIsLogin}} >
       {children}
     </userContext.Provider>
 

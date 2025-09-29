@@ -1,22 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-function ArticuloCard() {
+
+function ArticuloCard({ titulo, descripcion, fecha,img }) {
   return (
-    <>
-      <div class="card mb-3">
-        <img src="..." class="card-img-top" alt="..."/>
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-          <div>
-            <Link to='/' className='text-decoration-none'>
-              <button className='btn btn-comprar rounded text-decoration-none '>Ver Articulo</button>
-            </Link>
-          </div>
+    <div className="card mb-3">
+      <img src={img} className="card-img-top" alt={titulo}/>
+      <div className="card-body">
+        <h5 className="card-title">{titulo}</h5>
+        <p className="card-text">{descripcion}</p>
+        <p className="card-text">
+          <small className="text-body-secondary">Última actualización: {fecha}</small>
+        </p>
+        <div className='d-flex gap-2'>
+          <Link to='/' className='text-decoration-none'>
+            <button className='btn btn-comprar rounded'>Ver Artículo</button>
+          </Link>
+            <button className='btn btn-comprar rounded'>Editar Artículo</button>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

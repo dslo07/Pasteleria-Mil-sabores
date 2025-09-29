@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useFetch from '../../hooks/useFetch'
 import metodosImg from '../..//img/metodos-de-pago.webp'
 import emailjs from "emailjs-com";
@@ -45,6 +45,10 @@ const Footer = () => {
 
   return (
     <footer className="p-4 bg-white">
+      { modal && 
+      <AlertModal setModal={setModal} 
+                  titulo={tituloModal}
+                  desc={ descModal}/>}
       <div className="row">
         {/* Navegación */}
         <div className="col-12 col-md-6 col-lg-2 mb-4">
@@ -82,7 +86,7 @@ const Footer = () => {
 
         {/* Newsletter */}
         <div className="col-12 col-md-6 col-lg-5 mb-4">
-          <form>
+          <form onSubmit={handleSubmit}>
             <h5>Obtén las últimas novedades de Mil Sabores</h5>
             <div className="d-flex flex-column flex-sm-row w-100 gap-2 mt-3">
               <input

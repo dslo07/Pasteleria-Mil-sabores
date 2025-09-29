@@ -14,6 +14,7 @@
     --color-badge-borde: #FFC0CB;
 }
 
+
 /* tipografía */
 body {
     font-family: "Lato", sans-serif;
@@ -23,7 +24,9 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: "Pacifico";
 }
-
+.normal-text{
+    font-family: 'lato' ;
+}
 /* estilos de la carta de productos */
 .h5 {
     font-weight: 900;
@@ -66,6 +69,7 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 20px;
     padding: 5px;
     text-decoration: none;
+    
 }
 
 .btn-general {
@@ -141,11 +145,30 @@ height: 100%;
 }
 
 /*generales*/
+.text-brown{
+    color: var(--color-boton) !important;
+}
+
   .separador {
       border-top: 1px solid #ccc; /* Light gray line */
       margin-top: 3rem; /* Add space above */
       margin-bottom: 3rem; /* Add space below */
     }
+
+.bg-header, .bg-blog{
+    height: 80vh !important;
+    background-size:cover;
+    background-position-y: left;
+}
+.bg-header{
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0, 0, 0, 0.61)), 
+                    url('../src/img/bg-header.jpg');
+}
+.bg-blog{
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0, 0, 0, 0.61)), 
+                    url('../src/img/bg-blog.jpg');
+}
+
 /*scroll bar de carrito de compras */
 .custom-scroll::-webkit-scrollbar {
   width: 10px;              /* ancho de la barra */
@@ -185,3 +208,40 @@ height: 100%;
 .lato-regular-italic { font-family: "Lato", sans-serif; font-weight: 400; font-style: italic; }
 .lato-bold-italic { font-family: "Lato", sans-serif; font-weight: 700; font-style: italic; }
 .lato-black-italic { font-family: "Lato", sans-serif; font-weight: 900; font-style: italic; }
+
+
+
+/* estilos admin */
+.bg-dash{
+    background-color:var(--color-boton-hover);
+}
+.nav-link.active {
+  background-color: var(--color-boton) !important; /* tu color de fondo */
+  color: #fff !important;              /* color del texto */
+} 
+/*hover*/
+.card-hover:hover{
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: var(--card-shadow-hover);
+    cursor:pointer;
+}
+.bg-brown{
+    
+}
+
+.tag-rol,.tag-estado,.tag-inactivo {
+    border:  1px solid  ;
+  background-color: var(--color-boton) ; /* bg-dark */
+  color: #fff;              /* text-white */
+  text-align: center;       /* text-center */
+  padding-left: 0.8rem;     /* px-2 (left & right padding = .5rem) */
+  padding-right: 0.8rem;
+  border-radius: 0.25rem;   /* rounded */
+}
+.tag-inactivo{
+    background-color: var(--color-boton-hover);
+    border: solid 1px var(--color-boton);
+    color: var(--color-boton);
+}
