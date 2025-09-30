@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../../../hooks/useFetch";
 
 function EditarProd() {
   const { data: catalogo } = useFetch("/ApiProductos.json");

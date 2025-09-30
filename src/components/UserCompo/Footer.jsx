@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import useFetch from '../../hooks/useFetch'
 import metodosImg from '../..//img/metodos-de-pago.webp'
 import emailjs from "emailjs-com";
-import { VITE_EmailApiKey,VITE_ServicesID,VITE_TempleteID } from '../../../env';
 import AlertModal from '../AlerModal';
 const Footer = () => {
   const { data: categorias, loading } = useFetch("./ApiCategorias.json");
@@ -12,7 +11,7 @@ const Footer = () => {
   let descModal = "¡Suscríbete y recibe nuestras últimas novedades, ofertas exclusivas y recetas especiales directamente en tu correo! No te pierdas ninguna actualización de Mil Sabores."
   
   const showModal = () => {
-    setModal(true); // ✅ Solo se llama en un evento, no en el render
+    setModal(true);
   };
   
    const handleSubmit = (e) => {
