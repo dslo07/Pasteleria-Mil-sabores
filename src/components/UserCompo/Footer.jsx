@@ -4,6 +4,10 @@ import metodosImg from '../..//img/metodos-de-pago.webp'
 import emailjs from "emailjs-com";
 import AlertModal from '../AlerModal';
 const Footer = () => {
+  const serviceID = import.meta.env.VITE_ServicesID;
+  const templateID = import.meta.env.VITE_TempleteID;
+  const publicKey = import.meta.env.VITE_EmailApiKey;
+
   const { data: categorias, loading } = useFetch("./ApiCategorias.json");
   const [email, setEmail] = useState("");
   const [modal,setModal] = useState(false);
@@ -11,19 +15,19 @@ const Footer = () => {
   let descModal = "¡Suscríbete y recibe nuestras últimas novedades, ofertas exclusivas y recetas especiales directamente en tu correo! No te pierdas ninguna actualización de Mil Sabores."
   
   const showModal = () => {
-    setModal(true);
-  };
+
+    setModal(true); 
+
   
    const handleSubmit = (e) => {
     e.preventDefault();
     showModal();
 
-    emailjs
-        .send(
-          VITE_ServicesID,    // lo obtienes de EmailJS
-          VITE_TempleteID,   // lo configuras en EmailJS
+        emailjs.send(
+          serviceID,
+          templateID,
           { user_email: email },
-          VITE_EmailApiKey     // tu public key de EmailJS
+          publicKey
         )
         .then(
           (result) => {
