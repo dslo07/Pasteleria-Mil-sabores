@@ -85,7 +85,7 @@ WHERE u.id_usuario = $1;`,
 
     await client.query("COMMIT");
     res.status(200).json({ msg: "Login exitoso", user: usuario.rows[0], rol: rol_usuario.rows[0] /*El .rows[0] es como lista empiza en 0 recuerdar */
-    , datos: datos_cliente.rows[0]
+    , datos: datos_cliente.rows
     }); 
     // Cuando la repuesta sea 200 ok pasara eb formato Json mensaje y la variable user 
     // que contiene el id del usuario. esto se pasara para el front.

@@ -33,21 +33,21 @@ const navigate = useNavigate();
     try {
       const { correo, contrasena } = form;
 
-      const { data, error } = await supabase.auth.signUp({
-        email: correo,
-        password: contrasena,
-        options: {
-          // data: { }, // guarda nombres, apellidos, nacimiento en user_metadata
-          emailRedirectTo: `${window.location.origin}/http://localhost:5173/`,
-        },
-      });
+    const { data, error } = await supabase.auth.signUp({
+      email: correo,
+      password: contrasena,
+      options: {
+          emailRedirectTo: "https://mil-sabores-tau.vercel.app",
+      },
+    });
+
 
       if (error) throw error;
 
-      setMsg("✅ Cuenta creada. Revisa tu correo para confirmar tu cuenta.");
+      // setMsg("Cuenta creada. Revisa tu correo para confirmar tu cuenta.");
       await registrarUsuario(form);  
       setMsg("registrado con exito padre, redirigiendo a login...");
-      setTimeout(() => { navigate("/login"); }, 2000);
+      //setTimeout(() => { navigate("/login"); }, 2000);
     } catch (err) {
       setMsg("Error: " + err.message);
     }

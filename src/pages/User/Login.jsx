@@ -22,6 +22,7 @@ const Login = () => {
         correo: correo,
         rol: { id: user.rol.rol_id, nombre: user.rol.nombre_rol }
        }
+       console.log(user);
 
        
       // localStorage.setItem("DatosUsuario", Json.stringify(user));
@@ -32,13 +33,13 @@ const Login = () => {
       
       // 1 es de cliente y 2 es de admin
       if (user.rol.rol_id === 1) {
-        navigate("/"); // Redirigir a la pagina principal
+        // navigate("/"); // Redirigir a la pagina principal
       }
       else if (user.rol.rol_id === 2) {
-        navigate("/admin"); // Redirigir a la pagina de admin
+        // navigate("/admin"); // Redirigir a la pagina de admin
       }
       else {
-        navigate("/"); // Redirigir a la pagina principal
+        // navigate("/"); // Redirigir a la pagina principal
       }
 
     } catch (err) {
