@@ -3,6 +3,7 @@ import useFetch from '../../hooks/useFetch'
 import metodosImg from '../..//img/metodos-de-pago.webp'
 import emailjs from "emailjs-com";
 import AlertModal from '../AlerModal';
+import { VITE_ServicesID, VITE_TempleteID,VITE_EmailApiKey } from '../../../env'
 const Footer = () => {
   const { data: categorias, loading } = useFetch("./ApiCategorias.json");
   const [email, setEmail] = useState("");
@@ -92,6 +93,8 @@ const Footer = () => {
                 className="form-control"
                 placeholder="Correo electrónico"
                 aria-label="Correo electrónico"
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
               <button
                 className="btn btn-primary"
