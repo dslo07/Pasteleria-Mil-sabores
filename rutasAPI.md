@@ -28,6 +28,10 @@
 ## Registro
   * Registrar: http://localhost:5174/api/usuarios/crear
 
+
+## Documentacion con Swagger
+  * Swagger: http://localhost:5174/docs
+
 # === Por Terminar === 
 
 ## Usuario
@@ -46,8 +50,6 @@
   Terminar End-Points.
 
   Integrar End-Points a React.
-
-  Pruebas Unitarias con Swagger.
 
   Desplegar en AWS.
 
