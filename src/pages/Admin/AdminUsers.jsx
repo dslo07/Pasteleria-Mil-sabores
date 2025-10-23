@@ -5,7 +5,6 @@ import CompoContent from "../../components/AdminCompo/CompoContent";
 
 const AdminUsers = () => { 
   const { data: usuarios } = useFetch("/ApiUsuarios.json");
-  console.log(usuarios);
   
   
   return (

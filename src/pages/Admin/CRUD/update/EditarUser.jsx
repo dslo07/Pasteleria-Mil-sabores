@@ -11,8 +11,9 @@ function EditarUser() {
 
   // Cargar producto desde el catálogo
   useEffect(() => {
-    if (usuarios) {
-      const user = usuarios.find(p => p.user == id);
+    if (usuarios) {      
+      const user = usuarios.find(us => us.id == id);
+      
       if (user) setUsuario(user);
     }
   }, [id, usuarios]);
@@ -84,6 +85,18 @@ return (
             onChange={handleChange}
           />
         </div>
+        <div className="mb-3">
+          <label className="form-label">Estado</label>
+          <select
+            className="form-select"
+            name="estado"
+            value={usuario.estado}
+            onChange={handleChange}
+          >
+            <option value={true}>Activo</option>
+            <option value={false}>Inactivo</option>
+          </select>
+        </div>
       </div>
 
       {/* Columna derecha: Más información */}
@@ -130,20 +143,9 @@ return (
             <option value="Admin">Admin</option>
           </select>
         </div>
-        <div className="mb-3">
-          <label className="form-label">Estado</label>
-          <select
-            className="form-select"
-            name="estado"
-            value={usuario.estado}
-            onChange={handleChange}
-          >
-            <option value={true}>Activo</option>
-            <option value={false}>Inactivo</option>
-          </select>
-        </div>
+        
 
-        <button className="btn btn-comprar" onClick={handleGuardar}>
+        <button className="btn btn-comprar" onClick={()=>{}}>
           Guardar Cambios
         </button>
       </div>

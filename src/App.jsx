@@ -23,10 +23,11 @@ import CrearProd from './pages/Admin/crud/create/CrearProd'
 import CrearUser from './pages/Admin/crud/create/CrearUser'
 import CrearArticulo from './pages/Admin/crud/create/CrearArticulo'
 import EditarProd from './pages/Admin/crud/update/EditarProd'
-import EditarUser from './pages/Admin/crud/update/EditarUser'
+import EditarUser from './pages/Admin/CRUD/update/EditarUser'
 
 // Toast (alert)
 import toast, { Toaster } from 'react-hot-toast';
+
 function App() {
   return (
     <>
