@@ -1,10 +1,8 @@
-import NavBar from '../../components/UserCompo/NavBar'
 import ArticuloCard from '../../components/UserCompo/ArticuloCard'
-import Footer from '../../components/UserCompo/Footer'
 import useFetch from "../../hooks/useFetch";
 
 function Blog() {
-  const { data: blogs } = useFetch("/ApiBlogs.json");
+  const { data: blogs } = useFetch("http://localhost:5174/api/blogs");
   
   return (
     <>
@@ -24,10 +22,10 @@ function Blog() {
             blogs.map((blog, index) => (
               <div className='col-md-6 col-lg-4 mb-4' key={index}>
                 <ArticuloCard
-                  titulo={blog.titulo}
-                  descripcion={blog.descripcion}
-                  fecha={blog.fecha}
-                  img={blog.img}
+                  titulo={blog.titulo_blogs}
+                  descripcion={blog.descripcion_blogs}
+                  fecha={blog.fecha_blogs}
+                  img={blog.imagen}
                 />
               </div>
             ))

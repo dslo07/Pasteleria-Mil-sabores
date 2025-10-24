@@ -1,45 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const CrearProd = () => {
   const [producto, setProducto] = useState({
-    codigo: "",
-    categoria: "",
-    nombre: "",
-    precio: "",
-    moneda: "CLP",
-    imagenURL: "",
-    descripcion: "",
-    cantInCar: 0,
+    codigo_producto: "",
+    id_categoria: "",
+    nombre_producto: "",
+    decripcion_producto: "", // ⚠️ coincidir con tu API
+    precio_producto: "",
+    imagen_producto: "",
   });
+
+  const [categorias, setCategorias] = useState([]);
+
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const res = await fetch("http://localhost:5174/api/categorias");
+        const data = await res.json();
+        setCategorias(data);
+      } catch (error) {
+        console.error("Error cargando categorías:", error);
+      }
+    };
+    fetchCategorias();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProducto({ ...producto, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Producto creado:", producto);
-    alert("✅ Producto creado con éxito");
-    setProducto({
-      codigo: "",
-      categoria: "",
-      nombre: "",
-      precio: "",
-      moneda: "CLP",
-      imagenURL: "",
-      descripcion: "",
-      inCar: false,
-      cantInCar: 0,
-    });
+
+    // Convertir tipos a número si es necesario
+    const body = {
+      ...producto,
+      id_categoria: Number(producto.id_categoria),
+      precio_producto: Number(producto.precio_producto),
+    };
+
+    try {
+      const res = await fetch("http://localhost:5174/api/productos/crear-producto", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Error al crear el producto");
+      }
+
+      const data = await res.json();
+      alert(`✅ Producto creado con éxito: ${data.producto.nombre_producto}`);
+
+      // Reset formulario
+      setProducto({
+        codigo_producto: "",
+        id_categoria: "",
+        nombre_producto: "",
+        decripcion_producto: "",
+        precio_producto: "",
+        imagen_producto: "",
+      });
+    } catch (error) {
+      console.error(error);
+      alert(`No se pudo crear el producto: ${error.message}`);
+    }
   };
 
   return (
     <div className="container mt-4">
-      <h3 className=" text-brown">Crear Producto</h3>
-      <form onSubmit={handleSubmit} className="card p-4 shadow-sm ">
+      <h3 className="text-brown">Crear Producto</h3>
+      <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
         <div className="row">
-          {/* Columna izquierda */}
           <div className="col-12 col-md-6">
             <div className="mb-3">
               <label className="form-label">Código</label>
@@ -47,8 +82,8 @@ const CrearProd = () => {
                 type="text"
                 className="form-control"
                 placeholder="EJ: TT1111"
-                name="codigo"
-                value={producto.codigo}
+                name="codigo_producto"
+                value={producto.codigo_producto}
                 onChange={handleChange}
                 required
               />
@@ -56,8 +91,19 @@ const CrearProd = () => {
 
             <div className="mb-3">
               <label className="form-label">Categoría</label>
-              <select name="categoria" id="catSelect" className="form-control">
-                <option value="">cat1 </option>
+              <select
+                name="id_categoria"
+                className="form-control"
+                value={producto.id_categoria}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Seleccione categoría</option>
+                {categorias.map((cat) => (
+                  <option key={cat.id_categoria} value={cat.id_categoria}>
+                    {cat.nombre_categoria}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -66,9 +112,9 @@ const CrearProd = () => {
               <input
                 type="text"
                 className="form-control"
-                name="nombre"
+                name="nombre_producto"
                 placeholder="EJ: torta redonda chocolate"
-                value={producto.nombre}
+                value={producto.nombre_producto}
                 onChange={handleChange}
                 required
               />
@@ -79,44 +125,29 @@ const CrearProd = () => {
               <input
                 type="number"
                 className="form-control"
-                name="precio"
+                name="precio_producto"
                 placeholder="EJ: 25000"
-                value={producto.precio}
+                value={producto.precio_producto}
                 onChange={handleChange}
                 required
               />
             </div>
           </div>
 
-          {/* Columna derecha */}
           <div className="col-12 col-md-6">
-            <div className="mb-3">
-              <label className="form-label">Moneda</label>
-              <select
-                className="form-select"
-                name="moneda"
-                value={producto.moneda}
-                onChange={handleChange}
-              >
-                <option value="CLP">CLP</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-              </select>
-            </div>
-
             <div className="mb-3">
               <label className="form-label">Imagen (URL)</label>
               <input
                 type="text"
                 className="form-control"
-                name="imagenURL"
+                name="imagen_producto"
                 placeholder="EJ: freepik.com/foto-de-pastel-rosa"
-                value={producto.imagenURL}
+                value={producto.imagen_producto}
                 onChange={handleChange}
               />
-              {producto.imagenURL && (
+              {producto.imagen_producto && (
                 <img
-                  src={producto.imagenURL}
+                  src={producto.imagen_producto}
                   alt="preview"
                   className="img-fluid mt-2 rounded"
                   style={{ maxHeight: "150px" }}
@@ -129,9 +160,9 @@ const CrearProd = () => {
               <textarea
                 className="form-control"
                 rows="3"
-                name="descripcion"
+                name="decripcion_producto"
                 placeholder="EJ: Torta hecha con chocolate vegano"
-                value={producto.descripcion}
+                value={producto.decripcion_producto}
                 onChange={handleChange}
               ></textarea>
             </div>
@@ -140,7 +171,7 @@ const CrearProd = () => {
 
         <div className="text-end">
           <button type="submit" className="btn btn-comprar">
-            Guardar Producto
+            Crear Producto
           </button>
         </div>
       </form>

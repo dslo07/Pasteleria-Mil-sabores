@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "../../../../hooks/useFetch";
 
+
 function EditarProd() {
   const { codigo_producto } = useParams();
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ function EditarProd() {
       navigate("/admin/productos");
     } catch (err) {
       console.error(err);
-      toast.error("No se pudo guardar el producto");
+      toast.error("No se pudo guardar el producto",err);
     }
   };
 

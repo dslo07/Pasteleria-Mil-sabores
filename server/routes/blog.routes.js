@@ -31,28 +31,86 @@ blogRouter.post("/crear-blog", async (req, res) => {
 // obtener todos los Blog
 blogRouter.get("/", async (_req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM blogs");
-    res.json(result.rows);
+    const result = await pool.query(`
+      SELECT
+        b.id_blogs,
+        b.titulo_blogs,
+        b.descripcion_blogs,
+        b.imagen_blogs -- esta columna es BYTEA o puede ser texto
+      FROM blogs b;
+    `);
+
+    const blogs = result.rows.map(b => {
+      let imagenFinal = null;
+
+      if (b.imagen_blogs) {
+        const valor = b.imagen_blogs.toString();
+
+        // Si empieza con "http", asumimos que ya es una URL válida
+        if (valor.startsWith("http")) {
+          imagenFinal = valor;
+        } else {
+          // Si realmente es binario, convertir a base64
+          const base64 = b.imagen.toString("base64");
+          imagenFinal = `data:image/png;base64,${base64}`;
+        }
+      }
+
+      return {
+        ...b,
+        imagen: imagenFinal,
+      };
+    });
+
+    res.json(blogs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+//obtener blog por id
+blogRouter.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(`
+      SELECT
+        b.id_blogs,
+        b.titulo_blogs,
+        b.descripcion_blogs,
+        b.imagen_blogs
+      FROM blogs b
+      WHERE b.id_blogs = $1;
+    `, [id]); // ⚠️ Pasar el parámetro
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Blog no encontrado" });
+    }
+
+    const b = result.rows[0];
+
+    let imagenFinal = null;
+
+    if (b.imagen_blogs) {
+      const valor = b.imagen_blogs.toString();
+
+      if (valor.startsWith("http")) {
+        imagenFinal = valor;
+      } else {
+        const base64 = b.imagen_blogs.toString("base64"); // ⚠️ usar la propiedad correcta
+        imagenFinal = `data:image/png;base64,${base64}`;
+      }
+    }
+
+    res.json({
+      ...b,
+      imagen: imagenFinal,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-//obtener blog por id
-blogRouter.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await pool.query("SELECT * FROM blogs WHERE id_blogs = $1", [id]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "blog no encontrado" });
-    }else{
-      res.status(201).json({ msg: "blog Encontrado", Blog: result.rows[0] });
-    }
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+
+
 // actualizar categoria
 blogRouter.put("/actualizar-blog/:id", async (req, res) => {
   const { id } = req.params;

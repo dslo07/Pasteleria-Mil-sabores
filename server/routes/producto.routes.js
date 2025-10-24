@@ -115,6 +115,7 @@ productoRouter.get("/:codigo_producto", async (req, res) => {
       SELECT
         p.codigo_producto,
         c.nombre_categoria,
+        c.id_categoria,        
         p.nombre_producto,
         p.decripcion_producto,
         p.precio_producto,
@@ -217,12 +218,12 @@ productoRouter.put("/:codigo_producto", async (req, res) => {
 
 
 // borrar categoria 
-productoRouter.delete("/borrar-producto/:id", async (req, res) => {
-  const { id } = req.params;
+productoRouter.delete("/borrar-producto/:codigo_producto", async (req, res) => {
+  const { codigo_producto } = req.params;
   try {
     const result = await pool.query(
-      "DELETE FROM producto WHERE id_producto = $1 RETURNING *",
-      [id]
+      "DELETE FROM producto WHERE codigo_producto = $1 RETURNING *",
+      [codigo_producto]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Producto no encontrado" });
