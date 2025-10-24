@@ -64,69 +64,157 @@ productoRouter.post("/crear-producto", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-// obtener todos las categorias
+// obtener todos los productos
 productoRouter.get("/", async (_req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM producto");
-    res.json(result.rows);
+    const result = await pool.query(`
+      SELECT
+        p.codigo_producto,
+        c.nombre_categoria,
+        p.nombre_producto,
+        p.decripcion_producto,
+        p.precio_producto,
+        p.imagen_producto
+      FROM producto p
+      INNER JOIN categoria c ON p.id_categoria = c.id_categoria;
+    `);
+
+    const productos = result.rows.map((p) => {
+      let imagenFinal = null;
+
+      if (p.imagen_producto) {
+        const valor = p.imagen_producto.toString();
+
+        // Si empieza con "http", asumimos que ya es una URL válida
+        if (valor.startsWith("http")) {
+          imagenFinal = valor;
+        } else {
+          // Si realmente es binario, convertir a base64
+          const base64 = p.imagen_producto.toString("base64");
+          imagenFinal = `data:image/png;base64,${base64}`;
+        }
+      }
+
+      return {
+        ...p,
+        imagen_producto: imagenFinal,
+      };
+    });
+
+    res.json(productos);
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+productoRouter.get("/:codigo_producto", async (req, res) => {
+  const { codigo_producto } = req.params;
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT
+        p.codigo_producto,
+        c.nombre_categoria,
+        p.nombre_producto,
+        p.decripcion_producto,
+        p.precio_producto,
+        p.imagen_producto,
+        p.imagen_producto
+      FROM producto p
+      INNER JOIN categoria c ON p.id_categoria = c.id_categoria
+      WHERE p.codigo_producto = $1;
+      `,
+      [codigo_producto]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    const producto = result.rows[0];
+
+    // Detectar si imagen_producto viene como Buffer (bytea)
+    let imagen;
+    if (producto.imagen_producto instanceof Buffer) {
+      // Convertir a base64 con prefijo data
+      imagen = `data:image/png;base64,${producto.imagen_producto.toString("base64")}`;
+    } else if (producto.imagen_url) {
+      // Si existe un campo imagen_url, usarlo
+      imagen = producto.imagen_url;
+    } else {
+      // fallback
+      imagen = null;
+    }
+
+    // Enviar el producto con el campo listo para el frontend
+    res.json({
+      ...producto,
+      imagen_producto: imagen
+    });
+
+  } catch (err) {
+    console.error("Error al obtener producto:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-//obtener categoria por id
-productoRouter.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await pool.query("SELECT * FROM producto WHERE id_producto = $1", [id]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Categoría no encontrada" });
-    }else{
-      res.status(201).json({ msg: "Producto Encontrado", categoria: result.rows[0] });
-    }
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-// actualizar categoria
-productoRouter.put("/actualizar-producto/:id", async (req, res) => {
-  const { id } = req.params;
-  const {  
-    codigo_producto,
-    id_categoria,
+
+
+// Actualizar producto por código
+productoRouter.put("/:codigo_producto", async (req, res) => {
+  const { codigo_producto } = req.params;
+  const {
     nombre_producto,
     decripcion_producto,
     precio_producto,
-    imagen_producto
+    imagen_producto,
+    id_categoria
   } = req.body;
 
-  if (validarDatosProducto(req.body)) {
-    return res.status(400).json({ error: "No puede enviar datos vacios" });
-  }
-
   try {
-const result = await pool.query(
-      `UPDATE producto SET 
-          codigo_producto = $1,
-          id_categoria = $2,
-          nombre_producto = $3,
-          decripcion_producto = $4,
-          precio_producto = $5,
-          imagen_producto = $6
-       WHERE id_producto = $7
-       RETURNING *`,
-      [codigo_producto, id_categoria, nombre_producto, decripcion_producto, precio_producto, imagen_producto, id]
+    // Verificar si el producto existe
+    const existe = await pool.query(
+      "SELECT * FROM producto WHERE codigo_producto = $1",
+      [codigo_producto]
     );
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "producto no encontrado" });
+
+    if (existe.rows.length === 0) {
+      return res.status(404).json({ error: "Producto no encontrado" });
     }
-    res.json({ msg: "Producto actualizado", categoria: result.rows[0] });
+
+    // Actualizar los datos
+    const result = await pool.query(
+      `
+      UPDATE producto
+      SET
+        nombre_producto = $1,
+        decripcion_producto = $2,
+        precio_producto = $3,
+        imagen_producto = $4,
+        id_categoria = $5
+      WHERE codigo_producto = $6
+      RETURNING *;
+      `,
+      [
+        nombre_producto,
+        decripcion_producto,
+        precio_producto,
+        imagen_producto,
+        id_categoria,
+        codigo_producto
+      ]
+    );
+
+    res.json({
+      message: "Producto actualizado correctamente",
+      producto: result.rows[0],
+    });
   } catch (err) {
+    console.error("Error al actualizar producto:", err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // borrar categoria 
 productoRouter.delete("/borrar-producto/:id", async (req, res) => {

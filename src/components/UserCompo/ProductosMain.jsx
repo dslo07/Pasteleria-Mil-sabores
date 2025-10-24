@@ -3,7 +3,7 @@ import useFetch from '../../hooks/useFetch';
 import CardProd from './CardProd';
 
 function ProductosMain() {
-  const { data, loading, error } = useFetch("/ApiProductos.json");
+  const { data, loading, error } = useFetch(" http://localhost:5174/api/productos");
   const productos = Array.isArray(data) ? data : [];
 
   return (

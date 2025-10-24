@@ -32,7 +32,7 @@ process.on("unhandledRejection", (reason, promise) => {
   console.error("❌ Rechazo no manejado:", reason);
 });
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: ["http://localhost:5173", "http://localhost:5174"] }));
 app.use(express.json());
 
 app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDocs));

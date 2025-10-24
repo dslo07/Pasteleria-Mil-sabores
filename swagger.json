@@ -21,9 +21,9 @@
         }
       }
     },
-    "/api/usuario/crear": {
+    "/usuario/crear": {
       "post": {
-        "description": "",
+        "description": "Ruta concreta para crear un usuario en base los parametros necesarios",
         "parameters": [
           {
             "name": "body",
@@ -63,9 +63,9 @@
         }
       }
     },
-    "/api/usuario/login": {
+    "/usuario/login": {
       "post": {
-        "description": "",
+        "description": "Bajo esta mismma ruta se realiza el login de usuario",
         "parameters": [
           {
             "name": "body",
@@ -93,9 +93,9 @@
         }
       }
     },
-    "/api/categorias/crear-categoria": {
+    "/categorias/crear-categoria": {
       "post": {
-        "description": "",
+        "description": "creacion de categorias de productos",
         "parameters": [
           {
             "name": "body",
@@ -123,9 +123,9 @@
         }
       }
     },
-    "/api/categorias/": {
+    "/categorias/": {
       "get": {
-        "description": "",
+        "description": "lista de todas las categorias",
         "responses": {
           "200": {
             "description": "OK"
@@ -136,9 +136,9 @@
         }
       }
     },
-    "/api/categorias/{id}": {
+    "/categorias/{id}": {
       "get": {
-        "description": "",
+        "description": "bucar categoria por id",
         "parameters": [
           {
             "name": "id",
@@ -163,9 +163,9 @@
         }
       }
     },
-    "/api/categorias/actualizar-categoria/{id}": {
+    "/categorias/actualizar-categoria/{id}": {
       "put": {
-        "description": "",
+        "description": "actualizar categoria por id",
         "parameters": [
           {
             "name": "id",
@@ -202,9 +202,9 @@
         }
       }
     },
-    "/api/categorias/borrar-categoria/{id}": {
+    "/categorias/borrar-categoria/{id}": {
       "delete": {
-        "description": "",
+        "description": "borrar una categoria por id",
         "parameters": [
           {
             "name": "id",
@@ -226,9 +226,9 @@
         }
       }
     },
-    "/api/productos/crear-producto": {
+    "/productos/crear-producto": {
       "post": {
-        "description": "",
+        "description": "crear un producto",
         "parameters": [
           {
             "name": "body",
@@ -271,9 +271,9 @@
         }
       }
     },
-    "/api/productos/": {
+    "/productos/": {
       "get": {
-        "description": "",
+        "description": "listar los todos productos",
         "responses": {
           "200": {
             "description": "OK"
@@ -286,7 +286,7 @@
     },
     "/api/productos/{id}": {
       "get": {
-        "description": "",
+        "description": "Buscar producto por id",
         "parameters": [
           {
             "name": "id",
@@ -311,9 +311,9 @@
         }
       }
     },
-    "/api/productos/actualizar-producto/{id}": {
+    "/productos/actualizar-producto/{id}": {
       "put": {
-        "description": "",
+        "description": "actualizar producto por id",
         "parameters": [
           {
             "name": "id",
@@ -365,9 +365,9 @@
         }
       }
     },
-    "/api/productos/borrar-producto/{id}": {
+    "/productos/borrar-producto/{id}": {
       "delete": {
-        "description": "",
+        "description": "borrar una producto por id",
         "parameters": [
           {
             "name": "id",
@@ -389,9 +389,9 @@
         }
       }
     },
-    "/api/blogs/crear-blog": {
+    "/blogs/crear-blog": {
       "post": {
-        "description": "",
+        "description": "Creacion de un nuevo post en el blog",
         "parameters": [
           {
             "name": "body",
@@ -425,9 +425,9 @@
         }
       }
     },
-    "/api/blogs/": {
+    "/blogs/": {
       "get": {
-        "description": "",
+        "description": "listar todos los blogs",
         "responses": {
           "200": {
             "description": "OK"
@@ -438,9 +438,9 @@
         }
       }
     },
-    "/api/blogs/{id}": {
+    "/blogs/{id}": {
       "get": {
-        "description": "",
+        "description": "buscar un blog por id",
         "parameters": [
           {
             "name": "id",
@@ -465,9 +465,9 @@
         }
       }
     },
-    "/api/blogs/actualizar-blog/{id}": {
+    "/blogs/actualizar-blog/{id}": {
       "put": {
-        "description": "",
+        "description": "actualizar un blog por id",
         "parameters": [
           {
             "name": "id",
@@ -510,9 +510,9 @@
         }
       }
     },
-    "/api/blogs/borrar-blog/{id}": {
+    "/blogs/borrar-blog/{id}": {
       "delete": {
-        "description": "",
+        "description": "borra un blog por id",
         "parameters": [
           {
             "name": "id",

@@ -5,7 +5,7 @@ import CardProdTabla from "../../components/AdminCompo/CardProdTabla";
 
 
 const AdminProd = () => {
-  const { data: productos } = useFetch("/ApiProductos.json");
+  const { data: productos } = useFetch("http://localhost:5174/api/productos");
   const [listaProductos, setListaProductos] = useState([]);
 
   // Inicializar el estado con los productos del fetch

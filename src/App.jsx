@@ -54,7 +54,7 @@ function App() {
           <Route path='admin-perfil' element={<PerfilUsuario/>}/>
           <Route path='productos' element={<AdminProd/>}/>
           <Route path='productos/crear-producto' element={<CrearProd/>}/>
-          <Route path="productos/editar-producto/:id" element={<EditarProd />} />
+          <Route path="productos/editar-producto/:codigo_producto" element={<EditarProd />} />
           <Route path='usuarios'   element={<AdminUsers/>}/>
           <Route path='usuarios/crear-usuario' element={<CrearUser/>}/>
           <Route path='usuarios/editar-usuario/:id' element={<EditarUser/>}/>

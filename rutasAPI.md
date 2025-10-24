@@ -45,13 +45,13 @@
   * Realizar compra
 
 # === To Do ===
-  Integrar API WEB TOKEN.
+  Integrar API WEB TOKEN. (opcional, al final)
 
-  Terminar End-Points.
+  Terminar End-Points pendientes.
 
   Integrar End-Points a React.
 
-  Desplegar en AWS.
+  Desplegar en AWS (ultimo).
 
 
 

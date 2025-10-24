@@ -9,7 +9,7 @@ const Footer = ({ nombre }) => {
   const templateID = import.meta.env.VITE_TempleteID;
   const publicKey = import.meta.env.VITE_EmailApiKey;
 
-  const { data: categorias, loading } = useFetch("./ApiCategorias.json");
+  const { data: categorias, loading } = useFetch("http://localhost:5174/api/categorias");
   const [email, setEmail] = useState("");
   const [modal, setModal] = useState(false);
   const [tituloModal, setTituloModal] = useState("Te hemos enviado un correo de confirmación!");
@@ -78,9 +78,9 @@ const Footer = ({ nombre }) => {
             {loading
               ? <li className="dropdown-item">Cargando...</li>
               : categorias.map(cat => (
-                <li key={cat.Nombre}>
+                <li key={cat.nombre_categoria}>
                   <a className="dropdown-item my-2 border-bottom" href="#">
-                    {cat.Nombre}
+                    {cat.nombre_categoria}
                   </a>
                 </li>
               ))}

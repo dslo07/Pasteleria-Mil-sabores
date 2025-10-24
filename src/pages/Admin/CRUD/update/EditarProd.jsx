@@ -4,19 +4,35 @@ import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "../../../../hooks/useFetch";
 
 function EditarProd() {
-  const { data: catalogo } = useFetch("/ApiProductos.json");
-  const { id } = useParams();
+  const { codigo_producto } = useParams();
   const navigate = useNavigate();
-  const [producto, setProducto] = useState();
 
-  // Cargar producto desde el catálogo
+  // 1️⃣ Cargar producto desde la API
+  const { data, loading, error } = useFetch(
+    `http://localhost:5174/api/productos/${codigo_producto}`
+  );
+
+  // 2️⃣ Cargar todas las categorías
+  const { data: categorias = [], loading: loadingCats, error: errorCats } = useFetch(
+    "http://localhost:5174/api/categorias"
+  );
+
+  // 3️⃣ Estado local editable
+  const [producto, setProducto] = useState(null);
+
+  // 4️⃣ Actualizar el estado cuando llega la data
   useEffect(() => {
-    if (catalogo) {
-      const prod = catalogo.find(p => p.codigo == id);
-      if (prod) setProducto(prod);
+    if (data) {
+      setProducto({
+        ...data,
+        // Si tu API envía imagen como base64 o URL, se mantiene igual
+        imagen_producto: data.imagen_producto || "",
+      });
     }
-  }, [id, catalogo]);
+  }, [data]);
 
+  if (loading || loadingCats) return <p>Cargando...</p>;
+  if (error || errorCats) return <p>Error al cargar datos</p>;
   if (!producto) return <p>Producto no encontrado</p>;
 
   const handleChange = (e) => {
@@ -24,101 +40,108 @@ function EditarProd() {
     setProducto({ ...producto, [name]: value });
   };
 
-  // Guardar cambios en localStorage
-
-  //solo los guarda en el localstorage falta hacer que se renderice los cambios
-  const handleGuardar = () => {
-    const productos = JSON.parse(localStorage.getItem("productos")) || [];
-    const index = productos.findIndex(p => p.codigo === producto.codigo);
-
-    if (index >= 0) {
-      productos[index] = producto;
-    } else {
-      productos.push(producto);
+  const handleGuardar = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5174/api/productos/${producto.codigo_producto}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nombre_producto: producto.nombre_producto,
+            decripcion_producto: producto.decripcion_producto,
+            precio_producto: producto.precio_producto,
+            imagen_producto: producto.imagen_producto,
+            id_categoria: producto.id_categoria,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Error al actualizar");
+      toast.success("Producto actualizado correctamente");
+      navigate("/admin/productos");
+    } catch (err) {
+      console.error(err);
+      toast.error("No se pudo guardar el producto");
     }
-
-    localStorage.setItem("productos", JSON.stringify(productos));
-    toast.success("Producto guardado correctamente");
-    navigate("/admin/productos"); // Redirige a la lista de productos
   };
 
   return (
     <div className="container my-4">
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between align-items-center">
         <h2 className="mb-4">Editar Producto</h2>
-        <div>
-          <button className=" btn btn-comprar" onClick={()=>navigate(-1)}> Volver</button>
-        </div>
-        
+        <button className="btn btn-comprar" onClick={() => navigate(-1)}>
+          Volver
+        </button>
       </div>
+
       <div className="row g-4">
-        {/* Columna izquierda: Imagen */}
+        {/* Imagen */}
         <div className="col-12 col-md-4">
           <div className="mb-3">
-            <label className="form-label">URL de la Imagen</label>
+            <label className="form-label">Imagen (base64 o URL)</label>
             <input
               type="text"
               className="form-control"
-              name="imagenURL"
-              value={producto.imagenURL}
+              name="imagen_producto"
+              value={producto.imagen_producto}
               onChange={handleChange}
             />
           </div>
           <img
-            src={producto.imagenURL}
-            alt={producto.nombre}
+            src={producto.imagen_producto}
+            alt={producto.nombre_producto}
             className="img-fluid rounded border"
           />
         </div>
 
-        {/* Columna derecha: Campos del producto */}
+        {/* Campos */}
         <div className="col-12 col-md-8">
           <div className="mb-3">
             <label className="form-label">Nombre</label>
             <input
               type="text"
               className="form-control"
-              name="nombre"
-              value={producto.nombre}
+              name="nombre_producto"
+              value={producto.nombre_producto}
               onChange={handleChange}
             />
           </div>
+
           <div className="mb-3">
             <label className="form-label">Categoría</label>
-            <input
-              type="text"
+            <select
               className="form-control"
-              name="categoria"
-              value={producto.categoria}
+              name="id_categoria"
+              value={producto.id_categoria}
               onChange={handleChange}
-            />
+            >
+              <option value="">Seleccionar categoría</option>
+              {categorias.map((cat) => (
+                <option key={cat.id_categoria} value={cat.id_categoria}>
+                  {cat.nombre_categoria}
+                </option>
+              ))}
+            </select>
           </div>
+
           <div className="mb-3">
             <label className="form-label">Precio</label>
             <input
               type="number"
               className="form-control"
-              name="precio"
-              value={producto.precio}
+              name="precio_producto"
+              value={producto.precio_producto}
               onChange={handleChange}
             />
           </div>
-          <div className="mb-3">
-            <label className="form-label">Moneda</label>
-            <input
-              type="text"
-              className="form-control"
-              name="moneda"
-              value={producto.moneda}
-              onChange={handleChange}
-            />
-          </div>
+
           <div className="mb-3">
             <label className="form-label">Descripción</label>
             <textarea
               className="form-control"
-              name="descripcion"
-              value={producto.descripcion}
+              name="decripcion_producto"
+              value={producto.decripcion_producto}
               onChange={handleChange}
               rows={5}
             />
