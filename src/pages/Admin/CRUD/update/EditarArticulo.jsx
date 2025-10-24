@@ -1,53 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
-const CrearArticulo = () => {
+const EditarArticulo = () => {
+  const { id } = useParams(); // id del artículo
+  const navigate = useNavigate();
   const [articulo, setArticulo] = useState({
     titulo_blogs: "",
     descripcion_blogs: "",
     imagen_blogs: "",
   });
 
+  useEffect(() => {
+    // Cargar datos del artículo
+    const fetchArticulo = async () => {
+      try {
+        const res = await fetch(`http://localhost:5174/api/blogs/${id}`);
+        if (!res.ok) throw new Error("Error al cargar el artículo");
+        const data = await res.json();
+        console.log(articulo);
+        
+        setArticulo({
+          titulo_blogs: data[0].titulo_blogs,
+          descripcion_blogs: data[0].descripcion_blogs,
+          imagen_blogs: data[0].imagen_blogs,
+        });
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      }
+    };
+    fetchArticulo();
+  }, [id]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setArticulo({
-      ...articulo,
-      [name]: value,
-    });
+    setArticulo({ ...articulo, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await fetch("http://localhost:5174/api/blogs/crear-blog", {
-        method: "POST",
+      const res = await fetch(`http://localhost:5174/api/blogs/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(articulo),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || "Error al crear el artículo");
+        throw new Error(errorData.error || "Error al actualizar el artículo");
       }
 
       const data = await res.json();
-      alert(`✅ Artículo creado con éxito: ${data.blog.titulo_blogs}`);
-
-      // Reset formulario
-      setArticulo({
-        titulo_blogs: "",
-        descripcion_blogs: "",
-        imagen_blogs: "",
-      });
+      alert(`✅ Artículo actualizado con éxito: ${data.blog.titulo_blogs}`);
+      navigate("/admin/blogs"); // Redirige a la lista de artículos
     } catch (error) {
       console.error(error);
-      alert(`No se pudo crear el artículo: ${error.message}`);
+      alert(`No se pudo actualizar el artículo: ${error.message}`);
     }
   };
 
   return (
     <div className="container mt-4">
-      <h3 className="mb-4">Crear Artículo</h3>
+      <h3 className="mb-4">Editar Artículo</h3>
       <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
         <div className="mb-3">
           <label className="form-label">Título</label>
@@ -98,7 +113,7 @@ const CrearArticulo = () => {
 
         <div className="text-end">
           <button type="submit" className="btn btn-comprar">
-            Guardar Artículo
+            Actualizar Artículo
           </button>
         </div>
       </form>
@@ -106,4 +121,4 @@ const CrearArticulo = () => {
   );
 };
 
-export default CrearArticulo;
+export default EditarArticulo;

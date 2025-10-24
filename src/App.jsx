@@ -24,7 +24,7 @@ import CrearUser from './pages/Admin/crud/create/CrearUser'
 import CrearArticulo from './pages/Admin/crud/create/CrearArticulo'
 import EditarProd from './pages/Admin/crud/update/EditarProd'
 import EditarUser from './pages/Admin/CRUD/update/EditarUser'
-
+import EditarArticulo from './pages/Admin/CRUD/update/EditarArticulo'
 // Toast (alert)
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -60,6 +60,7 @@ function App() {
           <Route path='usuarios/editar-usuario/:id' element={<EditarUser/>}/>
           <Route path='blog'   element={<AdminBlog  />}/>
           <Route path='blog/crear-blog' element={<CrearArticulo/>}/>
+          <Route path='blog/editar-blog/:id' element={<EditarArticulo/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -16,6 +16,7 @@ const AdminBlog = () => {
                 descripcion={blog.descripcion_blogs}
                 fecha={blog.fecha_blogs}
                 img={blog.imagen}
+                id={blog.id_blogs}
               />
             </div>
           ))}

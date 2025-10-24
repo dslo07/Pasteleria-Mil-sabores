@@ -36,7 +36,7 @@ blogRouter.get("/", async (_req, res) => {
         b.id_blogs,
         b.titulo_blogs,
         b.descripcion_blogs,
-        b.imagen_blogs -- esta columna es BYTEA o puede ser texto
+        b.imagen_blogs 
       FROM blogs b;
     `);
 
