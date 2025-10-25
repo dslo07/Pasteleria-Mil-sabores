@@ -5,7 +5,7 @@ import CardProdTabla from "../../components/AdminCompo/CardProdTabla";
 
 
 const AdminProd = () => {
-  const { data: productos } = useFetch("/ApiProductos.json");
+  const { data: productos } = useFetch("http://localhost:5174/api/productos");
   const [listaProductos, setListaProductos] = useState([]);
 
   // Inicializar el estado con los productos del fetch
@@ -15,13 +15,7 @@ const AdminProd = () => {
     }
   }, [productos]);
 
-  // Función para eliminar un producto
-  const eliminarProd = (codigo) => {
-    const nuevaLista = listaProductos.filter(prod => prod.codigo !== codigo);
-    setListaProductos(nuevaLista);
-    // Opcional: actualizar localStorage
-    localStorage.setItem("productos", JSON.stringify(nuevaLista));
-  };
+
 
   return (
     <>
@@ -35,7 +29,6 @@ const AdminProd = () => {
               >
                 <CardProdTabla
                   producto={producto}
-                  eliminarProd={eliminarProd}
                 />
               </div>
             ))}

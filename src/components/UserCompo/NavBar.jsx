@@ -9,7 +9,7 @@ import { FaUserCheck } from "react-icons/fa6";
 function NavBar() {
   const { isLogin } = useContext(userContext);
   const { total } = useContext(carContext);
-  const { data: categorias, loading } = useFetch("./ApiCategorias.json");
+  const { data: categorias, loading } = useFetch("http://localhost:5174/api/categorias");
 
   return (
     <nav className="navbar navbar-expand-lg bg-white fixed-top">
@@ -46,33 +46,17 @@ function NavBar() {
               </NavLink>
             </li>
 
-<li className="nav-item dropdown">
-  <a
-    href="#"
-    className="nav-link dropdown-toggle"
-    role="button"
-    data-bs-toggle="dropdown"
-    aria-expanded="false"
-  >
-    Productos
-  </a>
-  <ul className="dropdown-menu">
-    {loading
-      ? <li className="dropdown-item">Cargando...</li>
-      : categorias.map((cat, index) => (
-          <li key={index}>
-            <NavLink
-              to={`/productos/${cat.Nombre}`}
-              className={({ isActive }) =>
-                "dropdown-item my-2 border-bottom" + (isActive ? " active" : "")
-              }
-            >
-              {cat.Nombre}
-            </NavLink>
-          </li>
-      ))
-    }
-  </ul>
+            <li className="nav-item ">
+              <NavLink
+                to="/tienda"
+                className="nav-link "
+                role="button"
+                data-bs-toggle=""
+                aria-expanded="false"
+              >
+                Tienda
+              </NavLink>
+
 </li>
 
             <li className="nav-item">

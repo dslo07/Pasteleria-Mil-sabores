@@ -21,26 +21,45 @@ const CrearUser = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Usuario creado:", user);
-    alert("✅ Usuario creado con éxito");
-    setUser({
-      nombre: "",
-      apellido_paterno: "",
-      apellido_materno: "",
-      correo: "",
-      contrasena: "",
-      fecha_nacimiento: "",
-      isAdmin: false,
-      rol: "Admin",
-      estado: true,
-    });
+
+    try {
+      const res = await fetch("http://localhost:5174/api/usuarios/crear-usuario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Error al crear el usuario");
+      }
+
+      const data = await res.json();
+      alert(`✅ Usuario creado con éxito: ${data.usuario.nombre}`);
+
+      // Reset formulario
+      setUser({
+        nombre: "",
+        apellido_paterno: "",
+        apellido_materno: "",
+        correo: "",
+        contrasena: "",
+        fecha_nacimiento: "",
+        isAdmin: false,
+        rol: "Admin",
+        estado: true,
+      });
+    } catch (error) {
+      console.error(error);
+      alert(`No se pudo crear el usuario: ${error.message}`);
+    }
   };
 
   return (
     <div className="container mt-4">
-      <h3 >Crear Usuario</h3>
+      <h3>Crear Usuario</h3>
       <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
         <div className="row">
           {/* Columna izquierda */}
@@ -57,6 +76,7 @@ const CrearUser = () => {
                 required
               />
             </div>
+
             <div className="mb-3">
               <label className="form-label">Nombre</label>
               <input
@@ -64,13 +84,11 @@ const CrearUser = () => {
                 className="form-control"
                 name="nombre"
                 value={user.nombre}
-                placeholder="EJ: Juanito "
+                placeholder="EJ: Juanito"
                 onChange={handleChange}
                 required
               />
             </div>
-
-
 
             <div className="mb-3">
               <label className="form-label">Apellido Materno</label>
@@ -98,7 +116,6 @@ const CrearUser = () => {
                 <option value="Supervisor">Supervisor</option>
               </select>
             </div>
-
           </div>
 
           {/* Columna derecha */}
@@ -115,7 +132,7 @@ const CrearUser = () => {
                 required
               />
             </div>
-            
+
             <div className="mb-3">
               <label className="form-label">Apellido Paterno</label>
               <input
@@ -128,20 +145,18 @@ const CrearUser = () => {
                 required
               />
             </div>
-            
+
             <div className="mb-3">
               <label className="form-label">Fecha de Nacimiento</label>
               <input
                 type="date"
                 className="form-control"
                 name="fecha_nacimiento"
-                
                 value={user.fecha_nacimiento}
                 onChange={handleChange}
                 required
               />
             </div>
-
           </div>
         </div>
 

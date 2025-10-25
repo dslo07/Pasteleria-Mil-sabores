@@ -1,5 +1,6 @@
 [
   {
+    "id":"1",
     "nombre": "Harold",
     "apellido_paterno": "Peralta",
     "apellido_materno": "Marte",
@@ -11,6 +12,7 @@
     "estado": true
   },
   {
+    "id":2,
     "nombre": "Santiago",
     "apellido_paterno": "López",
     "apellido_materno": "Marulanda",
@@ -22,6 +24,7 @@
     "estado": true
   },
   {
+    "id":3,
     "nombre": "Valentina",
     "apellido_paterno": "Rojas",
     "apellido_materno": "Muñoz",
@@ -33,6 +36,7 @@
     "estado": true
   },
   {
+    "id":4,
     "nombre": "Carlos",
     "apellido_paterno": "Gonzales",
     "apellido_materno": "Hernández",
@@ -44,6 +48,7 @@
     "estado": false
   },
   {
+    "id":5,
     "nombre": "Vicente",
     "apellido_paterno": "García",
     "apellido_materno": "Morales",

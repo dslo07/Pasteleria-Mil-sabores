@@ -2,6 +2,7 @@ import { Router } from "express";
 import pool from "../bd.js";
 
 const router = Router();
+//ruta para crear un usuario (pagina de Registro)
 router.post("/crear", async (req, res) => {
   const client = await pool.connect();
   try {
@@ -49,7 +50,7 @@ router.post("/crear", async (req, res) => {
   }
 });
 
-
+//ruta para el login de usuario (pagina de Login)
 router.post("/login", async (req, res) => {
   const client = await pool.connect();
   try {
@@ -81,5 +82,11 @@ router.post("/login", async (req, res) => {
     client.release();
   }
 });
+
+// ===== Desde aca empiezan las nuevas rutas del CRUD ===== //
+
+
+
+
 
 export default router;
