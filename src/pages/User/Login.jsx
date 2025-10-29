@@ -16,9 +16,12 @@ const Login = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const user = await loginUsuario({ correo, contrasena }); 
+      const user = await loginUsuario({ correo, contrasena, }); 
+      
       setMsg("Login satisfactorio");
         setIsLogin(true)
+        localStorage.setItem("rol",JSON.stringify(user.rol))
+        localStorage.setItem("id",JSON.stringify(user.user.id))
       
       // 1 es de cliente y 2 es de admin
       if (user.rol.rol_id === 1) {

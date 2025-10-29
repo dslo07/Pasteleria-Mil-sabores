@@ -1,6 +1,5 @@
 import React from "react";
 import { FaPlus } from "react-icons/fa6";
-import { IoSearchSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
 const CompoContent = ({ children = null, tipo }) => {
@@ -34,15 +33,6 @@ const CompoContent = ({ children = null, tipo }) => {
         <button onClick={()=>redireccion()} className="btn btn-comprar d-flex align-items-center gap-1">
           <FaPlus /> Crear {tipo}
         </button>
-      </div>
-
-      <div className="d-flex align-items-center border rounded mt-4 bg-white px-2">
-        <IoSearchSharp className="me-2 text-muted" />
-        <input
-          type="text"
-          placeholder={placeholder}
-          className="form-control border-0 shadow-none"
-        />
       </div>
 
       <div className="mt-3">{children}</div>

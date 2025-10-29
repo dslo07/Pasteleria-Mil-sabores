@@ -1,25 +1,34 @@
 import { Router } from "express";
 import pool from "../bd.js";
-
+import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
+import bcrypt from "bcryptjs";
+dotenv.config();
 const router = Router();
+
+
+// Validación rápida
+if (!process.env.JWT_SECRET) {
+  console.error("❌ ERROR: No se encontró la variable JWT_SECRET en el .env");
+  process.exit(1); // termina la ejecución del servidor
+} else {
+  console.log("✅ JWT_SECRET cargado correctamente");
+}
 //ruta para crear un usuario (pagina de Registro)
 router.post("/crear", async (req, res) => {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
 
-    const {
-      nombres,       
-      apellidoPaterno,
-      apellidoMaterno,
-      correo,
-      contrasena,
-      nacimiento
-    } = req.body;
+    const { nombres, apellidoPaterno, apellidoMaterno, correo, contrasena, nacimiento } = req.body;
 
-    const usuario = await client.query(`INSERT INTO usuario (email_usuario, contrasena_usuario) VALUES ($1, $2) RETURNING id_usuario AS user_id`,
-        [correo, contrasena]
-      );
+    // encriptar contraseña
+    const hashedPassword = await bcrypt.hash(contrasena, 10);
+
+    const usuario = await client.query(
+      `INSERT INTO usuario (email_usuario, contrasena_usuario) VALUES ($1, $2) RETURNING id_usuario AS user_id`,
+      [correo, hashedPassword]
+    );
 
     const cliente = await client.query(
       "INSERT INTO cliente (nombres_cliente, appat_cliente, apmat_cliente) VALUES ($1, $2, $3) RETURNING id_cliente AS client_id",
@@ -28,20 +37,29 @@ router.post("/crear", async (req, res) => {
 
     await client.query(
       "INSERT INTO usuario_rol (id_usuario, id_rol) VALUES ($1, $2)",
-      [usuario.rows[0].user_id, "1"] // El rol 1 es para decir que la persona es un usuario normal (no admin) "Cliente"
+      [usuario.rows[0].user_id, "1"] // Rol normal
     );
-    
+
     await client.query(
       "INSERT INTO cliente_usuario (id_usuario, id_cliente) VALUES ($1, $2)",
       [usuario.rows[0].user_id, cliente.rows[0].client_id]
     );
 
-    const datos_cliente = await client.query(
+    await client.query(
       "INSERT INTO datos_cliente (id_cliente, email_cliente, fecha_nacimiento) VALUES ($1, $2, $3)",
       [cliente.rows[0].client_id, correo, nacimiento]
     );
+
     await client.query("COMMIT");
-    res.status(201).json({ msg: "Usuario creado", user: usuario.rows[0] });
+
+    // Generar JWT
+    const token = jwt.sign(
+      { id: usuario.rows[0].user_id, role: "user" },
+        process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    res.status(201).json({ msg: "Usuario creado", user: usuario.rows[0], token });
   } catch (err) {
     await client.query("ROLLBACK");
     res.status(500).json({ error: err.message });
@@ -50,42 +68,107 @@ router.post("/crear", async (req, res) => {
   }
 });
 
-//ruta para el login de usuario (pagina de Login)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//ruta para el login de usuario (pagina de Login)x
 router.post("/login", async (req, res) => {
   const client = await pool.connect();
   try {
-    await client.query("BEGIN"); 
+    await client.query("BEGIN");
 
-    const {
-      correo,
-      contrasena
-    } = req.body;
+    const { correo, contrasena } = req.body;
 
-    const usuario = await client.query(`SELECT id_usuario AS user_id FROM usuario WHERE email_usuario = $1 AND contrasena_usuario = $2`,
-        [correo, contrasena] /*Son las varibles que se unitaran en el $..  */
-      );
+    const usuarioQuery = await client.query(
+      `SELECT id_usuario AS user_id, contrasena_usuario FROM usuario WHERE email_usuario = $1`,
+      [correo]
+    );
 
-    const rol_usuario = await/*Esperar y unicar la Query a la bd*/  client.query(`select id_rol as rol_id from usuario_rol where id_usuario = $1`,
-        [usuario.rows[0].user_id]);
+    if (!usuarioQuery.rows.length) {
+      return res.status(401).json({ msg: "Usuario no encontrado" });
+    }
+
+    const usuario = usuarioQuery.rows[0];
+
+    // Verificar contraseña
+    const validPass = await bcrypt.compare(contrasena, usuario.contrasena_usuario);
+    if (!validPass) return res.status(401).json({ msg: "Contraseña incorrecta" });
+
+    // Obtener rol
+    const rolQuery = await client.query(
+      "SELECT id_rol AS rol_id FROM usuario_rol WHERE id_usuario = $1",
+      [usuario.user_id]
+    );
+
+    const rol = rolQuery.rows[0].rol_id === 1 ? "user" : "admin";
+
+    // Generar JWT
+    const token = jwt.sign({ id: usuario.user_id, role: rol }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
 
     await client.query("COMMIT");
-    res.status(200).json({ msg: "Login exitoso", user: usuario.rows[0], rol: rol_usuario.rows[0] /*El .rows[0] es como lista empiza en 0 recuerdar */}); 
-    // Cuando la repuesta sea 200 ok pasara eb formato Json mensaje y la variable user 
-    // que contiene el id del usuario. esto se pasara para el front.
-
-
-    
+    res.status(200).json(
+      { 
+        msg: "Login exitoso",
+        user: { id: usuario.user_id },
+        rol,
+        token
+      });
   } catch (err) {
     await client.query("ROLLBACK");
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: token });
   } finally {
     client.release();
   }
 });
+
 
 // ===== Desde aca empiezan las nuevas rutas del CRUD ===== //
 
 
+
+//obtener datos de usuario por id
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(`
+      SELECT 
+        clu.id_usuario,
+        clu.id_cliente,
+        da.email_cliente, 
+        da.telefono_cliente,
+        da.fecha_nacimiento,
+        cl.nombres_cliente,
+        cl.appat_cliente,
+        cl.apmat_cliente
+      FROM cliente_usuario AS clu
+      INNER JOIN cliente AS cl ON cl.id_cliente = clu.id_cliente
+      INNER JOIN datos_cliente AS da ON da.id_cliente = cl.id_cliente
+      INNER JOIN usuario AS u ON u.id_usuario = clu.id_usuario
+      WHERE u.id_usuario = $1
+    `, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ msg: "Usuario no encontrado" });
+    }
+
+    res.status(200).json({ msg: "Usuario encontrado", data: result.rows[0] });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 
 
