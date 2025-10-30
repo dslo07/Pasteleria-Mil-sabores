@@ -20,20 +20,22 @@ const PerfilUsuario = () => {
     telefono_cliente: "",
   });
 
-  //  Cuando llegan los datos del backend
+  // 🔹 Cargar datos del usuario una vez que llegan del backend
   useEffect(() => {
-    if (data && data.data) {
+    if (data) {
+      const u = data.usuario || data; // por si el backend devuelve directamente el usuario
       setUsuario({
-        nombres_cliente: data.data.nombres_cliente || "",
-        appat_cliente: data.data.appat_cliente || "",
-        apmat_cliente: data.data.apmat_cliente || "",
-        email_cliente: data.data.email_cliente || "",
-        fecha_nacimiento: data.data.fecha_nacimiento || "",
-        telefono_cliente: data.data.telefono_cliente || "",
+        nombres_cliente: u.nombres_cliente || "",
+        appat_cliente: u.appat_cliente || "",
+        apmat_cliente: u.apmat_cliente || "",
+        email_cliente: u.email_cliente || "",
+        fecha_nacimiento: u.fecha_nacimiento || "",
+        telefono_cliente: u.telefono_cliente || "",
       });
     }
   }, [data]);
 
+  // 🔹 Manejo de cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUsuario({
@@ -42,6 +44,31 @@ const PerfilUsuario = () => {
     });
   };
 
+  // 🔹 Actualizar perfil en el backend
+  const handleGuardar = async (e) => {
+    e.preventDefault(); // evitar recarga
+    try {
+      const token = JSON.parse(localStorage.getItem("token"));
+      const res = await fetch(`http://localhost:5174/api/usuario/${idUsuario}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify(usuario),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Error al actualizar el perfil");
+
+      alert("✅ Perfil actualizado correctamente");
+    } catch (err) {
+      console.error("Error al guardar usuario:", err);
+      alert(`❌ No se pudo actualizar el perfil: ${err.message}`);
+    }
+  };
+
+  // 🔹 Cerrar sesión
   const cerrarSesion = () => {
     setModal(true);
     localStorage.removeItem("token");
@@ -51,9 +78,7 @@ const PerfilUsuario = () => {
   };
 
   const sesion = localStorage.getItem("id");
-  if (!sesion) {
-    return <Navigate to="/login" />; // si no hay sesión
-  }
+  if (!sesion) return <Navigate to="/login" />;
 
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -76,70 +101,60 @@ const PerfilUsuario = () => {
               <h1 className="mb-3">Bienvenido, {usuario.nombres_cliente}</h1>
               <p className="text-muted mb-4">Editar información personal</p>
 
-              <form>
+              <form onSubmit={handleGuardar}>
                 <div className="mb-3">
-                  <label htmlFor="inputNombres" className="form-label">
-                    Nombres
-                  </label>
+                  <label htmlFor="inputNombres" className="form-label">Nombres</label>
                   <input
                     type="text"
                     className="form-control"
                     name="nombres_cliente"
                     value={usuario.nombres_cliente}
-                    onChange={(e) => handleChange(e)}
+                    onChange={handleChange}
                   />
                 </div>
 
                 <div className="row mb-3">
                   <div className="col-md-6">
-                    <label htmlFor="inputAPPat" className="form-label">
-                      Apellido Paterno
-                    </label>
+                    <label className="form-label">Apellido Paterno</label>
                     <input
                       type="text"
                       className="form-control"
                       name="appat_cliente"
                       value={usuario.appat_cliente}
-                      onChange={(e) => handleChange(e)}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="col-md-6">
-                    <label htmlFor="inputAPMat" className="form-label">
-                      Apellido Materno
-                    </label>
+                    <label className="form-label">Apellido Materno</label>
                     <input
                       type="text"
                       className="form-control"
                       name="apmat_cliente"
                       value={usuario.apmat_cliente}
-                      onChange={(e) => handleChange(e)}
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="inputEmail" className="form-label">
-                    Correo
-                  </label>
+                  <label className="form-label">Correo</label>
                   <input
                     type="email"
                     className="form-control"
                     name="email_cliente"
                     value={usuario.email_cliente}
-                    onChange={(e) => handleChange(e)}
+                    onChange={handleChange}
                   />
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="inputNacimiento" className="form-label">
-                    Fecha de Nacimiento
-                  </label>
+                  <label className="form-label">Fecha de Nacimiento</label>
                   <input
                     type="date"
                     className="form-control"
                     name="fecha_nacimiento"
                     value={usuario.fecha_nacimiento}
-                    onChange={(e) => handleChange(e)}
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -166,7 +181,7 @@ const PerfilUsuario = () => {
                 width="120"
               />
 
-              <h4 className=" mb-0">
+              <h4 className="mb-0">
                 {usuario.nombres_cliente} {usuario.appat_cliente}
               </h4>
               <p className="text-muted mb-0">{usuario.email_cliente}</p>
@@ -174,7 +189,11 @@ const PerfilUsuario = () => {
               <p className="text-muted">
                 Nacimiento: {usuario.fecha_nacimiento}
               </p>
-              <button className="btn btn-outline-primary w-100 rounded-pill my-3 d-md-none d-inline" onClick={()=>setMostrar(!mostrar)}>
+
+              <button
+                className="btn btn-outline-primary w-100 rounded-pill my-3 d-md-none d-inline"
+                onClick={() => setMostrar(!mostrar)}
+              >
                 Editar Perfil
               </button>
             </div>
