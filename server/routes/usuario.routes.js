@@ -138,15 +138,18 @@ router.post("/login", async (req, res) => {
 // ===== Desde aca empiezan las nuevas rutas del CRUD ===== //
 
 
-
-//obtener datos de usuario por id
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
+//obtener todos los usuarios
+router.get("/", async (_req, res) => {
   try {
     const result = await pool.query(`
       SELECT 
         clu.id_usuario,
         clu.id_cliente,
+        CASE 
+          WHEN ur.id_rol = 1 THEN 'Cliente'
+          WHEN ur.id_rol = 2 THEN 'Admin'
+          ELSE 'Desconocido'
+        END AS rol,
         da.email_cliente, 
         da.telefono_cliente,
         da.fecha_nacimiento,
@@ -157,6 +160,41 @@ router.get("/:id", async (req, res) => {
       INNER JOIN cliente AS cl ON cl.id_cliente = clu.id_cliente
       INNER JOIN datos_cliente AS da ON da.id_cliente = cl.id_cliente
       INNER JOIN usuario AS u ON u.id_usuario = clu.id_usuario
+      INNER JOIN usuario_rol as ur on u.id_usuario = ur.id_usuario
+      order by rol asc 
+    `);
+
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ msg: "Usuario no encontrado" });
+    }
+     res.status(200).json({ msg: "Usuario encontrado", usuarios: result.rows });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+//obtener datos de usuario por id
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(`
+      SELECT 
+        clu.id_usuario,
+        clu.id_cliente,
+        ur.id_rol,
+        da.email_cliente, 
+        da.telefono_cliente,
+        da.fecha_nacimiento,
+        cl.nombres_cliente,
+        cl.appat_cliente,
+        cl.apmat_cliente
+      FROM cliente_usuario AS clu
+      INNER JOIN cliente AS cl ON cl.id_cliente = clu.id_cliente
+      INNER JOIN datos_cliente AS da ON da.id_cliente = cl.id_cliente
+      INNER JOIN usuario AS u ON u.id_usuario = clu.id_usuario
+      INNER JOIN usuario_rol as ur on u.id_usuario = ur.id_usuario
       WHERE u.id_usuario = $1
     `, [id]);
 
@@ -164,12 +202,35 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ msg: "Usuario no encontrado" });
     }
 
-    res.status(200).json({ msg: "Usuario encontrado", data: result.rows[0] });
+    res.status(200).json({ msg: "Usuario encontrado", usuario: result.rows[0] });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+//Borrar usuario por id
+router.delete("/borrar-usuario/:id", async (req, res) => {
+const { id } = req.params;
+
+  try {
+    // 1️ Borra relaciones 
+    await pool.query("DELETE FROM usuario_rol WHERE id_usuario = $1", [id]);
+    await pool.query("DELETE FROM empleado_usuario WHERE id_usuario = $1", [id]);
+    await pool.query("DELETE FROM cliente_usuario WHERE id_usuario = $1", [id]);
+
+    // 2️  borra el usuario
+    const result = await pool.query("DELETE FROM usuario WHERE id_usuario = $1", [id]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ msg: "Usuario no encontrado" });
+    }
+
+    res.json({ msg: "Usuario eliminado correctamente" });
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    res.status(500).json({ msg: "Error al eliminar usuario", error: error.message });
+  }
+});
 
 
 export default router;
