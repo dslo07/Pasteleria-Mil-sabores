@@ -63,7 +63,7 @@ function EditarUser() {
   // Borar un usuario
   const borrarUser = () =>{
     const res = prompt(`Escriba el nombre del usuario para borrarlo "${usuario.nombres_cliente}"`)
-    if(res = usuario.nombres_cliente){
+    if(res == usuario.nombres_cliente){
       alert("Usuario eliminado con exito")
     }else{
       alert("Usuario no eliminado")

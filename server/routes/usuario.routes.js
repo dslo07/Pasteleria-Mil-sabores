@@ -1,20 +1,44 @@
+// routes/usuarios.js
 import { Router } from "express";
 import pool from "../bd.js";
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 dotenv.config();
+
 const router = Router();
 
+// ===== Middleware de autenticación ===== //
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token) return res.status(403).json({ msg: "Token no proporcionado" });
 
-// Validación rápida
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // { id, role }
+    next();
+  } catch (err) {
+    return res.status(401).json({ msg: "Token inválido o expirado" });
+  }
+};
+
+const isAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ msg: "Acceso denegado: solo admins" });
+  }
+  next();
+};
+
+// ===== Validación rápida ===== //
 if (!process.env.JWT_SECRET) {
-  console.error("❌ ERROR: No se encontró la variable JWT_SECRET en el .env");
-  process.exit(1); // termina la ejecución del servidor
+  console.error("❌ ERROR: No se encontró JWT_SECRET en .env");
+  process.exit(1);
 } else {
   console.log("✅ JWT_SECRET cargado correctamente");
 }
-//ruta para crear un usuario (pagina de Registro)
+
+// ===== Registro de usuario ===== //
 router.post("/crear", async (req, res) => {
   const client = await pool.connect();
   try {
@@ -22,7 +46,6 @@ router.post("/crear", async (req, res) => {
 
     const { nombres, apellidoPaterno, apellidoMaterno, correo, contrasena, nacimiento } = req.body;
 
-    // encriptar contraseña
     const hashedPassword = await bcrypt.hash(contrasena, 10);
 
     const usuario = await client.query(
@@ -37,7 +60,7 @@ router.post("/crear", async (req, res) => {
 
     await client.query(
       "INSERT INTO usuario_rol (id_usuario, id_rol) VALUES ($1, $2)",
-      [usuario.rows[0].user_id, "1"] // Rol normal
+      [usuario.rows[0].user_id, "1"]
     );
 
     await client.query(
@@ -52,10 +75,9 @@ router.post("/crear", async (req, res) => {
 
     await client.query("COMMIT");
 
-    // Generar JWT
     const token = jwt.sign(
       { id: usuario.rows[0].user_id, role: "user" },
-        process.env.JWT_SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
@@ -68,21 +90,7 @@ router.post("/crear", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ruta para el login de usuario (pagina de Login)x
+// ===== Login de usuario ===== //  
 router.post("/login", async (req, res) => {
   const client = await pool.connect();
   try {
@@ -101,11 +109,9 @@ router.post("/login", async (req, res) => {
 
     const usuario = usuarioQuery.rows[0];
 
-    // Verificar contraseña
     const validPass = await bcrypt.compare(contrasena, usuario.contrasena_usuario);
     if (!validPass) return res.status(401).json({ msg: "Contraseña incorrecta" });
 
-    // Obtener rol
     const rolQuery = await client.query(
       "SELECT id_rol AS rol_id FROM usuario_rol WHERE id_usuario = $1",
       [usuario.user_id]
@@ -113,33 +119,22 @@ router.post("/login", async (req, res) => {
 
     const rol = rolQuery.rows[0].rol_id === 1 ? "user" : "admin";
 
-    // Generar JWT
     const token = jwt.sign({ id: usuario.user_id, role: rol }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
 
     await client.query("COMMIT");
-    res.status(200).json(
-      { 
-        msg: "Login exitoso",
-        user: { id: usuario.user_id },
-        rol,
-        token
-      });
+    res.status(200).json({ msg: "Login exitoso", user: { id: usuario.user_id }, rol, token });
   } catch (err) {
     await client.query("ROLLBACK");
-    res.status(500).json({ error: token });
+    res.status(500).json({ error: err.message });
   } finally {
     client.release();
   }
 });
 
-
-// ===== Desde aca empiezan las nuevas rutas del CRUD ===== //
-
-
-//obtener todos los usuarios
-router.get("/", async (_req, res) => {
+// ===== Obtener todos los usuarios (solo admin) ===== //
+router.get("/", verifyToken, isAdmin, async (_req, res) => {
   try {
     const result = await pool.query(`
       SELECT 
@@ -161,23 +156,28 @@ router.get("/", async (_req, res) => {
       INNER JOIN datos_cliente AS da ON da.id_cliente = cl.id_cliente
       INNER JOIN usuario AS u ON u.id_usuario = clu.id_usuario
       INNER JOIN usuario_rol as ur on u.id_usuario = ur.id_usuario
-      order by rol asc 
+      ORDER BY rol ASC;
     `);
 
-
     if (result.rows.length === 0) {
-      return res.status(404).json({ msg: "Usuario no encontrado" });
+      return res.status(404).json({ msg: "Usuarios no encontrados" });
     }
-     res.status(200).json({ msg: "Usuario encontrado", usuarios: result.rows });
+
+    res.status(200).json({ msg: "Usuarios encontrados", usuarios: result.rows });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-
-//obtener datos de usuario por id
-router.get("/:id", async (req, res) => {
+// ===== Obtener usuario por ID ===== //
+router.get("/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
+
+  // solo permitir ver su propio perfil o admin
+  if (req.user.role !== "admin" && parseInt(req.user.id) !== parseInt(id)) {
+    return res.status(403).json({ msg: "Acceso denegado" });
+  }
+
   try {
     const result = await pool.query(`
       SELECT 
@@ -208,19 +208,15 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//Borrar usuario por id
-router.delete("/borrar-usuario/:id", async (req, res) => {
-const { id } = req.params;
-
+// ===== Borrar usuario por ID (solo admin) ===== //
+router.delete("/borrar-usuario/:id", verifyToken, isAdmin, async (req, res) => {
+  const { id } = req.params;
   try {
-    // 1️ Borra relaciones 
     await pool.query("DELETE FROM usuario_rol WHERE id_usuario = $1", [id]);
     await pool.query("DELETE FROM empleado_usuario WHERE id_usuario = $1", [id]);
     await pool.query("DELETE FROM cliente_usuario WHERE id_usuario = $1", [id]);
 
-    // 2️  borra el usuario
     const result = await pool.query("DELETE FROM usuario WHERE id_usuario = $1", [id]);
-
     if (result.rowCount === 0) {
       return res.status(404).json({ msg: "Usuario no encontrado" });
     }
@@ -231,6 +227,5 @@ const { id } = req.params;
     res.status(500).json({ msg: "Error al eliminar usuario", error: error.message });
   }
 });
-
 
 export default router;

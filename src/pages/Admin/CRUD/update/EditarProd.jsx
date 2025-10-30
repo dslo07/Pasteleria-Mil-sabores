@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "../../../../hooks/useFetch";
 
-
 function EditarProd() {
   const { codigo_producto } = useParams();
   const navigate = useNavigate();
@@ -26,7 +25,6 @@ function EditarProd() {
     if (data) {
       setProducto({
         ...data,
-        // Si tu API envía imagen como base64 o URL, se mantiene igual
         imagen_producto: data.imagen_producto || "",
       });
     }
@@ -42,28 +40,40 @@ function EditarProd() {
   };
 
   const handleGuardar = async () => {
+    if (!producto.nombre_producto || !producto.id_categoria) {
+      toast.error("Completa los campos requeridos");
+      return;
+    }
+
     try {
+      const token = JSON.parse(localStorage.getItem("token"));
+
       const response = await fetch(
         `http://localhost:5174/api/productos/${producto.codigo_producto}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
           body: JSON.stringify({
             nombre_producto: producto.nombre_producto,
-            decripcion_producto: producto.decripcion_producto,
-            precio_producto: producto.precio_producto,
+            descripcion_producto: producto.descripcion_producto, // ✅ corregido
+            precio_producto: Number(producto.precio_producto),
             imagen_producto: producto.imagen_producto,
-            id_categoria: producto.id_categoria,
+            id_categoria: Number(producto.id_categoria),
           }),
         }
       );
+
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Error al actualizar");
-      toast.success("Producto actualizado correctamente");
+
+      toast.success(" Producto actualizado correctamente");
       navigate("/admin/productos");
     } catch (err) {
-      console.error(err);
-      toast.error("No se pudo guardar el producto",err);
+      console.error("Error al guardar producto:", err);
+      toast.error("❌ No se pudo guardar el producto");
     }
   };
 
@@ -89,11 +99,17 @@ function EditarProd() {
               onChange={handleChange}
             />
           </div>
-          <img
-            src={producto.imagen_producto}
-            alt={producto.nombre_producto}
-            className="img-fluid rounded border"
-          />
+          {producto.imagen_producto && (
+            <img
+              src={
+                producto.imagen_producto.startsWith("data:image")
+                  ? atob(producto.imagen_producto.split(",")[1]) // decodifica la URL
+                  : producto.imagen_producto
+              }
+              alt={producto.nombre_producto}
+              className="img-fluid rounded border"
+            />
+          )}
         </div>
 
         {/* Campos */}
@@ -141,8 +157,8 @@ function EditarProd() {
             <label className="form-label">Descripción</label>
             <textarea
               className="form-control"
-              name="decripcion_producto"
-              value={producto.decripcion_producto}
+              name="descripcion_producto" // ✅ corregido
+              value={producto.descripcion_producto || ""}
               onChange={handleChange}
               rows={5}
             />

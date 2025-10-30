@@ -5,13 +5,14 @@ const CrearProd = () => {
     codigo_producto: "",
     id_categoria: "",
     nombre_producto: "",
-    decripcion_producto: "", // ⚠️ coincidir con tu API
+    decripcion_producto: "", // cuidado con el nombre del campo en tu API
     precio_producto: "",
     imagen_producto: "",
   });
 
   const [categorias, setCategorias] = useState([]);
 
+  // 🔹 Cargar categorías
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
@@ -30,10 +31,18 @@ const CrearProd = () => {
     setProducto({ ...producto, [name]: value });
   };
 
+  // 🔹 Crear producto (solo admin)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Convertir tipos a número si es necesario
+    const token = JSON.parse(localStorage.getItem("token")); // traer token del login
+
+    if (!token) {
+      alert("⚠️ No tienes un token válido. Inicia sesión como administrador.");
+      return;
+    }
+
+    // convertir tipos
     const body = {
       ...producto,
       id_categoria: Number(producto.id_categoria),
@@ -43,16 +52,19 @@ const CrearProd = () => {
     try {
       const res = await fetch("http://localhost:5174/api/productos/crear-producto", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 🔑 token de admin
+        },
         body: JSON.stringify(body),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Error al crear el producto");
+        throw new Error(data.error || "Error al crear el producto");
       }
 
-      const data = await res.json();
       alert(`✅ Producto creado con éxito: ${data.producto.nombre_producto}`);
 
       // Reset formulario
@@ -66,7 +78,7 @@ const CrearProd = () => {
       });
     } catch (error) {
       console.error(error);
-      alert(`No se pudo crear el producto: ${error.message}`);
+      alert(`❌ No se pudo crear el producto: ${error.message}`);
     }
   };
 
