@@ -1,47 +1,24 @@
 import React from "react";
-import { FaUsers } from "react-icons/fa6";
-import { CiEdit } from "react-icons/ci";
 
-const CardBlogTabla = () => {
-
+const CardBlogTabla = ({ blog }) => {
   return (
-        <div className="border rounded shadow-sm p-3 bg-white">
+    <div className="border rounded shadow-sm p-3 bg-white">
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-2">
-        <h5 className="mb-0">{blog.titulo}</h5>
-        <span
-          className={`badge ${
-            blog.estado === "Publicado" ? "bg-success" : "bg-secondary"
-          }`}
-        >
-          {blog.estado}
-        </span>
+        <h5 className="mb-0">{blog.titulo_blogs}</h5>
       </div>
-
-      {/* Fecha */}
-      <p className="text-muted mb-2">{blog.fecha}</p>
 
       {/* Imagen */}
-      <img
-        src={blog.imagen}
-        alt={blog.titulo}
-        className="img-fluid rounded mb-2"
-      />
+      {blog.imagen && (
+        <img
+          src={blog.imagen}
+          alt={blog.titulo_blogs}
+          className="img-fluid rounded mb-2"
+        />
+      )}
 
       {/* Descripción */}
-      <p className="mb-2">{blog.descripcion}</p>
-
-      {/* Autor */}
-      <p className="text-muted mb-2">Por {blog.autor}</p>
-
-      {/* Categorías */}
-      <div className="mb-2">
-        {blog.categorias.map((cat, index) => (
-          <span key={index} className="badge bg-light text-dark me-1">
-            {cat}
-          </span>
-        ))}
-      </div>
+      <p className="mb-2">{blog.descripcion_blogs}</p>
 
       {/* Botones */}
       <div className="d-flex gap-2">

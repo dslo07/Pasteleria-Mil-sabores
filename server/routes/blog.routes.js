@@ -95,7 +95,7 @@ blogRouter.get("/:id", async (req, res) => {
       if (valor.startsWith("http")) {
         imagenFinal = valor;
       } else {
-        const base64 = b.imagen_blogs.toString("base64"); // ⚠️ usar la propiedad correcta
+        const base64 = b.imagen_blogs.toString("base64"); 
         imagenFinal = `data:image/png;base64,${base64}`;
       }
     }

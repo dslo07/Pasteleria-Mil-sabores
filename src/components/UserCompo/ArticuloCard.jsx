@@ -1,27 +1,37 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-function ArticuloCard({ titulo, descripcion, fecha,img,id }) {
+function ArticuloCard({ articulo }) {
   return (
     <div className="card mb-3">
-      <img src={img} className="card-img-top" alt={titulo}/>
+      {articulo.imagen && (
+        <img
+          src={articulo.imagen}
+          className="card-img-top"
+          alt={articulo.titulo_blogs}
+        />
+      )}
       <div className="card-body">
-        <h5 className="card-title">{titulo}</h5>
-        <p className="card-text">{descripcion}</p>
-        <p className="card-text">
-          <small className="text-body-secondary">Creado en: {fecha}</small>
-        </p>
-        <div className='d-flex gap-2'>
-          <Link to={`/admin/blog/editar-blog/${id}`} className='text-decoration-none'>
-            <button className='btn btn-comprar rounded'>Ver Artículo</button>
+        <h5 className="card-title">{articulo.titulo_blogs}</h5>
+        <p className="card-text">{articulo.descripcion_blogs}</p>
+
+        <div className="d-flex gap-2">
+          <Link
+            to={`/admin/blog/editar-blog/${articulo.id_blogs}`}
+            className="text-decoration-none"
+          >
+            <button className="btn btn-comprar rounded">Editar</button>
           </Link>
-          <Link to={`/admin/blog/editar-blog/${id}`} className='text-decoration-none'>
-            <button className='btn btn-comprar rounded'>Editar Artículo</button>
-          </Link>
+          <button
+            className="btn btn-danger rounded"
+            onClick={() => console.log('Eliminar', articulo.id_blogs)}
+          >
+            Eliminar
+          </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ArticuloCard
+export default ArticuloCard;
