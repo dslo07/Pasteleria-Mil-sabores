@@ -1,119 +1,135 @@
-import { useContext, useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { carContext } from './carContext';
-import { userContext } from '../../context/user/userContext';
-import useFetch from '../../hooks/useFetch';
 import toast from 'react-hot-toast';
 
+const API_URL = "http://localhost:5174/api/productos";
+
 const StateCar = ({ children }) => {
-  const {isLogin} = useContext(userContext)
-  // cargar desde localStorage al inicio
-  const [productos, setProductos] = useState(() => {
-    const stored = localStorage.getItem('carrito');
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [ids, setIds] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [cupon, setCupon] = useState({ codigo: null, descuento: 0 });
+  const [loading, setLoading] = useState(false);
 
-  const [total, setTotal] = useState(0);
-  const [costo, setCosto] = useState(0);
-  const [cupon, setCupon] = useState({
-    codigo: '',
-    descuento: 0,
-  });
-
-  // traer cupones
-  const { data: listaCupones} = useFetch('/ApiCupones.json');
-   
-  // recalcular totales
+  // Cargar IDs desde localStorage
   useEffect(() => {
-    let suma = productos.reduce(
-      (acc, prod) => acc + prod.precio * prod.cantInCar,
-      0
-    );
+    const data = localStorage.getItem("carrito_ids");
+    if (data) setIds(JSON.parse(data));
+  }, []);
 
-    if (cupon?.descuento > 0) {
-      suma -= cupon.descuento;
-    }
-
-    setCosto(suma);
-    setTotal(productos.reduce((acc, p) => acc + p.cantInCar, 0));
-  }, [productos, cupon]);
-
-  // guardar en localStorage cuando cambie productos
+  // Guardar IDs en localStorage
   useEffect(() => {
-    localStorage.setItem('carrito', JSON.stringify(productos));
-  }, [productos]);
+    localStorage.setItem("carrito_ids", JSON.stringify(ids));
+  }, [ids]);
 
-  const agregarProd = (prod) => {
-    const existe = productos.find((p) => p.codigo === prod.codigo);
-
-    if (!existe) {
-      const newProd = { ...prod, inCar: true, cantInCar: 1 };
-      setProductos([...productos, newProd]);
-    } else {
-      toast.error("El producto ya está en el carrito.");
-    }
-  };
-
-
-  const controlCantidad = (accion, producto) => {
-    setProductos((prev) =>
-      prev.map((item) => {
-        if (item.codigo === producto.codigo) {
-          if (accion === 'suma') {
-            return { ...item, cantInCar: item.cantInCar + 1 };
-          }
-          if (accion === 'resta') {
-            return { ...item, cantInCar: Math.max(1, item.cantInCar - 1) };
-          }
-        }
-        return item;
+  // Inicializar productos según los IDs existentes al cargar
+  useEffect(() => {
+    if (ids.length === 0) return;
+    setLoading(true);
+    fetch(`${API_URL}?ids=${ids.join(",")}`)
+      .then(res => res.json())
+      .then(data => {
+        const productosArray = Array.isArray(data) ? data : [data];
+        const productosConCant = productosArray.map(p => ({ ...p, cantInCar: 1 }));
+        setProductos(productosConCant);
       })
+      .catch(() => toast.error("Error al cargar productos"))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Agregar producto por ID
+  const agregarProd = (id) => {
+    if (ids.includes(id)) {
+      toast.error("El producto ya está en el carrito");
+      return;
+    }
+
+    setLoading(true);
+    fetch(`${API_URL}?ids=${id}`) // Traer solo el producto agregado
+      .then(res => res.json())
+      .then(data => {
+        const productoNuevo = Array.isArray(data) ? data[0] : data;
+        productoNuevo.cantInCar = 1;
+        setProductos(prev => [...prev, productoNuevo]);
+        setIds(prev => [...prev, id]);
+        toast.success("Producto agregado al carrito");
+      })
+      .catch(() => toast.error("Error al agregar producto"))
+      .finally(() => setLoading(false));
+  };
+
+  // Quitar producto
+  const quitarProducto = (codigo) => {
+    setProductos(prev => prev.filter(p => p.codigo_producto !== codigo));
+    setIds(prev => prev.filter(id => id !== codigo));
+    toast("Producto eliminado del carrito", { icon: "🗑️" });
+  };
+
+  // Vaciar carrito
+  const vaciarCarrito = () => {
+    setIds([]);
+    setProductos([]);
+    toast("Carrito vaciado", { icon: "🧺" });
+  };
+
+  // Controlar cantidad
+  const controlCantidad = (accion, codigo) => {
+    setProductos(prev =>
+      prev
+        .map(p => {
+          if (p.codigo_producto === codigo) {
+            if (accion === "suma") return { ...p, cantInCar: (p.cantInCar || 1) + 1 };
+            if (accion === "resta") {
+              const nuevaCant = (p.cantInCar || 1) - 1;
+              return nuevaCant > 0 ? { ...p, cantInCar: nuevaCant } : null;
+            }
+          }
+          return p;
+        })
+        .filter(p => p !== null)
     );
   };
 
-  const quitarProducto = (codigo) => {
-    setProductos((prev) => prev.filter((item) => item.codigo !== codigo));
-  };
+  // Totales
+  const total = productos.reduce((acc, p) => acc + (p.cantInCar || 1), 0);
+  const subtotal = productos.reduce((acc, p) => acc + (Number(p.precio_producto) * (p.cantInCar || 1)), 0);
+  const costo = subtotal - (cupon.descuento || 0);
 
+  // Aplicar cupón
   const aplicarCupon = (codigo) => {
-    const cuponValido = listaCupones?.find((c) => c.codigo === codigo);
-
-      //vacio por el momento
+    if (!codigo) return toast.error("Ingrese un código");
+    if (codigo === "DESCUENTO10") {
+      setCupon({ codigo, descuento: subtotal * 0.1 });
+      toast.success("Cupón aplicado: 10% de descuento");
+    } else {
+      setCupon({ codigo: null, descuento: 0 });
+      toast.error("Cupón inválido");
+    }
   };
 
-
-//==== queda pendiente validar que si no hay productos agregados no se puede comprar
-const comprar = () => {
-  if (isLogin) {
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 1200)),
-      {
-        loading: 'Procesando compra...',
-        success: 'Compra realizada con éxito!',
-        error: 'Error en la compra'
-      }
-    ).then(() => {
-      setProductos([]); 
-      setCupon({ codigo: '', descuento: 0 });  
-    });
-  } else {
-    toast.error("Para comprar debe estar logeado");
-  }
-};
-
+  // Comprar
+  const comprar = () => {
+    if (productos.length === 0) return toast.error("Tu carrito está vacío");
+    toast.success("Compra realizada con éxito 🎉");
+    setIds([]);
+    setProductos([]);
+    setCupon({ codigo: null, descuento: 0 });
+  };
 
   return (
     <carContext.Provider
       value={{
+        ids,
         productos,
+        cupon,
         total,
         costo,
-        cupon,
-        setCupon,
         agregarProd,
-        aplicarCupon,
-        controlCantidad,
         quitarProducto,
-        comprar
+        vaciarCarrito,
+        aplicarCupon,
+        comprar,
+        loading,
+        controlCantidad,
       }}
     >
       {children}
