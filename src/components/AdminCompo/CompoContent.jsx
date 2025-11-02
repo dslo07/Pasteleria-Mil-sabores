@@ -14,8 +14,11 @@ const CompoContent = ({ children = null, tipo }) => {
       case "Blog":
           navigate("crear-blog"); 
         break;
-      case "Usuario":
-          navigate("crear-usuario"); 
+        case "Usuario":
+            navigate("crear-usuario"); 
+        break;
+        case "Categoria":
+            navigate("crear-categoria"); 
         break;
       
     }

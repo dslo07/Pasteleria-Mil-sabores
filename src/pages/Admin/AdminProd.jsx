@@ -16,14 +16,14 @@ const AdminProd = () => {
     }
   }, [productos]);
 
-  // Manejar cambios en el input de búsqueda
+  // Manejar cambios en el input 
   const handleBuscar = (e) => {
     const texto = e.target.value.toLowerCase();
     setBusqueda(texto);
 
     if (!productos) return;
 
-    // ✅ Filtrado robusto (evita errores con null o números)
+    //  Filtrado 
     const filtrados = productos.filter((p) => {
       const nombre = (p.nombre_producto || "").toLowerCase();
       const codigo = (p.codigo_producto || "").toString().toLowerCase();
@@ -43,7 +43,7 @@ const AdminProd = () => {
     <CompoContent tipo={"Producto"}>
       <div className="container">
         <div className="row g-4">
-          {/* 🔍 Input de búsqueda */}
+          {/* Input  */}
           <div className="d-flex align-items-center border rounded mt-4 bg-white px-2">
             <IoSearchSharp className="me-2 text-muted" />
             <input
@@ -55,7 +55,7 @@ const AdminProd = () => {
             />
           </div>
 
-          {/* 🧩 Render de productos */}
+          {/* Renderizar de productos */}
           {listaProductos.length > 0 ? (
             listaProductos.map((producto) => (
               <div

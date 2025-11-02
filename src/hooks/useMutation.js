@@ -20,7 +20,7 @@ const useMutation = () => {
       });
 
       const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Error en la petición");
+      if (!res.ok) throw new Error(json.message || "Error en la peticion");
 
       setResponse(json);
       return json;

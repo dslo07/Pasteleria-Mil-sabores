@@ -21,7 +21,7 @@ const PerfilUsuario = () => {
     telefono_cliente: "",
   });
 
-  // 🔹 Hook de actualización (PUT)
+  //  Hook de actualizacion
   const {
     execute: actualizarUsuario,
     loading: cargandoUpdate,
@@ -29,7 +29,7 @@ const PerfilUsuario = () => {
     response: respuestaUpdate,
   } = useMutation();
 
-  // 🔹 Cargar datos del usuario una vez que llegan del backend
+  // Cargar datos del usuario una vez que llegan del backend
   useEffect(() => {
     if (data) {
       const u = data.usuario || data;
@@ -44,7 +44,7 @@ const PerfilUsuario = () => {
     }
   }, [data]);
 
-  // 🔹 Manejo de cambios en los inputs
+  //  Manejo de cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUsuario({
@@ -53,7 +53,7 @@ const PerfilUsuario = () => {
     });
   };
 
-  // 🔹 Actualizar perfil con useMutation
+  // Actualizar perfil con useMutation
   const handleGuardar = async (e) => {
     e.preventDefault();
 
@@ -64,9 +64,9 @@ const PerfilUsuario = () => {
     );
 
     if (result) {
-      alert("✅ Perfil actualizado correctamente");
+      alert(" Perfil actualizado correctamente");
     } else if (errorUpdate) {
-      alert(`❌ No se pudo actualizar el perfil: ${errorUpdate}`);
+      alert(` No se pudo actualizar el perfil: ${errorUpdate}`);
     }
   };
 
@@ -96,7 +96,7 @@ const PerfilUsuario = () => {
         )}
 
         <div className="row g-4">
-          {/* Formulario de edición */}
+          {/* Formulario de edicion */}
           <div className="col-md-7 d-none d-md-inline">
             <div className="card shadow-sm rounded-4 p-4">
               <h1 className="mb-3">Bienvenido, {usuario.nombres_cliente}</h1>

@@ -227,8 +227,8 @@ height: 100%;
     box-shadow: var(--card-shadow-hover);
     cursor:pointer;
 }
-.bg-brown{
-    
+.bg-pink{
+    background-color: var(--color-badge-bg);
 }
 
 .tag-rol,.tag-estado,.tag-inactivo {
