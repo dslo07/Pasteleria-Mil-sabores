@@ -228,4 +228,66 @@ router.delete("/borrar-usuario/:id", verifyToken, isAdmin, async (req, res) => {
   }
 });
 
+// ===== Actualizar Datos de usuario ===== //
+router.put("/actualizar-usuario/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const {
+    nombres_cliente,
+    appat_cliente,
+    apmat_cliente,
+    email_cliente,
+    fecha_nacimiento,
+    telefono_cliente,
+  } = req.body;
+
+  try {
+    //  Verificar cliente asociado
+    const clienteResult = await pool.query(
+      `SELECT clu.id_cliente
+       FROM cliente_usuario AS clu
+       WHERE clu.id_usuario = $1`,
+      [id]
+    );
+
+    if (clienteResult.rows.length === 0) {
+      return res.status(404).json({ error: "Cliente no encontrado para el usuario" });
+    }
+
+    const id_cliente = clienteResult.rows[0].id_cliente;
+
+    //  Actualizar datos
+    await pool.query(
+      `UPDATE cliente
+       SET nombres_cliente = $1, appat_cliente = $2, apmat_cliente = $3
+       WHERE id_cliente = $4`,
+      [nombres_cliente, appat_cliente, apmat_cliente, id_cliente]
+    );
+
+    await pool.query(
+      `UPDATE datos_cliente
+       SET email_cliente = $1, fecha_nacimiento = $2, telefono_cliente = $3
+       WHERE id_cliente = $4`,
+      [email_cliente, fecha_nacimiento, telefono_cliente, id_cliente]
+    );
+
+    //  Respuesta consistente
+    res.json({
+      success: true,
+      msg: "Usuario actualizado correctamente",
+      updatedUser: {
+        nombres_cliente,
+        appat_cliente,
+        apmat_cliente,
+        email_cliente,
+        fecha_nacimiento,
+        telefono_cliente,
+      },
+    });
+  } catch (err) {
+    console.error("Error al actualizar usuario:", err);
+    res.status(500).json({ error: "Error interno del servidor", details: err.message });
+  }
+});
+
+
 export default router;

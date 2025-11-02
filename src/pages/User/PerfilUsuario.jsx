@@ -3,6 +3,7 @@ import AlertModal from "../../components/AlerModal";
 import ModalPerfilUser from "../../components/UserCompo/ModalPerfilUser";
 import { Navigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
+import useMutation from "../../hooks/useMutation";
 
 const PerfilUsuario = () => {
   const idUsuario = localStorage.getItem("id");
@@ -20,10 +21,18 @@ const PerfilUsuario = () => {
     telefono_cliente: "",
   });
 
+  // 🔹 Hook de actualización (PUT)
+  const {
+    execute: actualizarUsuario,
+    loading: cargandoUpdate,
+    error: errorUpdate,
+    response: respuestaUpdate,
+  } = useMutation();
+
   // 🔹 Cargar datos del usuario una vez que llegan del backend
   useEffect(() => {
     if (data) {
-      const u = data.usuario || data; // por si el backend devuelve directamente el usuario
+      const u = data.usuario || data;
       setUsuario({
         nombres_cliente: u.nombres_cliente || "",
         appat_cliente: u.appat_cliente || "",
@@ -44,27 +53,20 @@ const PerfilUsuario = () => {
     });
   };
 
-  // 🔹 Actualizar perfil en el backend
+  // 🔹 Actualizar perfil con useMutation
   const handleGuardar = async (e) => {
-    e.preventDefault(); // evitar recarga
-    try {
-      const token = JSON.parse(localStorage.getItem("token"));
-      const res = await fetch(`http://localhost:5174/api/usuario/${idUsuario}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify(usuario),
-      });
+    e.preventDefault();
 
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Error al actualizar el perfil");
+    const result = await actualizarUsuario(
+      `http://localhost:5174/api/usuario/actualizar-usuario/${idUsuario}`,
+      "PUT",
+      usuario
+    );
 
+    if (result) {
       alert("✅ Perfil actualizado correctamente");
-    } catch (err) {
-      console.error("Error al guardar usuario:", err);
-      alert(`❌ No se pudo actualizar el perfil: ${err.message}`);
+    } else if (errorUpdate) {
+      alert(`❌ No se pudo actualizar el perfil: ${errorUpdate}`);
     }
   };
 
@@ -74,7 +76,6 @@ const PerfilUsuario = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("id");
-    window.location.href = "/";
   };
 
   const sesion = localStorage.getItem("id");
@@ -158,10 +159,17 @@ const PerfilUsuario = () => {
                   />
                 </div>
 
-                <button type="submit" className="btn btn-comprar w-100 mt-3">
-                  Confirmar cambios
+                <button
+                  type="submit"
+                  className="btn btn-comprar w-100 mt-3"
+                  disabled={cargandoUpdate}
+                >
+                  {cargandoUpdate ? "Guardando..." : "Confirmar cambios"}
                 </button>
               </form>
+
+              {errorUpdate && <p className="text-danger mt-2">⚠️ {errorUpdate}</p>}
+              {respuestaUpdate && <p className="text-success mt-2">✅ Cambios guardados</p>}
             </div>
           </div>
 
@@ -186,9 +194,7 @@ const PerfilUsuario = () => {
               </h4>
               <p className="text-muted mb-0">{usuario.email_cliente}</p>
               <hr />
-              <p className="text-muted">
-                Nacimiento: {usuario.fecha_nacimiento}
-              </p>
+              <p className="text-muted">Nacimiento: {usuario.fecha_nacimiento}</p>
 
               <button
                 className="btn btn-outline-primary w-100 rounded-pill my-3 d-md-none d-inline"

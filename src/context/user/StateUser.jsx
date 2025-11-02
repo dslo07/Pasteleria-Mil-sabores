@@ -5,7 +5,6 @@ const StateUser = ({ children }) => {
   const [isLogin,setIsLogin] = useState(false)
 
   useEffect(()=>{
-    
     if(id){
       setIsLogin(true)
     }else{
