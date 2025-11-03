@@ -8,6 +8,7 @@ const StateCar = ({ children }) => {
   const [ids, setIds] = useState([]);
   const [productos, setProductos] = useState([]);
   const [cupon, setCupon] = useState({ codigo: null, descuento: 0 });
+  const [cuponFELICES50, setCuponFELICES50] = useState(false); // ✅ Cupón de por vida
   const [loading, setLoading] = useState(false);
 
   // Cargar IDs desde localStorage
@@ -21,7 +22,7 @@ const StateCar = ({ children }) => {
     localStorage.setItem("carrito_ids", JSON.stringify(ids));
   }, [ids]);
 
-  // Inicializar productos según los IDs existentes al cargar
+  // Inicializar productos según IDs
   useEffect(() => {
     if (ids.length === 0) return;
     setLoading(true);
@@ -36,25 +37,21 @@ const StateCar = ({ children }) => {
       .finally(() => setLoading(false));
   }, []);
 
-  // Agregar producto por ID
+  // Agregar producto
   const agregarProd = (id) => {
-    if (ids.includes(id)) {
-      toast.error("El producto ya está en el carrito");
-      return;
-    }
+    if (ids.includes(id)) return toast.error("El producto ya está en el carrito");
 
-    setLoading(true);
-    fetch(`${API_URL}?ids=${id}`) // Traer solo el producto agregado
+    fetch(API_URL)
       .then(res => res.json())
       .then(data => {
-        const productoNuevo = Array.isArray(data) ? data[0] : data;
+        const productoNuevo = data.find(p => p.codigo_producto === id);
+        if (!productoNuevo) return toast.error("Producto no encontrado");
         productoNuevo.cantInCar = 1;
         setProductos(prev => [...prev, productoNuevo]);
         setIds(prev => [...prev, id]);
         toast.success("Producto agregado al carrito");
       })
-      .catch(() => toast.error("Error al agregar producto"))
-      .finally(() => setLoading(false));
+      .catch(() => toast.error("Error al agregar producto"));
   };
 
   // Quitar producto
@@ -92,14 +89,20 @@ const StateCar = ({ children }) => {
   // Totales
   const total = productos.reduce((acc, p) => acc + (p.cantInCar || 1), 0);
   const subtotal = productos.reduce((acc, p) => acc + (Number(p.precio_producto) * (p.cantInCar || 1)), 0);
-  const costo = subtotal - (cupon.descuento || 0);
+  
+  // Costo con descuento FELICES50
+  const costo = (subtotal * (cuponFELICES50 ? 0.9 : 1)) - (cupon.descuento || 0);
 
-  // Aplicar cupón
+  // Aplicar cupon
   const aplicarCupon = (codigo) => {
     if (!codigo) return toast.error("Ingrese un código");
+
     if (codigo === "DESCUENTO10") {
       setCupon({ codigo, descuento: subtotal * 0.1 });
       toast.success("Cupón aplicado: 10% de descuento");
+    } else if (codigo === "FELICES50") {
+      setCuponFELICES50(true);
+      toast.success("Cupón FELICES50 aplicado: 10% de descuento de por vida!");
     } else {
       setCupon({ codigo: null, descuento: 0 });
       toast.error("Cupón inválido");

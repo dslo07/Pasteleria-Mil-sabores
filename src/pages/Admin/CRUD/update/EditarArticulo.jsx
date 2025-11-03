@@ -30,7 +30,6 @@ const EditarArticulo = () => {
         setArticulo({
           titulo_blogs: blog.titulo_blogs,
           descripcion_blogs: blog.descripcion_blogs,
-          // Usamos URL final si existe, o dejamos vacío
           imagen_blogs: blog.imagen || "",
         });
       } catch (error) {

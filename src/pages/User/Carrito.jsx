@@ -4,7 +4,7 @@ import { carContext } from '../../context/carrito/carContext';
 import { useConvert } from '../../hooks/useConvert';
 
 const Carrito = () => {
-  const { total, costo, cupon, comprar, aplicarCupon } = useContext(carContext);
+  const { total, costo, cupon, comprar, aplicarCupon, vaciarCarrito } = useContext(carContext);
   const [codigoCupon, setCodigoCupon] = useState("");
 
   return (
@@ -16,6 +16,11 @@ const Carrito = () => {
           {/* Lista de productos */}
           <div className="col-12 col-md-6 overflow-auto custom-scroll p-2" style={{ maxHeight: "400px" }}>
             <CarManager />
+              {total !== 0 && (
+                <button className='btn btn-danger p-2 rounded' onClick={vaciarCarrito}>
+                  Vaciar Carrito
+                </button>
+              )}
           </div>
 
           {/* Total */}
