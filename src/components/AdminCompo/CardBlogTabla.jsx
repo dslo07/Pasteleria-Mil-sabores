@@ -1,7 +1,15 @@
 import React from "react";
 
 const CardBlogTabla = ({ blog }) => {
+
+
+
+
+
+
+
   return (
+    
     <div className="border rounded shadow-sm p-3 bg-white">
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-2">
@@ -23,7 +31,7 @@ const CardBlogTabla = ({ blog }) => {
       {/* Botones */}
       <div className="d-flex gap-2">
         <button className="btn btn-outline-primary btn-sm">Editar</button>
-        <button className="btn btn-outline-danger btn-sm">Eliminar</button>
+        <button className="btn btn-outline-danger btn-sm" onClick={()=>eliminarArticulo}>Eliminar</button>
       </div>
     </div>
   );

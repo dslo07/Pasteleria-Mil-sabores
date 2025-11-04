@@ -137,26 +137,27 @@ router.post("/login", async (req, res) => {
 router.get("/", verifyToken, isAdmin, async (_req, res) => {
   try {
     const result = await pool.query(`
-      SELECT 
-        clu.id_usuario,
-        clu.id_cliente,
-        CASE 
-          WHEN ur.id_rol = 1 THEN 'Cliente'
-          WHEN ur.id_rol = 2 THEN 'Admin'
-          ELSE 'Desconocido'
-        END AS rol,
-        da.email_cliente, 
-        da.telefono_cliente,
-        da.fecha_nacimiento,
-        cl.nombres_cliente,
-        cl.appat_cliente,
-        cl.apmat_cliente
-      FROM cliente_usuario AS clu
-      INNER JOIN cliente AS cl ON cl.id_cliente = clu.id_cliente
-      INNER JOIN datos_cliente AS da ON da.id_cliente = cl.id_cliente
-      INNER JOIN usuario AS u ON u.id_usuario = clu.id_usuario
-      INNER JOIN usuario_rol as ur on u.id_usuario = ur.id_usuario
-      ORDER BY rol ASC;
+        SELECT 
+          clu.id_usuario,
+          clu.id_cliente,
+          CASE 
+            WHEN ur.id_rol = 1 THEN 'Cliente'
+            WHEN ur.id_rol = 2 THEN 'Admin'
+            ELSE 'Desconocido'
+          END AS rol,
+          da.email_cliente, 
+          da.telefono_cliente,
+          da.fecha_nacimiento,
+          cl.nombres_cliente,
+          cl.appat_cliente,
+          cl.apmat_cliente,
+          u.activo
+        FROM cliente_usuario AS clu
+        INNER JOIN cliente AS cl ON cl.id_cliente = clu.id_cliente
+        INNER JOIN datos_cliente AS da ON da.id_cliente = cl.id_cliente
+        INNER JOIN usuario AS u ON u.id_usuario = clu.id_usuario
+        INNER JOIN usuario_rol AS ur ON u.id_usuario = ur.id_usuario
+        ORDER BY rol ASC;
     `);
 
     if (result.rows.length === 0) {
@@ -195,7 +196,7 @@ router.get("/:id", verifyToken, async (req, res) => {
       INNER JOIN datos_cliente AS da ON da.id_cliente = cl.id_cliente
       INNER JOIN usuario AS u ON u.id_usuario = clu.id_usuario
       INNER JOIN usuario_rol as ur on u.id_usuario = ur.id_usuario
-      WHERE u.id_usuario = $1
+      WHERE u.id_usuario = $1 
     `, [id]);
 
     if (result.rows.length === 0) {
@@ -227,7 +228,6 @@ router.delete("/borrar-usuario/:id", verifyToken, isAdmin, async (req, res) => {
     res.status(500).json({ msg: "Error al eliminar usuario", error: error.message });
   }
 });
-
 // ===== Actualizar Datos de usuario ===== //
 router.put("/actualizar-usuario/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
@@ -238,11 +238,17 @@ router.put("/actualizar-usuario/:id", verifyToken, async (req, res) => {
     email_cliente,
     fecha_nacimiento,
     telefono_cliente,
+    activo,
+    id_rol
   } = req.body;
 
+  const client = await pool.connect();
+
   try {
-    //  Verificar cliente asociado
-    const clienteResult = await pool.query(
+    await client.query("BEGIN");
+
+    // 1️⃣ Verificar cliente asociado al usuario
+    const clienteResult = await client.query(
       `SELECT clu.id_cliente
        FROM cliente_usuario AS clu
        WHERE clu.id_usuario = $1`,
@@ -250,27 +256,47 @@ router.put("/actualizar-usuario/:id", verifyToken, async (req, res) => {
     );
 
     if (clienteResult.rows.length === 0) {
+      await client.query("ROLLBACK");
       return res.status(404).json({ error: "Cliente no encontrado para el usuario" });
     }
 
     const id_cliente = clienteResult.rows[0].id_cliente;
 
-    //  Actualizar datos
-    await pool.query(
+    // 2️⃣ Actualizar datos personales
+    await client.query(
       `UPDATE cliente
        SET nombres_cliente = $1, appat_cliente = $2, apmat_cliente = $3
        WHERE id_cliente = $4`,
       [nombres_cliente, appat_cliente, apmat_cliente, id_cliente]
     );
 
-    await pool.query(
+    // 3️⃣ Actualizar datos de contacto
+    await client.query(
       `UPDATE datos_cliente
        SET email_cliente = $1, fecha_nacimiento = $2, telefono_cliente = $3
        WHERE id_cliente = $4`,
       [email_cliente, fecha_nacimiento, telefono_cliente, id_cliente]
     );
 
-    //  Respuesta consistente
+    // 4️⃣ Actualizar estado del usuario
+    await client.query(
+      `UPDATE usuario
+       SET activo = $1
+       WHERE id_usuario = $2`,
+      [activo, id]
+    );
+
+    // 5️⃣ Actualizar rol del usuario
+    await client.query(
+      `UPDATE usuario_rol
+       SET id_rol = $1
+       WHERE id_usuario = $2`,
+      [id_rol, id]
+    );
+
+    await client.query("COMMIT");
+
+    // 6️⃣ Respuesta al cliente
     res.json({
       success: true,
       msg: "Usuario actualizado correctamente",
@@ -281,11 +307,19 @@ router.put("/actualizar-usuario/:id", verifyToken, async (req, res) => {
         email_cliente,
         fecha_nacimiento,
         telefono_cliente,
+        activo,
+        id_rol
       },
     });
   } catch (err) {
+    await client.query("ROLLBACK");
     console.error("Error al actualizar usuario:", err);
-    res.status(500).json({ error: "Error interno del servidor", details: err.message });
+    res.status(500).json({
+      error: "Error interno del servidor",
+      details: err.message,
+    });
+  } finally {
+    client.release();
   }
 });
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { FaUsers } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
@@ -7,8 +6,7 @@ const CardUserTabla = ({ usuario }) => {
   const nombreCompleto = `${usuario.nombres_cliente || ""} ${usuario.appat_cliente || ""} ${usuario.apmat_cliente || ""}`.trim();
   const correo = usuario.email_cliente || "Sin correo";
   const rol = usuario.rol || "Cliente";
-  const activo = usuario.estado !== undefined ? usuario.estado : true;
-console.log(usuario);
+  const activo = usuario.activo
 
   return (
     

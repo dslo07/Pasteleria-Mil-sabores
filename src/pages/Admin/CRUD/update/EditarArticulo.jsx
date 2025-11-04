@@ -1,135 +1,66 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import useFetch from "../../../../hooks/useFetch"
+import React from 'react';
+import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
+function ArticuloCard({ articulo }) {
+  const { execute, isLoading, error } = useMutation();
 
-const EditarArticulo = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const eliminarArticulo = async () => {
+    if (!window.confirm("¿Seguro que quieres eliminar este artículo?")) return;
 
-  const [articulo, setArticulo] = useState({
-    titulo_blogs: "",
-    descripcion_blogs: "",
-    imagen_blogs: "",
-  });
-
-  useEffect(() => {
-    const fetchArticulo = async () => {
-      try {
-        const res = useFetch(`http://localhost:5174/api/blogs/${id}`);
-
-        if (!res.ok) throw new Error("Error al cargar el artículo");
-
-        const data = await res.json();
-
-        if (!data || data.length === 0) throw new Error("Artículo no encontrado");
-
-        const blog = data[0];
-
-        setArticulo({
-          titulo_blogs: blog.titulo_blogs,
-          descripcion_blogs: blog.descripcion_blogs,
-          imagen_blogs: blog.imagen || "",
-        });
-      } catch (error) {
-        console.error(error);
-        alert(error.message);
-      }
-    };
-
-    fetchArticulo();
-  }, [id, token]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setArticulo({ ...articulo, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:5174/api/blogs/actualizar-blog/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(articulo),
-      });
+      const token = localStorage.getItem("token");
+      const result = await execute(
+        `http://localhost:5174/api/blogs/borrar-blog/${articulo.id_blogs}`,
+        "DELETE",
+        null,
+        token
+      );
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Error al actualizar el artículo");
+      if (result) {
+        toast.success("Artículo eliminado correctamente");
+        window.location.reload();
+      } else {
+        toast.error(error || "Error al eliminar el artículo");
       }
-
-      const data = await res.json();
-      alert(`✅ Artículo actualizado con éxito: ${data.blog.titulo_blogs}`);
-      navigate("/admin/blogs");
-    } catch (error) {
-      console.error(error);
-      alert(`No se pudo actualizar el artículo: ${error.message}`);
+    } catch (err) {
+      console.error(err);
+      toast.error("Error inesperado al eliminar el artículo");
     }
   };
 
   return (
-    <div className="container mt-4">
-      <h3 className="mb-4">Editar Artículo</h3>
-      <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
-        <div className="mb-3">
-          <label className="form-label">Título</label>
-          <input
-            type="text"
-            className="form-control"
-            name="titulo_blogs"
-            value={articulo.titulo_blogs}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div className="card mb-3">
+      {articulo.imagen && (
+        <img
+          src={articulo.imagen} // usamos la URL directa
+          className="card-img-top h-50"
+          alt={articulo.titulo_blogs}
+        />
+      )}
 
-        <div className="mb-3">
-          <label className="form-label">Descripción</label>
-          <textarea
-            className="form-control"
-            name="descripcion_blogs"
-            rows="3"
-            value={articulo.descripcion_blogs}
-            onChange={handleChange}
-            required
-          />
-        </div>
+      <div className="card-body">
+        <h5 className="card-title">{articulo.titulo_blogs}</h5>
+        <p className="card-text">{articulo.descripcion_blogs}</p>
 
-        <div className="mb-3">
-          <label className="form-label">Imagen (URL)</label>
-          <input
-            type="url"
-            className="form-control"
-            name="imagen_blogs"
-            value={articulo.imagen_blogs}
-            onChange={handleChange}
-          />
-        </div>
-
-        {articulo.imagen_blogs && (
-          <div className="mb-3 text-center">
-            <img
-              src={articulo.imagen_blogs}
-              alt="Vista previa"
-              className="img-fluid rounded shadow-sm"
-              style={{ maxHeight: "200px", objectFit: "cover" }}
-            />
-          </div>
-        )}
-
-        <div className="text-end">
-          <button type="submit" className="btn btn-comprar">
-            Actualizar Artículo
+        <div className="d-flex gap-2">
+          <Link
+            to={`/admin/blog/editar-blog/${articulo.id_blogs}`}
+            className="text-decoration-none"
+          >
+            <button className="btn btn-comprar rounded">Editar</button>
+          </Link>
+          <button
+            className="btn btn-danger rounded"
+            onClick={eliminarArticulo}
+            disabled={isLoading}
+          >
+            {isLoading ? "Eliminando..." : "Eliminar"}
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
-};
+}
 
-export default EditarArticulo;
+export default ArticuloCard;

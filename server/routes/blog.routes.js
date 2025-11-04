@@ -4,9 +4,9 @@ import pool from "../bd.js";
 const blogRouter = Router();
 //crear blog
 blogRouter.post("/crear-blog", async (req, res) => {
-  const { titulo_blogs, descripcion_blogs, imagen_blog } = req.body;
+  const { titulo_blogs, descripcion_blogs, imagen_blogs } = req.body;
 
-  if (!titulo_blogs ||descripcion_blogs.trim === "") {
+  if (!titulo_blogs ||descripcion_blogs.trim() === "") {
     return res.status(400).json({ error: "Tanto el título como  del blog son obligatorio" });
   }
   
@@ -16,7 +16,7 @@ blogRouter.post("/crear-blog", async (req, res) => {
       `INSERT INTO blogs (titulo_blogs, descripcion_blogs, fecha_blogs, imagen_blogs)
         VALUES ($1, $2, $3, $4) 
         RETURNING *`,
-      [titulo_blogs, descripcion_blogs, fecha, imagen_blog]
+      [titulo_blogs, descripcion_blogs, fecha, imagen_blogs]
 
     );
 
@@ -73,13 +73,13 @@ blogRouter.get("/:id", async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT
-        b.id_blogs,
-        b.titulo_blogs,
-        b.descripcion_blogs,
-        b.imagen_blogs
-      FROM blogs b
-      WHERE b.id_blogs = $1;
-    `, [id]); // ⚠️ Pasar el parámetro
+        id_blogs,
+        titulo_blogs,
+        descripcion_blogs,
+        imagen_blogs
+      FROM blogs 
+      WHERE id_blogs = $1;
+    `, [id]); 
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Blog no encontrado" });

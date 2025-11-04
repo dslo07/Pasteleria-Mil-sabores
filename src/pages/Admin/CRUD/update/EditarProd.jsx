@@ -7,20 +7,20 @@ function EditarProd() {
   const { codigo_producto } = useParams();
   const navigate = useNavigate();
 
-  // 1️⃣ Cargar producto desde la API
+  //  Cargar producto desde la API
   const { data, loading, error } = useFetch(
     `http://localhost:5174/api/productos/${codigo_producto}`
   );
 
-  // 2️⃣ Cargar todas las categorías
+  // Cargar todas las categorías
   const { data: categorias = [], loading: loadingCats, error: errorCats } = useFetch(
     "http://localhost:5174/api/categorias"
   );
 
-  // 3️⃣ Estado local editable
+  // Estado local 
   const [producto, setProducto] = useState(null);
 
-  // 4️⃣ Actualizar el estado cuando llega la data
+  // Actualizar el estado cuando llega la data
   useEffect(() => {
     if (data) {
       setProducto({

@@ -54,7 +54,7 @@ function App() {
         {/*rutas del Admin*/}
         <Route path='/admin' element={<DashBoard/>}>
           <Route index element={<AdminStats/>}/>
-          {/*editar Usuario*/}
+          {/*editar Perfil*/}
           <Route path='admin-perfil' element={<PerfilUsuario/>}/>
           {/*Crud Categorias*/}
           <Route path='categorias' element={<AdminCat/>}/>

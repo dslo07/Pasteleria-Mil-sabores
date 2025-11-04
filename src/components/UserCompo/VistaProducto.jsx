@@ -66,7 +66,7 @@ const VistaProducto = () => {
               className={`btn w-100 ${
                 yaEnCarrito ? "btn-success" : "btn-comprar"
               }`}
-              onClick={() => !yaEnCarrito && agregarProd(producto)}
+              onClick={() => !yaEnCarrito && agregarProd(producto.codigo_producto)}
               disabled={yaEnCarrito}
             >
               {yaEnCarrito ? "Producto agregado" : "Añadir al carrito"}

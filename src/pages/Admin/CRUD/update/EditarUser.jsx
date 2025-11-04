@@ -1,89 +1,104 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
+import useMutation from "../../../../hooks/useMutation";
+
+const API_URL = "http://localhost:5174/api/usuario";
 
 function EditarUser() {
   const [usuario, setUsuario] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Cargar usuario desde la API
+  const { execute, loading, error } = useMutation();
+
+  // 🔹 Cargar usuario con useMutation
   useEffect(() => {
     const fetchUsuario = async () => {
-      try {
-        const res = await fetch(`http://localhost:5174/api/usuario/${id}`);
-        const data = await res.json();
-
-        if (data.usuario) {
-          setUsuario(data.usuario);
-        } else {
-          toast.error("Usuario no encontrado");
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error("Error al obtener el usuario");
+      const result = await execute(`${API_URL}/${id}`, "GET");
+      if (result && result.usuario) {
+        setUsuario(result.usuario);
+      } else {
+        toast.error("No se pudo cargar el usuario.");
       }
     };
 
     fetchUsuario();
   }, [id]);
 
-  if (!usuario) return <p>Cargando usuario...</p>;
+  // 🔹 Mostrar spinner mientras carga
+  if (!usuario) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "50vh" }}
+      >
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    );
+  }
 
-  // Manejar cambios en inputs
+  // 🔹 Manejar cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUsuario((prev) => ({
       ...prev,
-      [name]: value,
+      [name]:
+        value === "true" ? true : value === "false" ? false : value,
     }));
   };
 
-  // Guardar cambios
+  // 🔹 Guardar cambios
   const handleSave = async () => {
-    try {
-      const res = await fetch(`http://localhost:5174/api/usuario/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(usuario),
-      });
-      const data = await res.json();
+    const result = await execute(
+      `${API_URL}/actualizar-usuario/${id}`,
+      "PUT",
+      usuario
+    );
 
-      if (res.ok) {
-        toast.success("Usuario actualizado correctamente");
-        navigate(-1);
-      } else {
-        toast.error(data.message || "Error al actualizar el usuario");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Error de conexión con el servidor");
+    if (result) {
+      toast.success("Usuario actualizado correctamente");
+      navigate(-1);
+    } else {
+      toast.error(error || "Error al actualizar el usuario");
     }
   };
-  // Borar un usuario
-  const borrarUser = () =>{
-    const res = prompt(`Escriba el nombre del usuario para borrarlo "${usuario.nombres_cliente}"`)
-    if(res == usuario.nombres_cliente){
-      alert("Usuario eliminado con exito")
-    }else{
-      alert("Usuario no eliminado")
+
+  //  Desactivar usuario
+  const eliminarUser = async () => {
+    const confirm = prompt(
+      `Escriba el nombre del usuario para desactivarlo: "${usuario.nombres_cliente}"`
+    );
+    if (confirm !== usuario.nombres_cliente) {
+      toast.error("Usuario no desactivado");
+      return;
     }
-  }
+
+    const result = await execute(`${API_URL}/${id}`, "PUT", {
+      ...usuario,
+      activo: false,
+    });
+
+    if (result) {
+      toast.success("Usuario desactivado con éxito");
+      navigate(-1);
+    } else {
+      toast.error(error || "Error al desactivar el usuario");
+    }
+  };
 
   return (
     <div className="container my-4">
       <div className="d-flex justify-content-between align-items-center">
-        <div className="d-flex">
-          <h2 className="mr-3">Editar usuario</h2>
-
-        </div>
-        
+        <h2>Editar usuario</h2>
         <button className="btn btn-secondary" onClick={() => navigate(-1)}>
           Volver
         </button>
       </div>
 
-      <div className="row g-4">
+      <div className="row g-4 mt-3">
         {/* Columna izquierda */}
         <div className="col-12 col-md-4">
           <div className="mb-3">
@@ -96,6 +111,7 @@ function EditarUser() {
               onChange={handleChange}
             />
           </div>
+
           <div className="mb-3">
             <label className="form-label">Apellido Paterno</label>
             <input
@@ -106,6 +122,7 @@ function EditarUser() {
               onChange={handleChange}
             />
           </div>
+
           <div className="mb-3">
             <label className="form-label">Apellido Materno</label>
             <input
@@ -115,6 +132,19 @@ function EditarUser() {
               value={usuario.apmat_cliente || ""}
               onChange={handleChange}
             />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Estado</label>
+            <select
+              className="form-select"
+              name="activo"
+              value={usuario.activo}
+              onChange={handleChange}
+            >
+              <option value={true}>Activo</option>
+              <option value={false}>Inactivo</option>
+            </select>
           </div>
         </div>
 
@@ -138,6 +168,7 @@ function EditarUser() {
               className="form-control"
               name="telefono_cliente"
               value={usuario.telefono_cliente || ""}
+              placeholder="+56 9 1234 1234"
               onChange={handleChange}
             />
           </div>
@@ -165,14 +196,23 @@ function EditarUser() {
               <option value={2}>Admin</option>
             </select>
           </div>
-          <div className="d-flex  justify-content-between">
 
-            <button className="btn btn-comprar" onClick={handleSave}>
-              Guardar Cambios
+          <div className="d-flex justify-content-between">
+            <button
+              className="btn btn-comprar"
+              onClick={handleSave}
+              disabled={loading}
+            >
+              {loading ? "Guardando..." : "Guardar Cambios"}
             </button>
-          <button className="btn btn-danger btn-sm " onClick={() => borrarUser()}>
-            Borrar usuario
-          </button>
+
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={eliminarUser}
+              disabled={loading}
+            >
+              {loading ? "Eliminando..." : "Usuario Eliminado"}
+            </button>
           </div>
         </div>
       </div>

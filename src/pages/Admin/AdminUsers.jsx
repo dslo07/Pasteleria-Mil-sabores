@@ -1,24 +1,37 @@
 import React, { useState, useEffect } from "react";
-import useFetch from "../../hooks/useFetch";
+import useMutation from "../../hooks/useMutation"; 
 import CardUserTabla from "../../components/AdminCompo/CardUserTabla";
 import CompoContent from "../../components/AdminCompo/CompoContent";
 import { IoSearchSharp } from "react-icons/io5";
 
+const API_URL = "http://localhost:5174/api/usuario";
+
 const AdminUsers = () => {
-  const { data } = useFetch("http://localhost:5174/api/usuario"); 
   const [usuarios, setUsuarios] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [filtrados, setFiltrados] = useState([]);
 
-  //  Actualizar lista cuando llega la data
-  useEffect(() => {
-    if (data && data.usuarios) {
-      setUsuarios(data.usuarios);
-      setFiltrados(data.usuarios);
-    }
-  }, [data]);
+  // usamos tu custom hook
+  const { execute, loading, error } = useMutation();
 
-  //  Maneja la búsqueda
+  // función para cargar usuarios
+  const fetchUsuarios = async () => {
+    const result = await execute(API_URL, "GET");
+
+    if (result && result.usuarios) {
+      setUsuarios(result.usuarios);
+      setFiltrados(result.usuarios);
+    } else {
+      console.error("Error al obtener usuarios:", error);
+    }
+  };
+
+  // cargar al montar el componente
+  useEffect(() => {
+    fetchUsuarios();
+  }, []);
+
+  // manejar búsqueda
   const handleBuscar = (e) => {
     const texto = e.target.value.toLowerCase();
     setBusqueda(texto);
@@ -47,21 +60,25 @@ const AdminUsers = () => {
           />
         </div>
 
-        <div className="row g-4 mt-3">
-          {filtrados.length > 0 ? (
-            filtrados.map((usuario) => (
-              <div
-                key={usuario.id_usuario}
-              >
+        {loading && (
+          <p className="text-center mt-4 text-muted">Cargando usuarios...</p>
+        )}
+
+        {!loading && filtrados.length > 0 ? (
+          <div className="row g-4 mt-3">
+            {filtrados.map((usuario) => (
+              <div key={usuario.id_usuario}>
                 <CardUserTabla usuario={usuario} />
               </div>
-            ))
-          ) : (
+            ))}
+          </div>
+        ) : (
+          !loading && (
             <p className="text-center mt-4 text-muted">
               No se encontraron usuarios.
             </p>
-          )}
-        </div>
+          )
+        )}
       </div>
     </CompoContent>
   );
