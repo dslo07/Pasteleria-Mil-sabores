@@ -205,14 +205,14 @@ function EditarUser() {
             >
               {loading ? "Guardando..." : "Guardar Cambios"}
             </button>
-
+{/* 
             <button
               className="btn btn-danger btn-sm"
               onClick={eliminarUser}
               disabled={loading}
             >
               {loading ? "Eliminando..." : "Usuario Eliminado"}
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

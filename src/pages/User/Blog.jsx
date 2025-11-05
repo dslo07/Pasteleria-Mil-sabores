@@ -1,4 +1,4 @@
-import ArticuloCard from '../../components/UserCompo/ArticuloCard'
+import ArticuloCliente from '../../components/UserCompo/ArticuloCliente'
 import useFetch from "../../hooks/useFetch";
 
 function Blog() {
@@ -21,12 +21,7 @@ function Blog() {
           {blogs ? (
             blogs.map((blog, index) => (
               <div className='col-md-6 col-lg-4 mb-4' key={index}>
-                <ArticuloCard
-                  titulo={blog.titulo_blogs}
-                  descripcion={blog.descripcion_blogs}
-                  fecha={blog.fecha_blogs}
-                  img={blog.imagen}
-                />
+                <ArticuloCliente blog={blog}/>
               </div>
             ))
           ) : (

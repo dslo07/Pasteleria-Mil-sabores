@@ -40,7 +40,7 @@ function ProductosMain() {
         {!loading &&
           !error &&
           productos.slice(0, 4).map((prod) => (
-            <CardProd key={prod.codigo} producto={prod} />
+            <CardProd key={prod.codigo_producto} producto={prod} />
           ))}
       </div>
     </section>

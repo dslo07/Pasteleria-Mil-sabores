@@ -1,17 +1,12 @@
 import React, { useState,useEffect } from 'react'
 import { userContext } from './userContext'
 const StateUser = ({ children }) => {
-  const id = localStorage.getItem("id")
-  const [isLogin,setIsLogin] = useState(false)
+ const [isLogin, setIsLogin] = useState(false)
 
-  useEffect(()=>{
-    if(id){
-      setIsLogin(true)
-    }else{
-      setIsLogin(false)
-    }
-  },[id])
-
+  useEffect(() => {
+    const id = localStorage.getItem("id")
+    setIsLogin(!!id) 
+  }, [])
 
 
   return (

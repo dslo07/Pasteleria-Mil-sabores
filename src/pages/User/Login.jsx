@@ -17,7 +17,7 @@ const Login = () => {
 
     try {
       const user = await loginUsuario({ correo, contrasena });
-      console.log("Respuesta del backend:", user.token);
+      console.log("Token:", user.token);
 
       setMsg("Login satisfactorio");
       setIsLogin(true);

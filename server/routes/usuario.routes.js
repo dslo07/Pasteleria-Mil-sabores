@@ -324,4 +324,57 @@ router.put("/actualizar-usuario/:id", verifyToken, async (req, res) => {
 });
 
 
+
+// crear un usario desde administrador 
+router.post("/crear-empleado", async (req, res) => {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+
+    const { nombres, apellidoPaterno, apellidoMaterno, correo, contrasena, nacimiento } = req.body;
+
+    const hashedPassword = await bcrypt.hash(contrasena, 10);
+
+    const usuario = await client.query(
+      `INSERT INTO usuario (email_usuario, contrasena_usuario) VALUES ($1, $2) RETURNING id_usuario AS user_id`,
+      [correo, hashedPassword]
+    );
+
+    const cliente = await client.query(
+      "INSERT INTO cliente (nombres_cliente, appat_cliente, apmat_cliente) VALUES ($1, $2, $3) RETURNING id_cliente AS client_id",
+      [nombres, apellidoPaterno, apellidoMaterno]
+    );
+
+    await client.query(
+      "INSERT INTO usuario_rol (id_usuario, id_rol) VALUES ($1, $2)",
+      [usuario.rows[0].user_id, "2"]
+    );
+
+    await client.query(
+      "INSERT INTO cliente_usuario (id_usuario, id_cliente) VALUES ($1, $2)",
+      [usuario.rows[0].user_id, cliente.rows[0].client_id]
+    );
+
+    await client.query(
+      "INSERT INTO datos_cliente (id_cliente, email_cliente, fecha_nacimiento) VALUES ($1, $2, $3)",
+      [cliente.rows[0].client_id, correo, nacimiento]
+    );
+
+    await client.query("COMMIT");
+
+    const token = jwt.sign(
+      { id: usuario.rows[0].user_id, role: "user" },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    res.status(201).json({ msg: "Usuario creado", user: usuario.rows[0], token });
+  } catch (err) {
+    await client.query("ROLLBACK");
+    res.status(500).json({ error: err.message });
+  } finally {
+    client.release();
+  }
+});
+
 export default router;

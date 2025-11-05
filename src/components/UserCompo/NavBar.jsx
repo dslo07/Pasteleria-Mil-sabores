@@ -95,7 +95,7 @@ function NavBar() {
                       <span className="text-decoration-none">{total}</span>
                     </button>
                   </NavLink>
-            {isLogin ? (
+            { isLogin ? (
                 <div className='d-flex gap-2'>
                   <NavLink to="/mi-perfil">
                     <button className="btn btn-outline-success d-flex gap-2 text-decoration-none p-2">

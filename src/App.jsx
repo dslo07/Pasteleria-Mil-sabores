@@ -12,6 +12,7 @@ import PerfilUsuario from './pages/User/PerfilUsuario'
 import Contacto from './pages/User/Contacto'
 import Nosotros from './pages/User/Nosotros'
 import VistaProducto from './components/UserCompo/VistaProducto'
+import VistaBlog from './pages/User/VistaBlog'
 //Rutas para el admin
 import DashBoard from './pages/Admin/DashBoard'
 import AdminProd from './pages/Admin/AdminProd'
@@ -45,6 +46,7 @@ function App() {
           <Route path='/mi-perfil' element={<PerfilUsuario/>}/>
           <Route path='/contacto' element={<Contacto/>}/>
           <Route path='/blog' element={<Blog/>}/>
+          <Route path='/blog/:id' element={<VistaBlog/>}/>
           <Route path='/nosotros' element={<Nosotros/>}/>
           <Route path='/tienda' element={<Tienda/>}/>
           <Route path='/producto/:id' element={<VistaProducto/>}/>

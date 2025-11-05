@@ -135,7 +135,7 @@ const categorias = Array.isArray(categoriasData) ? categoriasData : [];
             <p>Cargando productos...</p>
           ) : productosFiltrados.length > 0 ? (
             productosFiltrados.map((prod) => (
-              <div key={prod.codigo}>
+              <div key={prod.codigo_producto}>
                 <CardProd producto={prod} />
               </div>
             ))
