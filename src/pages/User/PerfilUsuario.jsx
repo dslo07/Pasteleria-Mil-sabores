@@ -146,14 +146,6 @@ const PerfilUsuario = () => {
             <p className="text-muted">Nacimiento: {usuario.fecha_nacimiento}</p>
 
           </div>
-            {/*  Solo visible si el rol es admin */}
-            {rol != "user" && (
-              <div className="p-4">
-                <Link to="/admin-panel" className="btn btn-comprar w-100 text-white">
-                  Ir al panel de Administración
-                </Link>
-              </div>
-            )}
         </div>
       </div>
 
