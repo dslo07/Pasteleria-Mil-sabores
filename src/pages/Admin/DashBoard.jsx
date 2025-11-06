@@ -1,13 +1,14 @@
 import React from "react";
 import SideBar from "../../components/AdminCompo/SideBar";
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink,Navigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa6";
 
 const DashBoard = () => {
-  const usuario = JSON.parse(localStorage.getItem("usuario"));
-  const userName = "santiago"; //`${usuario.nombre} ${usuario.apellido_paterno}`;
-
-  return (
+  const rol = JSON.parse(localStorage.getItem("rol"));
+  if (rol !== "admin") {
+      return <Navigate to="/notfound" />; // redirige si no es admin
+  } 
+    return (
     <main className="d-flex vh-100 position-relative bg-light">
       {/* Sidebar fijo en desktop */}
       <div className="d-none d-md-block">
@@ -55,8 +56,8 @@ const DashBoard = () => {
         {/* Header del dashboard */}
         <header className="d-flex justify-content-between align-items-center p-3 bg-white border-bottom shadow-sm sticky-top">
           <div>
-            <h1 className="fs-3 fw-bold text-dark mb-0">
-              Bienvenido, {userName}
+            <h1 className=" text-dark mb-0">
+              Panel administrador
             </h1>
             <p className="text-muted small mb-0">
               Gestiona usuarios, productos y blog
@@ -69,7 +70,7 @@ const DashBoard = () => {
               width="45"
               className="rounded-circle border shadow-sm"
             />
-            <span className="fw-semibold">Mi Perfil</span>
+            <span >Mi Perfil</span>
           </NavLink>
         </header>
 

@@ -2,10 +2,9 @@ import React, { useState } from "react";
 
 const CrearArticulo = () => {
   const [articulo, setArticulo] = useState({
-    titulo: "",
-    descripcion: "",
-    fecha: "",
-    img: "",
+    titulo_blogs: "",
+    descripcion_blogs: "",
+    imagen_blogs: "",
   });
 
   const handleChange = (e) => {
@@ -16,16 +15,34 @@ const CrearArticulo = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Artículo creado:", articulo);
-    alert(" Artículo creado con éxito");
-    setArticulo({
-      titulo: "",
-      descripcion: "",
-      fecha: "",
-      img: "",
-    });
+
+    try {
+      const res = await fetch("http://localhost:5174/api/blogs/crear-blog", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(articulo),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Error al crear el artículo");
+      }
+
+      const data = await res.json();
+      alert(`✅ Artículo creado con éxito: ${data.blog.titulo_blogs}`);
+
+      // Reset formulario
+      setArticulo({
+        titulo_blogs: "",
+        descripcion_blogs: "",
+        imagen_blogs: "",
+      });
+    } catch (error) {
+      console.error(error);
+      alert(`No se pudo crear el artículo: ${error.message}`);
+    }
   };
 
   return (
@@ -37,9 +54,10 @@ const CrearArticulo = () => {
           <input
             type="text"
             className="form-control"
-            name="titulo"
-            value={articulo.titulo}
+            name="titulo_blogs"
+            value={articulo.titulo_blogs}
             onChange={handleChange}
+            placeholder="Titulo corto del articulo"
             required
           />
         </div>
@@ -48,24 +66,13 @@ const CrearArticulo = () => {
           <label className="form-label">Descripción</label>
           <textarea
             className="form-control"
-            name="descripcion"
+            name="descripcion_blogs"
+            placeholder="Descripción del articulo"
             rows="3"
-            value={articulo.descripcion}
+            value={articulo.descripcion_blogs}
             onChange={handleChange}
             required
           ></textarea>
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Fecha</label>
-          <input
-            type="date"
-            className="form-control"
-            name="fecha"
-            value={articulo.fecha}
-            onChange={handleChange}
-            required
-          />
         </div>
 
         <div className="mb-3">
@@ -73,17 +80,18 @@ const CrearArticulo = () => {
           <input
             type="url"
             className="form-control"
-            name="img"
-            value={articulo.img}
+            name="imagen_blogs"
+            placeholder="URL de la imagen"
+            value={articulo.imagen_blogs}
             onChange={handleChange}
             required
           />
         </div>
 
-        {articulo.img && (
+        {articulo.imagen_blogs && (
           <div className="mb-3 text-center">
             <img
-              src={articulo.img}
+              src={articulo.imagen_blogs}
               alt="Vista previa"
               className="img-fluid rounded shadow-sm"
               style={{ maxHeight: "200px", objectFit: "cover" }}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import logo  from '../../img/logo-sin-fondo.png'
 const Slider = () => {
   return (
     <div className="my-5">
@@ -26,7 +27,7 @@ const Slider = () => {
             <div className="row g-0" style={{ height: "100%" }}>
               <div className="col-6">
                 <img
-                  src="https://www.pasteleriaelparron.cl/wp-content/uploads/2019/03/IMG_8535-scaled.jpg"
+                  src={logo}
                   alt="Torta 1"
                   className="img-fluid w-100 h-100"
                   style={{ objectFit: "cover" }}

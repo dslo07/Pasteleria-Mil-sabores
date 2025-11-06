@@ -1,21 +1,19 @@
 import React from "react";
 import CompoContent from "../../components/AdminCompo/CompoContent";
+import ArticuloCard from "../../components/AdminCompo/ArticuloCard";
 import useFetch from "../../hooks/useFetch";
-import ArticuloCard from "../../components/UserCompo/ArticuloCard";
+
 const AdminBlog = () => {
-  const { data: blogs } = useFetch("/ApiBlogs.json");
+  const { data: blogs } = useFetch("http://localhost:5174/api/blogs");
 
   return (
     <div>
       <CompoContent tipo={"Blog"}>
         <div className="row">
-          {blogs && blogs.map((blog, index) => (
-            <div className="col-md-6 mb-4" key={index}>
+          {blogs && blogs.map((blog) => (
+            <div className="col-md-6 mb-4" key={blog.id_blogs}>
               <ArticuloCard
-                titulo={blog.titulo}
-                descripcion={blog.descripcion}
-                fecha={blog.fecha}
-                img={blog.img}
+                blog={blog} // Pasamos todo el objeto blog
               />
             </div>
           ))}

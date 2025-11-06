@@ -1,25 +1,30 @@
-import React from "react"
-import CardStats from "../../components/AdminCompo/CardStat"
+import React from "react";
+import useFetch from "../../hooks/useFetch";
+import CardStats from "../../components/AdminCompo/CardStat";
 import { FaUsers } from "react-icons/fa6";
 import { FaCartShopping } from "react-icons/fa6";
 import { RiAdminFill } from "react-icons/ri";
-import { FaBox } from "react-icons/fa";
 import { FaNewspaper } from "react-icons/fa6";
 
-const AdminStats = () =>{
-  return(
+const AdminStats = () => {
+  const { data, loading, error } = useFetch("http://localhost:5174/api/estadisticas");
+
+  if (loading) return <p>Cargando estadísticas...</p>;
+  if (error) return <p>Error al cargar estadísticas</p>;
+
+  return (
     <>
       <div>
-        <h2 className="">Resumen:</h2>
+        <h2>Resumen:</h2>
       </div>
-      <div className="row d-flex gap-2 px-3" >
-          <CardStats titulo={"Registrados"} img={<FaUsers />} stats={90} desc={"Clientes Con Cuenta"}/>
-          <CardStats titulo={"Productos"} img={<FaCartShopping />} stats={15} desc={"En el catalogo"}/>
-          <CardStats titulo={"Cuentas Admin"} img={<RiAdminFill />} stats={4} desc={"Cuentas Creadas"}/>
-          <CardStats titulo={"Stock Total"} img={<FaBox />} stats={25} desc={"Productos En El Inventario"}/>
-          <CardStats titulo={"Blog"} img={<FaNewspaper/>} stats={6} desc={"Articulos Creados"}/>
+      <div className="row d-flex gap-2 px-3">
+        <CardStats titulo="Registrados" img={<FaUsers />} stats={data.clientes} desc="Clientes Con Cuenta" />
+        <CardStats titulo="Productos" img={<FaCartShopping />} stats={data.productos} desc="En el catálogo" />
+        <CardStats titulo="Cuentas Admin" img={<RiAdminFill />} stats={data.administradores} desc="Cuentas Creadas" />
+        <CardStats titulo="Blog" img={<FaNewspaper />} stats={data.blogs} desc="Artículos Creados" />
       </div>
     </>
-  )
-}
-export default AdminStats
+  );
+};
+
+export default AdminStats;

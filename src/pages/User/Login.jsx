@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../../img/nombre-logo.png';
 import { loginUsuario } from '../../services/UsuarioServices';
@@ -7,43 +7,38 @@ import { userContext } from '../../context/user/userContext';
 const Login = () => {
   const navigate = useNavigate();
 
-      const [correo, setCorreo] = useState("");
-      const [contrasena, setContrasena] = useState("");
-      const [msg, setMsg] = useState("");
-      const { setIsLogin } = useContext(userContext);
-
+  const [correo, setCorreo] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [msg, setMsg] = useState("");
+  const { setIsLogin } = useContext(userContext);
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const user = await loginUsuario({ correo, contrasena }); 
-       var usuario = {
-        id: user.user.id_usuario,
-        correo: correo,
-        rol: { id: user.rol.rol_id, nombre: user.rol.nombre_rol }
-       }
-       console.log(user);
-
-       
-      // localStorage.setItem("DatosUsuario", Json.stringify(user));
-
+      const user = await loginUsuario({ correo, contrasena });
+      console.log("Token:", user.token);
 
       setMsg("Login satisfactorio");
-        setIsLogin(true)
-      
-      // 1 es de cliente y 2 es de admin
+      setIsLogin(true);
+
+      // Guardar datos en localStorage
+      localStorage.setItem("rol", JSON.stringify(user.rol));
+      localStorage.setItem("id", JSON.stringify(user.user.id));
+      localStorage.setItem("token", JSON.stringify(user.token));
+
+      // Redirección según el rol
       if (user.rol.rol_id === 1) {
-        // navigate("/"); // Redirigir a la pagina principal
-      }
-      else if (user.rol.rol_id === 2) {
-        // navigate("/admin"); // Redirigir a la pagina de admin
-      }
-      else {
-        // navigate("/"); // Redirigir a la pagina principal
+        navigate("/"); // Cliente
+      } else if (user.rol.rol_id === 2) {
+        navigate("/admin"); // Admin
+      } else {
+        navigate("/"); // Fallback
       }
 
     } catch (err) {
-      setMsg("Error: " + err.message);
+      console.error("Error al iniciar sesión:", err);
+      setMsg("Error: " + (err.message || "No se pudo iniciar sesión"));
     }
   };
 
@@ -70,9 +65,8 @@ const Login = () => {
                         <img src={logo} height="80px" alt="Logo" />
                       </div>
 
-                    {msg && <div className="alert alert-info py-2 my-2">{msg}</div>}
+                      {msg && <div className="alert alert-info py-2 my-2">{msg}</div>}
 
-                    
                       <h5 className="fw-normal mt-3 pb-3">
                         Ingresa los datos de tu cuenta
                       </h5>
@@ -109,7 +103,7 @@ const Login = () => {
                         </button>
                       </div>
 
-                      <Link to="/" className="small text-muted">volver</Link>
+                      <Link to="/" className="small text-muted">Volver</Link>
                       <p className="mb-2 pb-lg-2">
                         ¿Aún no tienes cuenta?{' '}
                         <Link to="/registro" style={{ color: '#393f81' }}>Regístrate Aquí</Link>

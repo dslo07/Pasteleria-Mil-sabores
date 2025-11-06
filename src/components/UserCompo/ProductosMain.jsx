@@ -3,7 +3,7 @@ import useFetch from '../../hooks/useFetch';
 import CardProd from './CardProd';
 
 function ProductosMain() {
-  const { data, loading, error } = useFetch("/ApiProductos.json");
+  const { data, loading, error } = useFetch(" http://localhost:5174/api/productos");
   const productos = Array.isArray(data) ? data : [];
 
   return (
@@ -40,7 +40,7 @@ function ProductosMain() {
         {!loading &&
           !error &&
           productos.slice(0, 4).map((prod) => (
-            <CardProd key={prod.codigo} producto={prod} />
+            <CardProd key={prod.codigo_producto} producto={prod} />
           ))}
       </div>
     </section>
