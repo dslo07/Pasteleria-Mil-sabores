@@ -360,6 +360,22 @@ router.post("/crear-empleado", async (req, res) => {
       [cliente.rows[0].client_id, correo, nacimiento]
     );
 
+    const datos_cliente = await client.query(`SELECT
+    c.nombres_cliente as nombres,
+    c.appat_cliente as apellidoPaterno,
+    c.apmat_cliente as apellidoMaterno,
+    c.rut_cliente as rut,
+    dc.fecha_nacimiento as nacimiento,
+(d.calle_direccion || ' ' || d.comuna_direccion || ' ' || d.numero_direccion || ' ' || d.region_direccion) AS direccion
+FROM usuario
+as u JOIN cliente_usuario as cs on (u.id_usuario = cs.id_usuario)
+JOIN cliente as c on (c.id_cliente = cs.id_cliente)
+JOIN datos_cliente as dc on (c.id_cliente = dc.id_cliente)
+LEFT JOIN direccion_cliente as direc on (c.id_cliente = direc.id_cliente)
+LEFT JOIN direccion as d on (d.id_direccion = direc.id_direccion)
+WHERE u.id_usuario = $1;`,
+        [usuario.rows[0].user_id]);
+
     await client.query("COMMIT");
 
     const token = jwt.sign(
