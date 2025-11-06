@@ -1,71 +1,91 @@
-import { useConvert } from '../../hooks/useConvert';
-import { Link } from 'react-router-dom';
-import AlertModal from '../../components/AlerModal'
-import { useState } from 'react';
-import { FiAlertTriangle } from 'react-icons/fi';
+import { useConvert } from "../../hooks/useConvert";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { FiAlertTriangle } from "react-icons/fi";
+import useMutation from "../../hooks/useMutation";
+import AlertModal from "../../components/AlerModal";
 
 function CardProdTabla({ producto }) {
+  const { execute, loading, error } = useMutation();
+  const [modal, setModal] = useState(null);
 
-const eliminarProd = async (codigo) => {
-  const respuesta = prompt(`Ingrese el código del producto para confirmar eliminación: "${codigo}"`);
+  const eliminarProd = async (codigo) => {
+    const respuesta = prompt(
+      `Ingrese el código del producto para confirmar eliminación: "${codigo}"`
+    );
 
-  if (!respuesta) return;
-  if (respuesta !== codigo) {
-    alert("Código incorrecto. No se eliminó el producto.");
-    return;
-  }
-
-  try {
-    const res = await fetch(`http://localhost:5174/api/productos/borrar-producto/${codigo}`, {
-      method: 'DELETE'
-    });
-
-    if (!res.ok) {
-      throw new Error(`Error al eliminar el producto: ${res.statusText}`);
+    if (!respuesta) return;
+    if (respuesta !== codigo) {
+      alert("❌ Código incorrecto. No se eliminó el producto.");
+      return;
     }
 
-    alert(`Producto con código "${codigo}" eliminado correctamente.`);
-    
-    window.location.reload()
-  } catch (error) {
-    console.error(error);
-    alert(error);
-  }
-};
+    const confirm = window.confirm(
+      `¿Seguro que deseas eliminar el producto "${producto.nombre_producto}"?`
+    );
+    if (!confirm) return;
 
+    const res = await execute(
+      `http://localhost:5174/api/productos/borrar-producto/${codigo}`,
+      "DELETE"
+    );
+
+    if (res && res.msg) {
+      alert(`✅ Producto "${producto.nombre_producto}" eliminado correctamente.`);
+      window.location.reload();
+    } else {
+      alert(`❌ No se pudo eliminar el producto: ${error || "Error desconocido"}`);
+    }
+  };
 
   return (
     <div className="card-Producto h-100 d-flex flex-column">
-      
+      {modal && (
+        <AlertModal
+          titulo={<><FiAlertTriangle /> Atención</>}
+          desc={modal}
+          setModal={setModal}
+        />
+      )}
+
       <img
         src={producto.imagen_producto}
         className="card-img-top border rounded-0"
         alt={producto.nombre_producto}
       />
+
       <div className="card-body d-flex flex-column flex-grow-1">
         <div>
           <div className="d-flex justify-content-between align-items-center gap-2">
             <span className="badge">{producto.nombre_categoria}</span>
           </div>
-          <h5 >{producto.nombre_producto}</h5>
+          <h5>{producto.nombre_producto}</h5>
         </div>
+
         <div className="mt-auto d-flex flex-column gap-2">
           <span className="badge-precio fw-medium">
             Precio: {useConvert(producto.precio_producto)} {producto.moneda}
           </span>
 
           <div className="d-flex gap-2">
-            <Link to={`/admin/productos/editar-producto/${producto.codigo_producto}`} className='text-decoration-none'>
-              <button className="btn btn-comprar w-100">
-                Editar 
-              </button>
+            <Link
+              to={`/admin/productos/editar-producto/${producto.codigo_producto}`}
+              className="text-decoration-none w-100"
+            >
+              <button className="btn btn-comprar w-100">Editar</button>
             </Link>
+
             <button
               className="btn btn-outline-danger py-1 px-2"
               title="Borrar producto"
               onClick={() => eliminarProd(producto.codigo_producto)}
+              disabled={loading}
             >
-              <i className="bi bi-trash-fill"></i>
+              {loading ? (
+                <span className="spinner-border spinner-border-sm"></span>
+              ) : (
+                <i className="bi bi-trash-fill"></i>
+              )}
             </button>
           </div>
         </div>

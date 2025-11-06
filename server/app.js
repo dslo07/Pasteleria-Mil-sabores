@@ -4,6 +4,7 @@ import cors from "cors";
 import usuarioRouter from "./routes/usuario.routes.js";
 import categoriaRouter from "./routes/categoria.routes.js";
 import productoRouter from "./routes/producto.routes.js";
+import dashboardRouter from "./routes/dashboard.routes.js";
 import blogRouter from "./routes/blog.routes.js";
 import 'dotenv/config';
 //documentacion con swagger
@@ -40,6 +41,7 @@ app.use("/api/usuario", usuarioRouter);
 app.use("/api/categorias", categoriaRouter);
 app.use("/api/productos", productoRouter);
 app.use("/api/blogs", blogRouter);
+app.use("/api/estadisticas", dashboardRouter);
 
 
 app.get("/health", (_req, res) => res.json({ ok: true }));

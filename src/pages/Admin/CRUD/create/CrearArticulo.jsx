@@ -57,6 +57,7 @@ const CrearArticulo = () => {
             name="titulo_blogs"
             value={articulo.titulo_blogs}
             onChange={handleChange}
+            placeholder="Titulo corto del articulo"
             required
           />
         </div>
@@ -66,6 +67,7 @@ const CrearArticulo = () => {
           <textarea
             className="form-control"
             name="descripcion_blogs"
+            placeholder="Descripción del articulo"
             rows="3"
             value={articulo.descripcion_blogs}
             onChange={handleChange}
@@ -79,6 +81,7 @@ const CrearArticulo = () => {
             type="url"
             className="form-control"
             name="imagen_blogs"
+            placeholder="URL de la imagen"
             value={articulo.imagen_blogs}
             onChange={handleChange}
             required

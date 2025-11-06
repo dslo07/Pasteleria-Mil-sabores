@@ -10,7 +10,7 @@ function NavBar() {
   const { isLogin } = useContext(userContext);
   const { total } = useContext(carContext);
   const { data: categorias, loading } = useFetch("http://localhost:5174/api/categorias");
-
+  const rol = JSON.parse(localStorage.getItem("rol"))
   return (
     <nav className="navbar navbar-expand-lg bg-white fixed-top">
       <div className="container">
@@ -95,7 +95,7 @@ function NavBar() {
                       <span className="text-decoration-none">{total}</span>
                     </button>
                   </NavLink>
-            {isLogin ? (
+            { isLogin ? (
                 <div className='d-flex gap-2'>
                   <NavLink to="/mi-perfil">
                     <button className="btn btn-outline-success d-flex gap-2 text-decoration-none p-2">

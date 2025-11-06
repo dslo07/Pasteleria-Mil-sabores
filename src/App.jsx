@@ -12,17 +12,21 @@ import PerfilUsuario from './pages/User/PerfilUsuario'
 import Contacto from './pages/User/Contacto'
 import Nosotros from './pages/User/Nosotros'
 import VistaProducto from './components/UserCompo/VistaProducto'
+import VistaBlog from './pages/User/VistaBlog'
 //Rutas para el admin
 import DashBoard from './pages/Admin/DashBoard'
 import AdminProd from './pages/Admin/AdminProd'
 import AdminUsers from './pages/Admin/AdminUsers'
+import AdminCat from './pages/Admin/AdminCat'
 import AdminBlog from './pages/Admin/AdminBlog'
 import AdminStats from './pages/Admin/AdminStats'
 //crud de admin
-import CrearProd from './pages/Admin/crud/create/CrearProd'
-import CrearUser from './pages/Admin/crud/create/CrearUser'
-import CrearArticulo from './pages/Admin/crud/create/CrearArticulo'
-import EditarProd from './pages/Admin/crud/update/EditarProd'
+import CrearProd from './pages/Admin/CRUD/create/CrearProd'
+import CrearUser from './pages/Admin/CRUD/create/CrearUser'
+import CrearArticulo from './pages/Admin/CRUD/create/CrearArticulo'
+import CrearCategoria from './pages/Admin/CRUD/create/CrearCategoria'
+import EditarProd from './pages/Admin/CRUD/update/EditarProd'
+import EditarCat from './pages/Admin/CRUD/update/EditarCat'
 import EditarUser from './pages/Admin/CRUD/update/EditarUser'
 import EditarArticulo from './pages/Admin/CRUD/update/EditarArticulo'
 // Toast (alert)
@@ -42,6 +46,7 @@ function App() {
           <Route path='/mi-perfil' element={<PerfilUsuario/>}/>
           <Route path='/contacto' element={<Contacto/>}/>
           <Route path='/blog' element={<Blog/>}/>
+          <Route path='/blog/:id' element={<VistaBlog/>}/>
           <Route path='/nosotros' element={<Nosotros/>}/>
           <Route path='/tienda' element={<Tienda/>}/>
           <Route path='/producto/:id' element={<VistaProducto/>}/>
@@ -51,13 +56,21 @@ function App() {
         {/*rutas del Admin*/}
         <Route path='/admin' element={<DashBoard/>}>
           <Route index element={<AdminStats/>}/>
+          {/*editar Perfil*/}
           <Route path='admin-perfil' element={<PerfilUsuario/>}/>
+          {/*Crud Categorias*/}
+          <Route path='categorias' element={<AdminCat/>}/>
+          <Route path='categorias/editar-categoria/:id' element={<EditarCat/>}/>
+          <Route path='categorias/crear-categoria' element={<CrearCategoria/>}/>
+          {/*Crud Productos*/}
           <Route path='productos' element={<AdminProd/>}/>
           <Route path='productos/crear-producto' element={<CrearProd/>}/>
           <Route path="productos/editar-producto/:codigo_producto" element={<EditarProd />} />
+          {/*Crud Usuarios*/}
           <Route path='usuarios'   element={<AdminUsers/>}/>
           <Route path='usuarios/crear-usuario' element={<CrearUser/>}/>
           <Route path='usuarios/editar-usuario/:id' element={<EditarUser/>}/>
+          {/*Crud Blogs*/}
           <Route path='blog'   element={<AdminBlog  />}/>
           <Route path='blog/crear-blog' element={<CrearArticulo/>}/>
           <Route path='blog/editar-blog/:id' element={<EditarArticulo/>}/>

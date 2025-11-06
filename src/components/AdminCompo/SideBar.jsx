@@ -3,63 +3,64 @@ import { NavLink } from "react-router-dom";
 import logotipo from "../../img/image.png";
 import nombrelogo from "../../img/nombre-logo.png";
 import { IoStatsChart } from "react-icons/io5";
-import { FaCartShopping } from "react-icons/fa6";
-import { FaUserCircle } from "react-icons/fa";
+import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { RiNewsFill } from "react-icons/ri";
+import { IoDuplicate } from "react-icons/io5";
+
 
 const SideBar = () => {
+  const menuItems = [
+    { to: "/admin", label: "Dashboard", icon: <IoStatsChart /> },
+    { to: "/admin/productos", label: "Control de Stock", icon: <FaShoppingCart /> },
+    { to: "/admin/categorias", label: "Categorías", icon: <IoDuplicate /> },
+    { to: "/admin/usuarios", label: "Usuarios", icon: <FaUserCircle /> },
+    { to: "/admin/blog", label: "Blog", icon: <RiNewsFill /> },
+    { to: "/admin/admin-perfil", label: "Mi Perfil", icon: <FaUserCircle />, hideOnDesktop: true },
+  ];
+
   return (
     <div
       className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dash h-100"
       style={{ width: "280px" }}
     >
-      {/* Logo y nombre */}
+      {/* Logo */}
       <img src={nombrelogo} alt="nombre de la empresa" width="200px" />
       <hr />
 
       {/* Menú */}
       <ul className="nav nav-pills flex-column mb-auto">
-        <li className="nav-item">
-          <NavLink  to="/admin"  className={({ isActive }) => "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")}>
-            Dashboard
-          </NavLink>
-        </li>
-
-        <li className="nav-item">
-          <NavLink to="/admin/productos" className={({ isActive }) => "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")}>
-            <FaCartShopping className="me-2" />
-            Control de Stock
-          </NavLink>
-        </li>
-
-        <li className="nav-item">
-          <NavLink to="/admin/usuarios" className={({ isActive }) => "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")}>
-            <FaUserCircle className="me-2" />
-            Usuarios
-          </NavLink>
-        </li>
-
-        <li className="nav-item">
-          <NavLink to="/admin/blog" className={({ isActive }) =>  "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")}>
-            <RiNewsFill className="me-2" />
-            Blog
-          </NavLink>
-        </li>
-        <li className="nav-item d-lg-none">
-          <NavLink to="/admin/admin-perfil" className={({ isActive }) =>  "nav-link d-flex align-items-center " + (isActive ? "active" : "text-white")}>
-            <RiNewsFill className="me-2" />
-            Mi Perfil
-          </NavLink>
-        </li>
+        {menuItems.map(({ to, label, icon, hideOnDesktop }) => (
+          <li key={to} className={`nav-item ${hideOnDesktop ? "d-lg-none" : ""}`}>
+            <NavLink
+              to={to}
+              className={({ isActive }) =>
+                `nav-link d-flex align-items-center ${
+                  isActive ? "active" : "text-white"
+                }`
+              }
+            >
+              {icon && <span className="me-2">{icon}</span>}
+              {label}
+            </NavLink>
+          </li>
+        ))}
       </ul>
 
       <hr />
 
-      {/* Link a vista de usuario */}
+      {/* Enlace a tienda */}
       <div>
-
-        <NavLink to="/tienda" className="d-flex align-items-center text-white text-decoration-none">
-          <img src={logotipo} alt="" width="32" height="32" className="rounded-circle me-2"/>
+        <NavLink
+          to="/tienda"
+          className="d-flex align-items-center text-white text-decoration-none"
+        >
+          <img
+            src={logotipo}
+            alt="logo tienda"
+            width="32"
+            height="32"
+            className="rounded-circle me-2"
+          />
           <strong>Volver a tienda</strong>
         </NavLink>
       </div>
