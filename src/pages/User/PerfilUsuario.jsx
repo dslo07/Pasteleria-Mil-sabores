@@ -58,8 +58,8 @@ const PerfilUsuario = () => {
       "PUT",
       usuario
     );
-    if (result) alert("✅ Perfil actualizado correctamente");
-    else if (errorUpdate) alert(`❌ No se pudo actualizar el perfil: ${errorUpdate}`);
+    if (result) alert(" Perfil actualizado correctamente");
+    else if (errorUpdate) alert(` No se pudo actualizar el perfil: ${errorUpdate}`);
   };
 
   const cerrarSesion = () => {
