@@ -1,12 +1,24 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../../img/nombre-logo.png';
-import { loginUsuario } from '../../services/UsuarioServices';
+import Footer from "../../components/UserCompo/Footer";
 import { userContext } from '../../context/user/userContext';
 
-const Login = () => {
+const Login = () => {   
   const navigate = useNavigate();
 
+const API_URL = "http://localhost:5174/api/usuario";
+
+async function loginUsuario({ correo, contrasena }) {
+  const res = await fetch(`${API_URL}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ correo, contrasena }),
+  });
+  if (!res.ok) throw new Error((await res.json()).error || "Error al iniciar sesión");
+  return await res.json();
+}
+  
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [msg, setMsg] = useState("");

@@ -16,9 +16,9 @@ try {
   swaggerDocs = JSON.parse(
     fs.readFileSync("./swagger.json", "utf-8")
   );
-  console.log("✅ Swagger cargado correctamente");
+  console.log("Swagger cargado correctamente");
 } catch (err) {
-  console.error("⚠️ Error cargando Swagger, la documentación no estará disponible:", err);
+  console.error("Error cargando Swagger, la documentación no estará disponible:", err);
 }
 
 
@@ -26,11 +26,11 @@ try {
 
 const app = express();
 process.on("uncaughtException", (err) => {
-  console.error("❌ Error no capturado:", err);
+  console.error("Error no capturado:", err);
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-  console.error("❌ Rechazo no manejado:", reason);
+  console.error("Rechazo no manejado:", reason);
 });
 
 app.use(cors({ origin: ["http://localhost:5173", "http://localhost:5174"] }));
@@ -48,5 +48,5 @@ app.get("/health", (_req, res) => res.json({ ok: true }));
 
 const PORT = process.env.PORT || 5174;
 app.listen(PORT, () => {
-  console.log(`🚀 API corriendo en http://localhost:${PORT}`);
+  console.log(`API corriendo en http://localhost:${PORT}`);
 });

@@ -10,6 +10,7 @@ const router = Router();
 
 // ===== Middleware de autenticación ===== //
 const verifyToken = (req, res, next) => {
+
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (!token) return res.status(403).json({ msg: "Token no proporcionado" });
@@ -22,7 +23,7 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ msg: "Token inválido o expirado" });
   }
 };
-
+// ===== Middleware de autorización de admin ===== //
 const isAdmin = (req, res, next) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ msg: "Acceso denegado: solo admins" });
@@ -32,10 +33,10 @@ const isAdmin = (req, res, next) => {
 
 // ===== Validación rápida ===== //
 if (!process.env.JWT_SECRET) {
-  console.error("❌ ERROR: No se encontró JWT_SECRET en .env");
+  console.error("ERROR: No se encontró JWT_SECRET en .env");
   process.exit(1);
 } else {
-  console.log("✅ JWT_SECRET cargado correctamente");
+  console.log("JWT_SECRET cargado correctamente");
 }
 
 // ===== Registro de usuario ===== //
@@ -43,9 +44,8 @@ router.post("/crear", async (req, res) => {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-
     const { nombres, apellidoPaterno, apellidoMaterno, correo, contrasena, nacimiento } = req.body;
-
+    
     const hashedPassword = await bcrypt.hash(contrasena, 10);
 
     const usuario = await client.query(
