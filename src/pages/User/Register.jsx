@@ -1,57 +1,82 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import logo from '../../img/nombre-logo.png';
-import { registrarUsuario } from '../../services/UsuarioServices';
-import { useNavigate } from "react-router-dom";
-import { supabase } from '../../Lib/supabase';
-  
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../../img/nombre-logo.png";
+import { supabase } from "../../Lib/supabase";
+
 function Register() {
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    nombres: '',
-    apellidoPaterno: '',
-    apellidoMaterno: '',
-    correo: '',
-    contrasena: '',
-    nacimiento: ''
+    nombres: "",
+    apellidoPaterno: "",
+    apellidoMaterno: "",
+    correo: "",
+    contrasena: "",
+    nacimiento: "",
   });
-  const [msg, setMsg] = useState('');
+  const [msg, setMsg] = useState("");
 
   const onChange = (e) => {
-    const { id, value } = e.target;
-    setForm(prev => ({ ...prev, [id]: value }));
+    const { id, value } = e.target;             
+    setForm((prev) => ({ ...prev, [id]: value }));
   };
+
+  const API_URL = "http://localhost:5174/api/usuario";
+
+  async function registrarUsuario(payload) {
+    const res = await fetch(`${API_URL}/crear`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),          
+    });
+
+    let data = {};
+    try { data = await res.json(); } catch {}
+
+    if (!res.ok) {
+      throw new Error(data.error || data.msg || "Error al registrar");
+    }
+    return data;
+  }
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-  if (!form.nombres || !form.apellidoPaterno || !form.correo || !form.contrasena || !form.nacimiento) {
-    setMsg("Debes completar todos los campos obligatorios sino quieres tener problemas. 🔫🔫🔫");
-    return;
-  }
-    try {
-      const { correo, contrasena } = form;
+    if (!form.nombres || !form.apellidoPaterno || !form.correo || !form.contrasena || !form.nacimiento) {
+      setMsg("Debes completar todos los campos obligatorios.");
+      return;
+    }
 
+    try {
+      // Limpia el payload (solo strings/fechas, nada de DOM/eventos)
+      const payload = {
+        nombres: form.nombres ?? "",
+        apellidoPaterno: form.apellidoPaterno ?? "",
+        apellidoMaterno: form.apellidoMaterno ?? "",
+        correo: form.correo ?? "",
+        contrasena: form.contrasena ?? "",
+        nacimiento: form.nacimiento ?? "",
+      };
+
+      // 1) Supabase (usa form.correo / form.contrasena)
       const { data, error } = await supabase.auth.signUp({
-        email: correo,
-        password: contrasena,
+        email: form.correo,
+        password: form.contrasena,
         options: {
           emailRedirectTo: `${import.meta.env.VITE_SITE_URL}/login`,
         },
       });
-
       if (error) throw error;
 
-      // setMsg("Cuenta creada. Revisa tu correo para confirmar tu cuenta.");
-      await registrarUsuario(form);  
-      setMsg("registrado con exito padre, redirigiendo a login...");
-      setTimeout(() => { navigate("/login"); }, 2000);
+      // 2) Backend (Express) – payload limpio
+      await registrarUsuario(payload);
+
+      setMsg("Registrado con éxito. Redirigiendo a login…");
+      setTimeout(() => navigate("/login"), 1000);
     } catch (err) {
       setMsg("Error: " + err.message);
     }
   };
-
    return (
     <section className="vh-100" style={{ backgroundColor: '#FFC0CB' }}>
       <div className="container py-1 h-100">

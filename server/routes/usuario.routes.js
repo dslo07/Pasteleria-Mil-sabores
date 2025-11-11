@@ -4,130 +4,149 @@ import pool from "../bd.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+import { verifyToken, isAdmin } from "./auth.js";
 dotenv.config();
 
 const router = Router();
-
-// ===== Middleware de autenticación ===== //
-const verifyToken = (req, res, next) => {
-
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (!token) return res.status(403).json({ msg: "Token no proporcionado" });
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id, role }
-    next();
-  } catch (err) {
-    return res.status(401).json({ msg: "Token inválido o expirado" });
-  }
-};
-// ===== Middleware de autorización de admin ===== //
-const isAdmin = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ msg: "Acceso denegado: solo admins" });
-  }
-  next();
-};
-
-// ===== Validación rápida ===== //
-if (!process.env.JWT_SECRET) {
-  console.error("ERROR: No se encontró JWT_SECRET en .env");
-  process.exit(1);
-} else {
-  console.log("JWT_SECRET cargado correctamente");
-}
 
 // ===== Registro de usuario ===== //
 router.post("/crear", async (req, res) => {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    const { nombres, apellidoPaterno, apellidoMaterno, correo, contrasena, nacimiento } = req.body;
-    
+
+    const {
+      nombres,
+      apellidoPaterno,
+      apellidoMaterno,
+      correo,
+      contrasena,
+      nacimiento,
+    } = req.body;
+
     const hashedPassword = await bcrypt.hash(contrasena, 10);
 
+    // 1) Crear usuario (activo por defecto TRUE en tu modelo; si no, agrégalo)
     const usuario = await client.query(
-      `INSERT INTO usuario (email_usuario, contrasena_usuario) VALUES ($1, $2) RETURNING id_usuario AS user_id`,
-      [correo, hashedPassword]
+      `INSERT INTO usuario (email_usuario, contrasena_usuario)
+       VALUES ($1, $2)
+       RETURNING id_usuario AS user_id, email_usuario`,
+      [String(correo).trim().toLowerCase(), hashedPassword]
     );
 
+    // 2) Crear cliente
     const cliente = await client.query(
-      "INSERT INTO cliente (nombres_cliente, appat_cliente, apmat_cliente) VALUES ($1, $2, $3) RETURNING id_cliente AS client_id",
+      `INSERT INTO cliente (nombres_cliente, appat_cliente, apmat_cliente)
+       VALUES ($1, $2, $3)
+       RETURNING id_cliente AS client_id`,
       [nombres, apellidoPaterno, apellidoMaterno]
     );
 
+    // 3) Rol por defecto = 1 (cliente)
     await client.query(
-      "INSERT INTO usuario_rol (id_usuario, id_rol) VALUES ($1, $2)",
-      [usuario.rows[0].user_id, "1"]
+      `INSERT INTO usuario_rol (id_usuario, id_rol) VALUES ($1, $2)`,
+      [usuario.rows[0].user_id, 1] // usa número, no "1" string
     );
 
+    // 4) Vínculo usuario-cliente
     await client.query(
-      "INSERT INTO cliente_usuario (id_usuario, id_cliente) VALUES ($1, $2)",
+      `INSERT INTO cliente_usuario (id_usuario, id_cliente) VALUES ($1, $2)`,
       [usuario.rows[0].user_id, cliente.rows[0].client_id]
     );
 
+    // 5) Datos cliente
     await client.query(
-      "INSERT INTO datos_cliente (id_cliente, email_cliente, fecha_nacimiento) VALUES ($1, $2, $3)",
-      [cliente.rows[0].client_id, correo, nacimiento]
+      `INSERT INTO datos_cliente (id_cliente, email_cliente, fecha_nacimiento)
+       VALUES ($1, $2, $3)`,
+      [cliente.rows[0].client_id, String(correo).trim().toLowerCase(), nacimiento]
     );
+
+    // 6) (Opcional) emitir token post-registro
+    const payload = { id: usuario.rows[0].user_id, rol: "cliente" };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN || "15m",
+    });
 
     await client.query("COMMIT");
 
-    const token = jwt.sign(
-      { id: usuario.rows[0].user_id, role: "user" },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
-    );
-
-    res.status(201).json({ msg: "Usuario creado", user: usuario.rows[0], token });
+    return res.status(201).json({
+      msg: "Usuario creado",
+      token,
+      user: {
+        id: usuario.rows[0].user_id,
+        email: usuario.rows[0].email_usuario,
+        rol: "cliente",
+      },
+    });
   } catch (err) {
     await client.query("ROLLBACK");
-    res.status(500).json({ error: err.message });
+    console.error("CREAR ERROR:", err);
+    return res.status(500).json({ msg: "Error interno" });
   } finally {
     client.release();
   }
 });
 
-// ===== Login de usuario ===== //  
+// ===== Login de usuario ===== //
 router.post("/login", async (req, res) => {
   const client = await pool.connect();
   try {
-    await client.query("BEGIN");
+    const correo = String(req.body.correo || "").trim().toLowerCase();
+    const contrasena = String(req.body.contrasena || "");
 
-    const { correo, contrasena } = req.body;
-
-    const usuarioQuery = await client.query(
-      `SELECT id_usuario AS user_id, contrasena_usuario FROM usuario WHERE email_usuario = $1`,
+    // 1) Buscar usuario por email y activo
+    const { rows } = await client.query(
+      `SELECT id_usuario, contrasena_usuario, email_usuario
+       FROM usuario
+       WHERE email_usuario = $1 AND activo = TRUE`,
       [correo]
     );
 
-    if (!usuarioQuery.rows.length) {
-      return res.status(401).json({ msg: "Usuario no encontrado" });
+    if (rows.length === 0) {
+      return res.status(400).json({ msg: "Correo o contraseña inválidos" });
     }
 
-    const usuario = usuarioQuery.rows[0];
+    const user = rows[0];
 
-    const validPass = await bcrypt.compare(contrasena, usuario.contrasena_usuario);
-    if (!validPass) return res.status(401).json({ msg: "Contraseña incorrecta" });
+    // 2) Comparar contraseña con bcrypt
+    const ok = await bcrypt.compare(contrasena, user.contrasena_usuario);
+    if (!ok) {
+      return res.status(400).json({ msg: "Correo o contraseña inválidos" });
+    }
 
-    const rolQuery = await client.query(
-      "SELECT id_rol AS rol_id FROM usuario_rol WHERE id_usuario = $1",
-      [usuario.user_id]
+    // 3) Obtener roles por id
+    const { rows: rolesRows } = await client.query(
+      `SELECT r.descripcion_rol
+         FROM usuario_rol AS ur
+         JOIN rol AS r ON r.id_rol = ur.id_rol
+        WHERE ur.id_usuario = $1`,
+      [user.id_usuario]
     );
 
-    const rol = rolQuery.rows[0].rol_id === 1 ? "user" : "admin";
+    // ✅ Arreglo de roles y primer rol
+    const roles = rolesRows.map(r => r.descripcion_rol);
+    const rolUser = roles[0] ?? "cliente";
 
-    const token = jwt.sign({ id: usuario.user_id, role: rol }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
+    // 4) Generar token JWT
+    const payload = { id: user.id_usuario, rol: rolUser };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN || "15m",
     });
 
-    await client.query("COMMIT");
-    res.status(200).json({ msg: "Login exitoso", user: { id: usuario.user_id }, rol, token });
+    // 5) Responder
+    return res.status(200).json({
+      msg: "Login exitoso",
+      token,
+      user: {
+        id: user.id_usuario,
+        email: user.email_usuario,
+        rol: rolUser,
+        roles, // si quieres también los envías
+      },
+    });
   } catch (err) {
-    await client.query("ROLLBACK");
-    res.status(500).json({ error: err.message });
+    console.error("LOGIN ERROR:", err);
+    return res.status(500).json({ msg: "Error interno" });
   } finally {
     client.release();
   }
