@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
-import AlertModal from "../../components/AlerModal";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import ModalPerfilUser from "../../components/UserCompo/ModalPerfilUser";
 import useFetch from "../../hooks/useFetch";
 import useMutation from "../../hooks/useMutation";
 
 const PerfilUsuario = () => {
   const idUsuario = localStorage.getItem("id");
+  const navigate = useNavigate();
+
   const { data, loading, error } = useFetch(`http://localhost:5174/api/usuario/${idUsuario}`);
 
   const [rol, setRol] = useState(null);
@@ -22,16 +23,28 @@ const PerfilUsuario = () => {
     telefono_cliente: "",
   });
 
-  const { execute: actualizarUsuario, loading: cargandoUpdate, error: errorUpdate, response: respuestaUpdate } = useMutation();
+  const {
+    execute: actualizarUsuario,
+    loading: cargandoUpdate,
+    error: errorUpdate,
+    response: respuestaUpdate,
+  } = useMutation();
 
-  // 🔹 Leer rol una vez montado el componente
+  // Estado y handler para el botón "Historial de Pedidos"
+  const [cargandoHist, setCargandoHist] = useState(false);
+  
+  const handleHistorialClick = () => {
+    setCargandoHist(true);
+    setTimeout(() => {
+      navigate("/historial-pedido");
+    }, 1000);
+  };
+
   useEffect(() => {
     const rolGuardado = localStorage.getItem("rol");
-    console.log("ROL guardado:", rolGuardado);
     setRol(rolGuardado ? rolGuardado.trim().toLowerCase() : null);
   }, []);
 
-  // 🔹 Cargar datos del usuario
   useEffect(() => {
     if (data) {
       const u = data.usuario || data;
@@ -48,7 +61,7 @@ const PerfilUsuario = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUsuario({ ...usuario, [name]: value });
+    setUsuario((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleGuardar = async (e) => {
@@ -57,19 +70,22 @@ const PerfilUsuario = () => {
       `http://localhost:5174/api/usuario/actualizar-usuario/${idUsuario}`,
       "PUT",
       usuario
-    );
-    if (result) alert("✅ Perfil actualizado correctamente");
-    else if (errorUpdate) alert(`❌ No se pudo actualizar el perfil: ${errorUpdate}`);
+    );  
+    if (result) {
+      alert("Perfil actualizado correctamente");
+    } else if (errorUpdate) {
+      alert(`No se pudo actualizar el perfil: ${errorUpdate?.message || errorUpdate}`);
+    }
   };
 
   const cerrarSesion = () => {
     setModal(true);
-    localStorage.clear();
+    localStorage.clear(); // En el siguiente render te mandará a /login
   };
 
   if (!localStorage.getItem("id")) return <Navigate to="/login" />;
   if (loading) return <p>Cargando...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <p>Error: {String(error)}</p>;
 
   return (
     <div className="container mt-5 p-4">
@@ -91,31 +107,65 @@ const PerfilUsuario = () => {
             <form onSubmit={handleGuardar}>
               <div className="mb-3">
                 <label className="form-label">Nombres</label>
-                <input type="text" className="form-control" name="nombres_cliente" value={usuario.nombres_cliente} onChange={handleChange}/>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="nombres_cliente"
+                  value={usuario.nombres_cliente}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="row mb-3">
                 <div className="col-md-6">
                   <label className="form-label">Apellido Paterno</label>
-                  <input type="text" className="form-control" name="appat_cliente" value={usuario.appat_cliente} onChange={handleChange}/>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="appat_cliente"
+                    value={usuario.appat_cliente}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="form-label">Apellido Materno</label>
-                  <input type="text" className="form-control" name="apmat_cliente" value={usuario.apmat_cliente} onChange={handleChange}/>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="apmat_cliente"
+                    value={usuario.apmat_cliente}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
 
               <div className="mb-3">
                 <label className="form-label">Correo</label>
-                <input type="email" className="form-control" name="email_cliente" value={usuario.email_cliente} onChange={handleChange}/>
+                <input
+                  type="email"
+                  className="form-control"
+                  name="email_cliente"
+                  value={usuario.email_cliente}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="mb-3">
                 <label className="form-label">Fecha de Nacimiento</label>
-                <input type="date" className="form-control" name="fecha_nacimiento" value={usuario.fecha_nacimiento} onChange={handleChange}/>
+                <input
+                  type="date"
+                  className="form-control"
+                  name="fecha_nacimiento"
+                  value={usuario.fecha_nacimiento}
+                  onChange={handleChange}
+                />
               </div>
 
-              <button type="submit" className="btn btn-comprar w-100 mt-3" disabled={cargandoUpdate}>
+              <button
+                type="submit"
+                className="btn btn-comprar w-100 mt-3"
+                disabled={cargandoUpdate}
+              >
                 {cargandoUpdate ? "Guardando..." : "Confirmar cambios"}
               </button>
             </form>
@@ -145,11 +195,21 @@ const PerfilUsuario = () => {
             <hr />
             <p className="text-muted">Nacimiento: {usuario.fecha_nacimiento}</p>
 
+            <button
+              type="button"
+              className="btn btn-comprar w-100 mt-3"
+              disabled={cargandoHist}
+              onClick={handleHistorialClick}
+            >
+              {cargandoHist ? "Cargando..." : "Historial de Pedidos"}
+            </button>
           </div>
         </div>
       </div>
 
-      {mostrar && <ModalPerfilUser usuario={usuario} handleChange={handleChange} />}
+      {mostrar && (
+        <ModalPerfilUser usuario={usuario} handleChange={handleChange} />
+      )}
     </div>
   );
 };
