@@ -23,10 +23,11 @@ const Login = () => {
       setIsLogin(true);
 
       // Guardar datos en localStorage
-      localStorage.setItem("rol", JSON.stringify(user.rol));
-      localStorage.setItem("id", JSON.stringify(user.user.id));
-      localStorage.setItem("token", JSON.stringify(user.token));
+      localStorage.setItem("rol", user.rol);
+      localStorage.setItem("id", user.user.id);
+      localStorage.setItem("token", user.token);
 
+      
       // Redirección según el rol
       if (user.rol.rol_id === 1) {
         navigate("/"); // Cliente

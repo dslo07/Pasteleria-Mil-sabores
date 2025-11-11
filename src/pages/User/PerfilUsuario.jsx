@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"; // corregido
 import AlertModal from "../../components/AlerModal";
 import ModalPerfilUser from "../../components/UserCompo/ModalPerfilUser";
 import useFetch from "../../hooks/useFetch";
 import useMutation from "../../hooks/useMutation";
 
 const PerfilUsuario = () => {
-  const idUsuario = localStorage.getItem("id");
-  const { data, loading, error } = useFetch(`http://localhost:5174/api/usuario/${idUsuario}`);
+  const navigate = useNavigate();
 
-  const [rol, setRol] = useState(null);
+  const [rol, setRol] = useState("");
+  const [idUsuario, setIdUsuario] = useState(null);
   const [mostrar, setMostrar] = useState(false);
   const [modal, setModal] = useState(false);
 
@@ -22,18 +23,32 @@ const PerfilUsuario = () => {
     telefono_cliente: "",
   });
 
-  const { execute: actualizarUsuario, loading: cargandoUpdate, error: errorUpdate, response: respuestaUpdate } = useMutation();
+  const { execute: actualizarUsuario, loading: cargandoUpdate, error: errorUpdate } = useMutation();
 
-  // 🔹 Leer rol una vez montado el componente
+  // Detectar rol e id desde token JWT
   useEffect(() => {
-    const rolGuardado = localStorage.getItem("rol");
-    console.log("ROL guardado:", rolGuardado);
-    setRol(rolGuardado ? rolGuardado.trim().toLowerCase() : null);
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const decoded = jwtDecode(token);
+        setRol(decoded.rol || decoded.role || "");
+        setIdUsuario(decoded.id || decoded.userId || null);
+      } else {
+        console.warn("⚠️ No hay token guardado");
+      }
+    } catch (error) {
+      console.error("❌ Error al decodificar token:", error);
+    }
   }, []);
 
-  // 🔹 Cargar datos del usuario
+  // Traer datos del usuario solo si idUsuario existe
+  const { data, loading, error } = useFetch(
+    idUsuario ? `http://localhost:5174/api/usuario/${idUsuario}` : null
+  );
+
+  // Cargar datos del usuario
   useEffect(() => {
-    if (data) {
+    if (data && (data.usuario || data.nombres_cliente)) {
       const u = data.usuario || data;
       setUsuario({
         nombres_cliente: u.nombres_cliente || "",
@@ -41,7 +56,7 @@ const PerfilUsuario = () => {
         apmat_cliente: u.apmat_cliente || "",
         email_cliente: u.email_cliente || "",
         fecha_nacimiento: u.fecha_nacimiento || "",
-        telefono_cliente: u.telefono_cliente || "",
+        telefono_cliente: u.telefono_cliente || ""
       });
     }
   }, [data]);
@@ -50,24 +65,41 @@ const PerfilUsuario = () => {
     const { name, value } = e.target;
     setUsuario({ ...usuario, [name]: value });
   };
-
+  
   const handleGuardar = async (e) => {
-    e.preventDefault();
-    const result = await actualizarUsuario(
-      `http://localhost:5174/api/usuario/actualizar-usuario/${idUsuario}`,
-      "PUT",
-      usuario
-    );
-    if (result) alert("✅ Perfil actualizado correctamente");
-    else if (errorUpdate) alert(`❌ No se pudo actualizar el perfil: ${errorUpdate}`);
-  };
+  e.preventDefault();
+  if (!idUsuario) {
+    alert("ID de usuario no disponible");
+    return;
+  }
+
+  // Llamar al endpoint de actualización de perfil
+  const result = await actualizarUsuario(
+    `http://localhost:5174/api/usuario/actualizar-perfil/${idUsuario}`,
+    "PUT",
+    usuario
+  );
+  if (errorUpdate) {
+    alert(`❌ Error: ${errorUpdate}`);
+  }
+  if (result?.success) {
+    alert("✅ Perfil actualizado correctamente");
+  } else if (errorUpdate) {
+    alert(`❌ No se pudo actualizar el perfil: ${errorUpdate}`);
+  } else {
+    alert("❌ Ocurrió un error desconocido");
+  }
+};
+
 
   const cerrarSesion = () => {
     setModal(true);
-    localStorage.clear();
+    localStorage.removeItem("id");
+    localStorage.removeItem("rol");
+    localStorage.removeItem("token");
   };
 
-  if (!localStorage.getItem("id")) return <Navigate to="/login" />;
+  if (!localStorage.getItem("token")) return <Navigate to="/login" />;
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -91,31 +123,65 @@ const PerfilUsuario = () => {
             <form onSubmit={handleGuardar}>
               <div className="mb-3">
                 <label className="form-label">Nombres</label>
-                <input type="text" className="form-control" name="nombres_cliente" value={usuario.nombres_cliente} onChange={handleChange}/>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="nombres_cliente"
+                  value={usuario.nombres_cliente}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="row mb-3">
                 <div className="col-md-6">
                   <label className="form-label">Apellido Paterno</label>
-                  <input type="text" className="form-control" name="appat_cliente" value={usuario.appat_cliente} onChange={handleChange}/>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="appat_cliente"
+                    value={usuario.appat_cliente}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="form-label">Apellido Materno</label>
-                  <input type="text" className="form-control" name="apmat_cliente" value={usuario.apmat_cliente} onChange={handleChange}/>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="apmat_cliente"
+                    value={usuario.apmat_cliente}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
 
               <div className="mb-3">
                 <label className="form-label">Correo</label>
-                <input type="email" className="form-control" name="email_cliente" value={usuario.email_cliente} onChange={handleChange}/>
+                <input
+                  type="email"
+                  className="form-control"
+                  name="email_cliente"
+                  value={usuario.email_cliente}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="mb-3">
                 <label className="form-label">Fecha de Nacimiento</label>
-                <input type="date" className="form-control" name="fecha_nacimiento" value={usuario.fecha_nacimiento} onChange={handleChange}/>
+                <input
+                  type="date"
+                  className="form-control"
+                  name="fecha_nacimiento"
+                  value={usuario.fecha_nacimiento}
+                  onChange={handleChange}
+                />
               </div>
 
-              <button type="submit" className="btn btn-comprar w-100 mt-3" disabled={cargandoUpdate}>
+              <button
+                type="submit"
+                className="btn btn-comprar w-100 mt-3"
+                disabled={cargandoUpdate}
+              >
                 {cargandoUpdate ? "Guardando..." : "Confirmar cambios"}
               </button>
             </form>
@@ -125,14 +191,24 @@ const PerfilUsuario = () => {
         {/* Tarjeta lateral */}
         <div className="col-md-5">
           <div className="card shadow-sm rounded-4 text-center px-4 py-4">
-            <div className="d-flex justify-content-end">
-              <button onClick={cerrarSesion} className="btn btn-danger mb-3">
-                Cerrar Sesión
-              </button>
+            <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3">
+              <div className="mb-2 mb-sm-0">
+                <button onClick={cerrarSesion} className="btn btn-danger">
+                  Cerrar
+                </button>
+              </div>
+
+              {rol === "admin" && (
+                <div>
+                  <button onClick={() => navigate("/admin")} className="btn btn-success">
+                    Panel de admin
+                  </button>
+                </div>
+              )}
             </div>
 
             <img
-              src="https://avatars.githubusercontent.com/u/147568951?s=400&u=2f8703b990535553a8b915da8db89f4a11115349&v=4"
+              src="https://avatars.githubusercontent.com/u/147568951?s=400"
               alt={`Foto de perfil de ${usuario.nombres_cliente}`}
               className="rounded-circle border border-3 mx-auto mb-3"
               width="120"
@@ -144,7 +220,6 @@ const PerfilUsuario = () => {
             <p className="text-muted mb-0">{usuario.email_cliente}</p>
             <hr />
             <p className="text-muted">Nacimiento: {usuario.fecha_nacimiento}</p>
-
           </div>
         </div>
       </div>

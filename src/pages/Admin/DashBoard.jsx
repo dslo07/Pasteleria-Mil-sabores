@@ -4,7 +4,7 @@ import { Outlet, NavLink,Navigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa6";
 
 const DashBoard = () => {
-  const rol = JSON.parse(localStorage.getItem("rol"));
+  const rol = localStorage.getItem("rol");
   if (rol !== "admin") {
       return <Navigate to="/notfound" />; // redirige si no es admin
   } 
@@ -27,7 +27,7 @@ const DashBoard = () => {
         <FaBars size={20} />
       </button>
 
-      {/* Sidebar Offcanvas en mobile */}
+      {/* Sidebar  en mobile */}
       <div
         className="offcanvas offcanvas-start bg-dash text-white"
         tabIndex="-1"

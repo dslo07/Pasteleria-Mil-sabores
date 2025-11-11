@@ -8,24 +8,35 @@ const useMutation = () => {
   const execute = async (url, method = "POST", body = null) => {
     setLoading(true);
     setError(null);
-    const token = JSON.parse(localStorage.getItem("token"));
+
+    // Tomar token directamente del localStorage
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setLoading(false);
+      setError("No hay token disponible");
+      return;
+    }
+
     try {
       const res = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`, // ✨ Cabecera correcta
         },
         body: body ? JSON.stringify(body) : null,
       });
 
       const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Error en la peticion");
+
+      if (!res.ok) throw new Error(json.message || "Error en la petición");
 
       setResponse(json);
       return json;
     } catch (err) {
       setError(err.message);
+      return null;
     } finally {
       setLoading(false);
     }

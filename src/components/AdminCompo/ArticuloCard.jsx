@@ -12,7 +12,7 @@ function ArticuloCard({ blog }) {
     try {
       const token = localStorage.getItem("token");
       const result = await execute(
-        `http://localhost:5174/api/blogs/borrar-blog/${blog.id_blogs}`,
+        `http://54.91.25.57:3000/api/blogs/borrar-blog/${blog.id_blogs}`,
         "DELETE",
         null,
         token

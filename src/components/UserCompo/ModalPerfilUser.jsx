@@ -7,7 +7,7 @@ const ModalPerfilUser = ({ usuario,handleChange })=>{
         <h1 className="mb-3">Bienvenido, {usuario.nombres_cliente}</h1>
         <p className="text-muted mb-4">Editar información personal</p>
 
-<form>
+          <form>    
                 <div className="mb-3">
                   <label htmlFor="inputNombres" className="form-label">
                     Nombres
