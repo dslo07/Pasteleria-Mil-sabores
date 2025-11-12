@@ -20,6 +20,8 @@ import AdminUsers from './pages/Admin/AdminUsers'
 import AdminCat from './pages/Admin/AdminCat'
 import AdminBlog from './pages/Admin/AdminBlog'
 import AdminStats from './pages/Admin/AdminStats'
+import AdminVentas from './pages/Admin/AdminVentas'
+ 
 //crud de admin
 import CrearProd from './pages/Admin/CRUD/create/CrearProd'
 import CrearUser from './pages/Admin/CRUD/create/CrearUser'
@@ -66,6 +68,8 @@ function App() {
           <Route path='productos' element={<AdminProd/>}/>
           <Route path='productos/crear-producto' element={<CrearProd/>}/>
           <Route path="productos/editar-producto/:codigo_producto" element={<EditarProd />} />
+          {/*Crud Productos*/}
+          <Route path='control-ventas' element={<AdminVentas/>}/>
           {/*Crud Usuarios*/}
           <Route path='usuarios'   element={<AdminUsers/>}/>
           <Route path='usuarios/crear-usuario' element={<CrearUser/>}/>

@@ -10,7 +10,7 @@ function NavBar() {
   const { isLogin } = useContext(userContext);
   const { total } = useContext(carContext);
   const { data: categorias, loading } = useFetch("http://localhost:5174/api/categorias");
-  const rol = JSON.parse(localStorage.getItem("rol"))
+  const rol = localStorage.getItem("rol")
   return (
     <nav className="navbar navbar-expand-lg bg-white fixed-top">
       <div className="container">

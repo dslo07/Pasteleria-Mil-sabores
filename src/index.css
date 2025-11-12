@@ -95,11 +95,20 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
 }
 /* badges */
-.badge {
+.badge, .badge-brown {
     margin: 8px 0px;
     background: var(--color-badge-bg) !important;
     color: var(--color-badge-texto) !important;
     border: solid 1px var(--color-badge-borde) !important;
+}
+.badge-brown {
+    margin: 8px 0px;
+    padding: 2px 4px;
+    border-radius: 5px;
+    font-size: 15px;
+    background: var(--color-boton-hover) !important;
+    color: var(--color-boton) !important;
+    border: solid 1px var(--color-boton) !important;
 }
 
 /* texto */
@@ -142,6 +151,28 @@ height: calc(100% - 73px);
 .h-custom {
 height: 100%;
 }
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 /*generales*/
@@ -218,7 +249,10 @@ height: 100%;
 .nav-link.active {
   background-color: var(--color-boton) !important; /* tu color de fondo */
   color: #fff !important;              /* color del texto */
-} 
+}
+.bg-brown{
+    background-color: var(--color-boton);
+}
 /*hover*/
 .card-hover:hover{
       transition: transform 0.3s ease, box-shadow 0.3s ease;

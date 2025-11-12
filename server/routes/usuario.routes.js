@@ -343,7 +343,6 @@ router.put("/actualizar-usuario/:id", verifyToken, async (req, res) => {
 });
 
 
-
 // crear un usario desde administrador 
 router.post("/crear-empleado", async (req, res) => {
   const client = await pool.connect();
@@ -411,5 +410,104 @@ WHERE u.id_usuario = $1;`,
     client.release();
   }
 });
+
+// ===== Actualizar solo datos de perfil del usuario ===== //
+router.put("/actualizar-perfil/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const {
+    nombres_cliente,
+    appat_cliente,
+    apmat_cliente,
+    email_cliente,
+    fecha_nacimiento,
+    telefono_cliente
+  } = req.body;
+
+  // ✅ Validación básica de campos
+  if (!nombres_cliente || !appat_cliente || !apmat_cliente) {
+    return res.status(400).json({
+      error: "Faltan datos obligatorios",
+      details: "nombres_cliente, appat_cliente y apmat_cliente son requeridos"
+    });
+  }
+
+  if (!email_cliente) {
+    return res.status(400).json({
+      error: "Correo electrónico requerido",
+      details: "email_cliente no puede estar vacío"
+    });
+  }
+
+  if (!req.user || req.user.id !== parseInt(id)) {
+    return res.status(403).json({ error: "No puedes modificar otro usuario" });
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    // Verificar cliente asociado al usuario
+    const clienteResult = await client.query(
+      `SELECT clu.id_cliente
+       FROM cliente_usuario AS clu
+       WHERE clu.id_usuario = $1`,
+      [id]
+    );
+
+    if (clienteResult.rows.length === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Cliente no encontrado para el usuario" });
+    }
+
+    const id_cliente = clienteResult.rows[0].id_cliente;
+
+    // Actualizar datos personales
+    await client.query(
+      `UPDATE cliente
+       SET nombres_cliente = $1, appat_cliente = $2, apmat_cliente = $3
+       WHERE id_cliente = $4`,
+      [nombres_cliente, appat_cliente, apmat_cliente, id_cliente]
+    );
+
+    // Actualizar datos de contacto
+    await client.query(
+      `UPDATE datos_cliente
+       SET email_cliente = $1, fecha_nacimiento = $2, telefono_cliente = $3
+       WHERE id_cliente = $4`,
+      [email_cliente, fecha_nacimiento, telefono_cliente, id_cliente]
+    );
+
+    await client.query("COMMIT");
+
+    // Respuesta al cliente
+    res.json({
+      success: true,
+      msg: "Perfil actualizado correctamente",
+      updatedUser: {
+        nombres_cliente,
+        appat_cliente,
+        apmat_cliente,
+        email_cliente,
+        fecha_nacimiento,
+        telefono_cliente
+      },
+    });
+    
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error al actualizar perfil:", err);
+
+    // Regresar error más descriptivo
+    res.status(500).json({
+      error: "No se pudo actualizar el perfil",
+      details: err.message,
+      stack: err.stack, // opcional: útil en dev
+    });
+  } finally {
+    client.release();
+  }
+});
+
 
 export default router;

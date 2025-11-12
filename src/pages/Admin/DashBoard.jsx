@@ -4,8 +4,8 @@ import { Outlet, NavLink,Navigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa6";
 
 const DashBoard = () => {
-  const rol = JSON.parse(localStorage.getItem("rol"));
-  if (rol !== "admin") {
+  const rol = localStorage.getItem("rol");
+  if (rol !== "Admin") {
       return <Navigate to="/notfound" />; // redirige si no es admin
   } 
     return (

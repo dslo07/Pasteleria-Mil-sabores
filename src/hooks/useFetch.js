@@ -12,7 +12,7 @@ function useFetch(url) {
         setLoading(true);
 
         // Tomar el token guardado en localStorage
-        const token = JSON.parse(localStorage.getItem("token"));
+        const token = localStorage.getItem("token");
 
         const config = token
           ? { headers: { Authorization: `Bearer ${token}` } }
