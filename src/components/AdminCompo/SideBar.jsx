@@ -4,6 +4,8 @@ import logotipo from "../../img/image.png";
 import nombrelogo from "../../img/nombre-logo.png";
 import { IoStatsChart } from "react-icons/io5";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
+import { HiClipboardList } from "react-icons/hi";
+
 import { RiNewsFill } from "react-icons/ri";
 import { IoDuplicate } from "react-icons/io5";
 
@@ -13,6 +15,7 @@ const SideBar = () => {
     { to: "/admin", label: "Dashboard", icon: <IoStatsChart /> },
     { to: "/admin/productos", label: "Control de Stock", icon: <FaShoppingCart /> },
     { to: "/admin/categorias", label: "Categorías", icon: <IoDuplicate /> },
+    { to: "/admin/control-ventas", label: "Ventas", icon: <HiClipboardList />},
     { to: "/admin/usuarios", label: "Usuarios", icon: <FaUserCircle /> },
     { to: "/admin/blog", label: "Blog", icon: <RiNewsFill /> },
     { to: "/admin/admin-perfil", label: "Mi Perfil", icon: <FaUserCircle />, hideOnDesktop: true },

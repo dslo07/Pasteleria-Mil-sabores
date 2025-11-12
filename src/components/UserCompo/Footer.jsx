@@ -10,7 +10,6 @@ const Footer = ({ nombre }) => {
   const publicKey = import.meta.env.VITE_EMAIL_API_KEY;
   const url = `${import.meta.env.VITE_COMPONENTE_USUR_FOOTER}`;
 
-  const { data: categorias, loading } = useFetch(url);
   const [email, setEmail] = useState("");
   const [modal, setModal] = useState(false);
   const [tituloModal, setTituloModal] = useState("Te hemos enviado un correo de confirmación!");
@@ -72,22 +71,6 @@ const Footer = ({ nombre }) => {
           </ul>
         </div>
 
-        {/* Categorías */}
-        <div className="col-12 col-md-6 col-lg-2 mb-4">
-          <h5>Categorías</h5>
-          <ul className="nav flex-column">
-            {loading
-              ? <li className="dropdown-item">Cargando...</li>
-              : categorias.map(cat => (
-                <li key={cat.nombre_categoria}>
-                  <a className="dropdown-item my-2 border-bottom" href="#">
-                    {cat.nombre_categoria}
-                  </a>
-                </li>
-              ))}
-          </ul>
-        </div>
-
         {/* Métodos de pago */}
         <div className="col-12 col-md-6 col-lg-3 mb-4">
           <h5>Métodos de pago</h5>
@@ -121,8 +104,8 @@ const Footer = ({ nombre }) => {
       </div>
 
       {/* Footer inferior */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-center py-4 my-4 border-top">
-        <p className="mb-2 mb-md-0 text-center text-md-start">
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-center pt-4 mt-4 border-top">
+        <p className=" mb-md-0 text-center text-md-start">
           © 2025 Pastelería Mil Sabores, desarrollado por Santiago Lopez y Harold Peralta.
         </p>
         <ul className="list-unstyled d-flex justify-content-center mb-0">
