@@ -11,7 +11,7 @@
 ## Productos:
   * Create: http://localhost:5174/api/productos/crear-producto
   * Read: http://localhost:5174/api/productos
-    * http://localhost:5174/api/producto/{id}
+    * http://localhost:5174/api/productos/{id}
   * Update: http://localhost:5174/api/productos/actualizar-producto/{id}
   * Delete: http://localhost:5174/api/productos/borrar-producto/{id}
 
@@ -19,8 +19,8 @@
   * Create: http://localhost:5174/api/blogs/crear-blog
   * Read: http://localhost:5174/api/blogs
     * http://localhost:5174/api/blog/{id}
-  * Update: http://localhost:5174/api/blog/actualizar-blog/{id}
-  * Delete: http://localhost:5174/api/blog/borrar-blog/{id}
+  * Update: http://localhost:5174/api/blogs/actualizar-blog/{id}
+  * Delete: http://localhost:5174/api/blogs/borrar-blog/{id}
 
 ## Login
   * Iniciar sesion: http://localhost:5174/api/usuarios/login
@@ -28,30 +28,16 @@
 ## Registro
   * Registrar: http://localhost:5174/api/usuarios/crear
 
+## Usuario
+  * Create Admin: http://localhost:5174/api/usuario/crear-administrador
+  * Read: http://localhost:5174/api/usuario
+    * http://localhost:5174/api/usuario/{id}
+  * Update: http://localhost:5174/api/usuario/actualizar-usuario/{id}
+  * Delete: http://localhost:5174/api/usuario/borrar-usuario/{id}
+
 
 ## Documentacion con Swagger
   * Swagger: http://localhost:5174/docs
-
-# === Por Terminar === 
-
-## Usuario
-  * Create: http://localhost:5174/api/usuarios/crear-usuario //crear desde panel
-  * Read: http://localhost:5174/api/usuarios 
-    * http://localhost:5174/api/usuario/{id}
-  * Update: http://localhost:5174/api/usuarios/actualizar-usuario/{id}
-  * Delete: http://localhost:5174/api/usuarios/borrar-usuario/{id}
-
-## Carrito de compras
-  * Realizar compra
-
-# === To Do ===
-  Integrar API WEB TOKEN. (opcional, al final)
-
-  Terminar End-Points pendientes.
-
-  Integrar End-Points a React.
-
-  Desplegar en AWS (ultimo).
 
 
 

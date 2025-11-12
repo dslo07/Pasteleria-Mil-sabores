@@ -134,7 +134,7 @@ const categorias = Array.isArray(categoriasData) ? categoriasData : [];
           </div>
         </div>
 
-        <div className="row productos-grid">
+        <div className="row productos-grid py-5">
           {loading ? (
             <p>Cargando productos...</p>
           ) : productosFiltrados.length > 0 ? (
@@ -149,7 +149,6 @@ const categorias = Array.isArray(categoriasData) ? categoriasData : [];
         </div>
       </section>
 
-      <Footer />
     </>
   );
 };

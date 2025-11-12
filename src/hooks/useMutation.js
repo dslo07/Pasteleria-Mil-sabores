@@ -8,7 +8,7 @@ const useMutation = () => {
   const execute = async (url, method = "POST", body = null) => {
     setLoading(true);
     setError(null);
-    const token = JSON.parse(localStorage.getItem("token"));
+    const token = localStorage.getItem("token");
     try {
       const res = await fetch(url, {
         method,
