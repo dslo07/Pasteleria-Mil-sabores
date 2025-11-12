@@ -15,8 +15,10 @@ const CrearProd = () => {
   // 🔹 Cargar categorías
   useEffect(() => {
     const fetchCategorias = async () => {
+    const url = `${import.meta.env.VITE_PAGINA_ADMIN_CRUD_CREAR_PROD}`;
+
       try {
-        const res = await fetch("http://localhost:5174/api/categorias");
+        const res = await fetch(url);
         const data = await res.json();
         setCategorias(data);
       } catch (error) {
@@ -36,9 +38,9 @@ const CrearProd = () => {
     e.preventDefault();
 
     const token = JSON.parse(localStorage.getItem("token")); // traer token del login
-
+ 
     if (!token) {
-      alert("⚠️ No tienes un token válido. Inicia sesión como administrador.");
+      alert("No tienes un token válido. Inicia sesión como administrador.");
       return;
     }
 
@@ -50,7 +52,7 @@ const CrearProd = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:5174/api/productos/crear-producto", {
+      const res = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +67,7 @@ const CrearProd = () => {
         throw new Error(data.error || "Error al crear el producto");
       }
 
-      alert(`✅ Producto creado con éxito: ${data.producto.nombre_producto}`);
+      alert(`Producto creado con éxito: ${data.producto.nombre_producto}`);
 
       // Reset formulario
       setProducto({
@@ -78,7 +80,7 @@ const CrearProd = () => {
       });
     } catch (error) {
       console.error(error);
-      alert(`❌ No se pudo crear el producto: ${error.message}`);
+      alert(`No se pudo crear el producto: ${error.message}`);
     }
   };
 

@@ -1,10 +1,9 @@
 // routes/usuarios.js
 import { Router } from "express";
 import pool from "../bd.js";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
-import { verifyToken, isAdmin } from "./auth.js";
+import { signToken, verifyToken, isAdmin } from "./auth.js"; // <-- usa el isAdmin de auth.js
 dotenv.config();
 
 const router = Router();
@@ -24,14 +23,15 @@ router.post("/crear", async (req, res) => {
       nacimiento,
     } = req.body;
 
-    const hashedPassword = await bcrypt.hash(contrasena, 10);
+    const email = String(correo || "").trim().toLowerCase();
+    const hashedPassword = await bcrypt.hash(String(contrasena || ""), 10);
 
-    // 1) Crear usuario (activo por defecto TRUE en tu modelo; si no, agrégalo)
+    // 1) Crear usuario (activo por defecto TRUE en DB)
     const usuario = await client.query(
       `INSERT INTO usuario (email_usuario, contrasena_usuario)
        VALUES ($1, $2)
        RETURNING id_usuario AS user_id, email_usuario`,
-      [String(correo).trim().toLowerCase(), hashedPassword]
+      [email, hashedPassword]
     );
 
     // 2) Crear cliente
@@ -45,7 +45,7 @@ router.post("/crear", async (req, res) => {
     // 3) Rol por defecto = 1 (cliente)
     await client.query(
       `INSERT INTO usuario_rol (id_usuario, id_rol) VALUES ($1, $2)`,
-      [usuario.rows[0].user_id, 1] // usa número, no "1" string
+      [usuario.rows[0].user_id, 1]
     );
 
     // 4) Vínculo usuario-cliente
@@ -54,18 +54,16 @@ router.post("/crear", async (req, res) => {
       [usuario.rows[0].user_id, cliente.rows[0].client_id]
     );
 
-    // 5) Datos cliente
+    // 5) Datos cliente (si tu columna admite nulls, OK; si no, valida 'nacimiento')
     await client.query(
       `INSERT INTO datos_cliente (id_cliente, email_cliente, fecha_nacimiento)
        VALUES ($1, $2, $3)`,
-      [cliente.rows[0].client_id, String(correo).trim().toLowerCase(), nacimiento]
+      [cliente.rows[0].client_id, email, nacimiento || null]
     );
 
-    // 6) (Opcional) emitir token post-registro
+    // 6) Emitir token post-registro (opcional)
     const payload = { id: usuario.rows[0].user_id, rol: "cliente" };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN || "15m",
-    });
+    const token = signToken(payload); // <-- usa signToken, no jwt.sign directo
 
     await client.query("COMMIT");
 
@@ -75,7 +73,7 @@ router.post("/crear", async (req, res) => {
       user: {
         id: usuario.rows[0].user_id,
         email: usuario.rows[0].email_usuario,
-        rol: "cliente",
+        rol: "cliente", // <-- consistente en minúsculas
       },
     });
   } catch (err) {
@@ -94,56 +92,38 @@ router.post("/login", async (req, res) => {
     const correo = String(req.body.correo || "").trim().toLowerCase();
     const contrasena = String(req.body.contrasena || "");
 
-    // 1) Buscar usuario por email y activo
+    // 1) Verificar usuario activo
     const { rows } = await client.query(
       `SELECT id_usuario, contrasena_usuario, email_usuario
        FROM usuario
        WHERE email_usuario = $1 AND activo = TRUE`,
       [correo]
     );
-
     if (rows.length === 0) {
       return res.status(400).json({ msg: "Correo o contraseña inválidos" });
     }
-
     const user = rows[0];
 
-    // 2) Comparar contraseña con bcrypt
+    // 2) Verificar contraseña
     const ok = await bcrypt.compare(contrasena, user.contrasena_usuario);
     if (!ok) {
       return res.status(400).json({ msg: "Correo o contraseña inválidos" });
     }
 
-    // 3) Obtener roles por id
+    // 3) Rol (primer rol)
     const { rows: rolesRows } = await client.query(
       `SELECT r.descripcion_rol
-         FROM usuario_rol AS ur
-         JOIN rol AS r ON r.id_rol = ur.id_rol
+         FROM usuario_rol ur
+         JOIN rol r ON r.id_rol = ur.id_rol
         WHERE ur.id_usuario = $1`,
       [user.id_usuario]
     );
+    const rolUser = rolesRows[0]?.descripcion_rol?.toLowerCase() ?? "cliente";
 
-    // ✅ Arreglo de roles y primer rol
-    const roles = rolesRows.map(r => r.descripcion_rol);
-    const rolUser = roles[0] ?? "cliente";
+    // 4) Token con { id, rol }
+    const token = signToken({ id: user.id_usuario, rol: rolUser });
 
-    // 4) Generar token JWT
-    const payload = { id: user.id_usuario, rol: rolUser };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN || "15m",
-    });
-
-    // 5) Responder
-    return res.status(200).json({
-      msg: "Login exitoso",
-      token,
-      user: {
-        id: user.id_usuario,
-        email: user.email_usuario,
-        rol: rolUser,
-        roles, // si quieres también los envías
-      },
-    });
+    return res.status(200).json({ token });
   } catch (err) {
     console.error("LOGIN ERROR:", err);
     return res.status(500).json({ msg: "Error interno" });
@@ -151,6 +131,25 @@ router.post("/login", async (req, res) => {
     client.release();
   }
 });
+
+//me para leer { id, rol } desde el token ya verificado
+router.get("/me", verifyToken, (req, res) => {
+  const { id, rol } = req.user;
+  res.json({ id, rol });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ===== Obtener todos los usuarios (solo admin) ===== //
 router.get("/", verifyToken, isAdmin, async (_req, res) => {

@@ -5,8 +5,12 @@ import CardProd from "../../components/UserCompo/CardProd";
 import Footer from "../../components/UserCompo/Footer";
 
 const Tienda = () => {
-const { data: productosData, loading } = useFetch("http://localhost:5174/api/productos");
-const { data: categoriasData } = useFetch("http://localhost:5174/api/categorias");
+
+const API_URL_PRODUC = `${import.meta.env.VITE_PAGINA_USER_TIENDA_PRODUC}`;
+const API_URL_CAT = `${import.meta.env.VITE_PAGINA_USER_TIENDA_CAT}`;
+
+const { data: productosData, loading } = useFetch(API_URL_PRODUC);
+const { data: categoriasData } = useFetch(API_URL_CAT);
 
 const productos = Array.isArray(productosData) ? productosData : [];
 const categorias = Array.isArray(categoriasData) ? categoriasData : [];

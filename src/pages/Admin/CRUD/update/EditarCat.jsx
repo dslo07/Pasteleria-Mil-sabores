@@ -6,10 +6,10 @@ import useMutation from "../../../../hooks/useMutation";
 const EditarCat = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const url = `${import.meta.env.VITE_PAGINA_ADMIN_CRUD_EDITAR_CAT}`;
+  const url_ACT = `${import.meta.env.VITE_PAGINA_ADMIN_CRUD_EDITAR_CAT_ACT}`;
 
-  const { data: categoria, loading: loadingFetch, error } = useFetch(
-    `http://localhost:5174/api/categorias/${id}`
-  );
+  const { data: categoria, loading: loadingFetch, error } = useFetch(`${url}${id}`);
 
   const { execute, loading: loadingMutation } = useMutation();
   const [nombre, setNombre] = useState("");
@@ -31,16 +31,16 @@ const EditarCat = () => {
 
     try {
       const res = await execute(
-        `http://localhost:5174/api/categorias/actualizar-categoria/${id}`,
+        `${url_ACT}${id}`,
         "PUT",
         { nombre }
       );
 
       if (res?.msg) {
-        alert("✅ Categoría actualizada correctamente.");
+        alert("Categoría actualizada correctamente.");
         navigate("/admin/categorias");
       } else {
-        alert("❌ No se pudo actualizar la categoría.");
+        alert("No se pudo actualizar la categoría.");
       }
     } catch (err) {
       console.error("Error al actualizar la categoría:", err);

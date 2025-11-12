@@ -5,8 +5,9 @@ import useFetch from "../../hooks/useFetch";
 function VistaBlog() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const API_URL = `${import.meta.env.VITE_PAGINA_USER_VISTA_BLOG}${id}`;
 
-  const { data: blog, loading, error } = useFetch(`http://localhost:5174/api/blogs/${id}`);
+  const { data: blog, loading, error } = useFetch(API_URL);
 
   if (loading)
     return (

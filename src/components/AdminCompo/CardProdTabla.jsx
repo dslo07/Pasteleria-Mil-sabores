@@ -9,6 +9,8 @@ function CardProdTabla({ producto }) {
   const { execute, loading, error } = useMutation();
   const [modal, setModal] = useState(null);
 
+  const url = `${import.meta.env.VITE_COMPONENTE_ADMIN_CARD_PROD_TABLA}${codigo}`;
+
   const eliminarProd = async (codigo) => {
     const respuesta = prompt(
       `Ingrese el código del producto para confirmar eliminación: "${codigo}"`
@@ -16,7 +18,7 @@ function CardProdTabla({ producto }) {
 
     if (!respuesta) return;
     if (respuesta !== codigo) {
-      alert("❌ Código incorrecto. No se eliminó el producto.");
+      alert("Código incorrecto. No se eliminó el producto.");
       return;
     }
 
@@ -26,15 +28,15 @@ function CardProdTabla({ producto }) {
     if (!confirm) return;
 
     const res = await execute(
-      `http://localhost:5174/api/productos/borrar-producto/${codigo}`,
-      "DELETE"
-    );
+        url,
+        "DELETE",
+      );
 
     if (res && res.msg) {
-      alert(`✅ Producto "${producto.nombre_producto}" eliminado correctamente.`);
+      alert(`Producto "${producto.nombre_producto}" eliminado correctamente.`);
       window.location.reload();
     } else {
-      alert(`❌ No se pudo eliminar el producto: ${error || "Error desconocido"}`);
+      alert(`No se pudo eliminar el producto: ${error || "Error desconocido"}`);
     }
   };
 

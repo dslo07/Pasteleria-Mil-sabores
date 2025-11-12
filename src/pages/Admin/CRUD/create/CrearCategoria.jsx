@@ -15,15 +15,16 @@ const CrearCategoria = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const url = `${import.meta.env.VITE_PAGINA_ADMIN_CRUD_CREAR_CAT}`;
 
     if (!categoria.nombre.trim()) {
-      alert("⚠️ El nombre de la categoría es obligatorio.");
+      alert("El nombre de la categoría es obligatorio.");
       return;
     }
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5174/api/categorias/crear-categoria", {
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(categoria),
@@ -33,13 +34,13 @@ const CrearCategoria = () => {
 
       if (!res.ok) throw new Error(data.error || "Error al crear la categoría");
 
-      alert(`✅ Categoría creada con éxito: ${data.categoria.nombre_categoria}`);
+      alert(`Categoría creada con éxito: ${data.categoria.nombre_categoria}`);
 
       // Reset del formulario
       setCategoria({ nombre: "" });
     } catch (error) {
       console.error(error);
-      alert(`❌ No se pudo crear la categoría: ${error.message}`);
+      alert(`No se pudo crear la categoría: ${error.message}`);
     } finally {
       setLoading(false);
     }

@@ -8,10 +8,12 @@ import useMutation from "../../hooks/useMutation";
 
 const PerfilUsuario = () => {
   const navigate = useNavigate();
+  const url = `${import.meta.env.VITE_PAGINA_USER_PERFIL_USUARIO}${idUsuario}`;
+  const urlActua = `${import.meta.env.VITE_PAGINA_USER_PERFIL_USUARIO_ACTUALIZAR}${idUsuario}`;
 
-  const [rol, setRol] = useState("");
-  const [ compras, setCompras ] = useState([]);
-  const [idUsuario, setIdUsuario] = useState(null);
+  const { data, loading, error } = useFetch(url);
+
+  const [rol, setRol] = useState(null);
   const [mostrar, setMostrar] = useState(false);
   const [modal, setModal] = useState(false);
 
@@ -68,30 +70,18 @@ const PerfilUsuario = () => {
   };
   
   const handleGuardar = async (e) => {
-  e.preventDefault();
-  if (!idUsuario) {
-    alert("ID de usuario no disponible");
-    return;
-  }
-
-  // Llamar al endpoint de actualización de perfil
-  const result = await actualizarUsuario(
-    `http://localhost:5174/api/usuario/actualizar-perfil/${idUsuario}`,
-    "PUT",
-    usuario
-  );
-  if (errorUpdate) {
-    alert(`❌ Error: ${errorUpdate}`);
-  }
-  if (result?.success) {
-    alert("✅ Perfil actualizado correctamente");
-  } else if (errorUpdate) {
-    alert(`❌ No se pudo actualizar el perfil: ${errorUpdate}`);
-  } else {
-    alert("❌ Ocurrió un error desconocido");
-  }
-};
-
+    e.preventDefault();
+    const result = await actualizarUsuario(
+      urlActua,
+      "PUT",
+      usuario
+    );  
+    if (result) {
+      alert("Perfil actualizado correctamente");
+    } else if (errorUpdate) {
+      alert(`No se pudo actualizar el perfil: ${errorUpdate?.message || errorUpdate}`);
+    }
+  };
 
   const cerrarSesion = () => {
     setModal(true);

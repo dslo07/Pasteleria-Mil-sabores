@@ -5,7 +5,9 @@ import CardCatTabla from "../../components/AdminCompo/CardCatTabla";
 import { IoSearchSharp } from "react-icons/io5";
 
 const AdminCat = () => {
-  const { data: categorias, loading, error } = useFetch("http://localhost:5174/api/categorias");
+  const url = `${import.meta.env.VITE_PAGINA_ADMIN_CAT}`;
+
+  const { data: categorias, loading, error } = useFetch(url);
   const [listaCategorias, setListaCategorias] = useState([]);
   const [busqueda, setBusqueda] = useState("");
 

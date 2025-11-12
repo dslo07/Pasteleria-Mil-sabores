@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react';
 import { carContext } from './carContext';
 import toast from 'react-hot-toast';
 
-const API_URL = "http://localhost:5174/api/productos";
-
-const StateCar = ({ children }) => {
+  const API_URL = `${import.meta.env.VITE_API_CARRITO}`;
+  const StateCar = ({ children }) => {
   const [ids, setIds] = useState([]);
   const [productos, setProductos] = useState([]);
   const [cupon, setCupon] = useState({ codigo: null, descuento: 0 });
-  const [cuponFELICES50, setCuponFELICES50] = useState(false); // ✅ Cupón de por vida
+  const [cuponFELICES50, setCuponFELICES50] = useState(false); 
   const [loading, setLoading] = useState(false);
 
   // Cargar IDs desde localStorage

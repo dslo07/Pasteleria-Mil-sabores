@@ -2,6 +2,7 @@ import { Router } from "express";
 import pool from "../bd.js";
 
 const blogRouter = Router();
+
 //crear blog
 blogRouter.post("/crear-blog", async (req, res) => {
   const { titulo_blogs, descripcion_blogs, imagen_blogs } = req.body;
