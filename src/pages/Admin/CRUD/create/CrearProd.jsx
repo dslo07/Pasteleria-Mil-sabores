@@ -38,7 +38,7 @@ const CrearProd = () => {
     e.preventDefault();
 
     const token = JSON.parse(localStorage.getItem("token")); // traer token del login
-
+ 
     if (!token) {
       alert("No tienes un token válido. Inicia sesión como administrador.");
       return;
@@ -52,7 +52,7 @@ const CrearProd = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:5174/api/productos/crear-producto", {
+      const res = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
