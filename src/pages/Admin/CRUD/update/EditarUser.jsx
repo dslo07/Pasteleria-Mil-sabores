@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 import useMutation from "../../../../hooks/useMutation";
 
-const API_URL = "http://localhost:5174/api/usuario";
+const API_URL = import.meta.env.VITE_PAGINA_ADMIN_CRUD_EDITAR_USER;
 
 function EditarUser() {
   const [usuario, setUsuario] = useState(null);

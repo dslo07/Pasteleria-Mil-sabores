@@ -5,7 +5,9 @@ import CardProdTabla from "../../components/AdminCompo/CardProdTabla";
 import { IoSearchSharp } from "react-icons/io5";
 
 const AdminProd = () => {
-  const { data: productos } = useFetch("http://localhost:5174/api/productos");
+  const url = `${import.meta.env.VITE_PAGINA_ADMIN_PROD}`;
+
+  const { data: productos } = useFetch(url);
   const [listaProductos, setListaProductos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
 

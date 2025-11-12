@@ -4,7 +4,7 @@ import CardUserTabla from "../../components/AdminCompo/CardUserTabla";
 import CompoContent from "../../components/AdminCompo/CompoContent";
 import { IoSearchSharp } from "react-icons/io5";
 
-const API_URL = "http://localhost:5174/api/usuario";
+  const API_URL = `${import.meta.env.VITE_PAGINA_ADMIN_USER}`;
 
 const AdminUsers = () => {
   const [usuarios, setUsuarios] = useState([]);

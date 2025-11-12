@@ -5,20 +5,22 @@ import toast from 'react-hot-toast';
 
 function ArticuloCard({ blog }) {
   const { execute, isLoading, error } = useMutation();
+const url = `${import.meta.env.VITE_COMPONENTE_ADMIN_ARTICULO_CARD}${blog.id_blogs}`;
 
   const eliminarArticulo = async () => {
     if (!window.confirm("¿Seguro que quieres eliminar este artículo?")) return;
 
     try {
       const token = localStorage.getItem("token");
-      const result = await execute(
-        `http://localhost:5174/api/blogs/borrar-blog/${blog.id_blogs}`,
+      
+      const res = await execute(
+        url,
         "DELETE",
         null,
         token
       );
 
-      if (result) {
+      if (res && res.msg) {
         toast.success("Artículo eliminado correctamente");
         window.location.reload(); 
       } else {

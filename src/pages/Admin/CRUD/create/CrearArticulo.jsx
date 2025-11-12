@@ -17,9 +17,10 @@ const CrearArticulo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const url = `${import.meta.env.VITE_PAGINA_ADMIN_CRUD_CREAR_ART}`;
 
     try {
-      const res = await fetch("http://localhost:5174/api/blogs/crear-blog", {
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(articulo),
@@ -31,7 +32,7 @@ const CrearArticulo = () => {
       }
 
       const data = await res.json();
-      alert(`✅ Artículo creado con éxito: ${data.blog.titulo_blogs}`);
+      alert(`Artículo creado con éxito: ${data.blog.titulo_blogs}`);
 
       // Reset formulario
       setArticulo({

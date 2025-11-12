@@ -1,9 +1,19 @@
+// auth.js
 import jwt from "jsonwebtoken";
+import "dotenv/config"; 
 
-// ===== Verifica el token JWT ===== //
+// ====== Generar un token con { id, rol } ======
+export function signToken({ id, rol }, opts = {}) {
+  return jwt.sign(
+    { id, rol },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || "15m", ...opts }
+  );
+}
+
+// ====== Middleware: verificar token ======
 export function verifyToken(req, res, next) {
   const authHeader = req.headers.authorization || req.headers.Authorization;
-  // Formato esperado: "Bearer <token>"
   const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
   if (!token) {
@@ -11,17 +21,34 @@ export function verifyToken(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id, rol, iat, exp }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+    req.user = decoded;
     next();
   } catch (err) {
     return res.status(401).json({ msg: "Token inválido o expirado" });
   }
 }
 
-// ===== Verifica si el usuario es admin ===== //
+// ====== Helper: obtener { id, rol } desde el token directamente ======
+export function getIdRolFromToken(token) {
+  try {
+    const { id, rol } = jwt.verify(token, process.env.JWT_SECRET);
+    return { id, rol };
+  } catch {
+    return null;
+  }
+}
+
+// ====== Helper: obtener { id, rol } desde la request ======
+export function getIdRolFromReq(req) {
+  const authHeader = req.headers.authorization || req.headers.Authorization;
+  const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
+  if (!token) return null;
+  return getIdRolFromToken(token);
+}
+
+// ====== Middleware: permitir solo admins ======
 export function isAdmin(req, res, next) {
-  // En tu payload usas "rol", no "role"
   if (!req.user || req.user.rol !== "admin") {
     return res.status(403).json({ msg: "Acceso denegado: solo admins" });
   }

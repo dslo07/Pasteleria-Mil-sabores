@@ -2,8 +2,9 @@ import ArticuloCliente from '../../components/UserCompo/ArticuloCliente'
 import useFetch from "../../hooks/useFetch";
 
 function Blog() {
-  const { data: blogs } = useFetch("http://localhost:5174/api/blogs");
-  
+  const url = `${import.meta.env.VITE_PAGINA_USER_BOLOG}`;
+  const { data: blogs } = useFetch(url);
+
   return (
     <>
       <header className="bg-blog px-5" style={{ height: '50vh' }}>

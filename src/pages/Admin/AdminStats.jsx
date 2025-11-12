@@ -7,7 +7,9 @@ import { RiAdminFill } from "react-icons/ri";
 import { FaNewspaper } from "react-icons/fa6";
 
 const AdminStats = () => {
-  const { data, loading, error } = useFetch("http://localhost:5174/api/estadisticas");
+  const url = `${import.meta.env.VITE_PAGINA_ADMIN_STATS}`;
+
+  const { data, loading, error } = useFetch(url);
 
   if (loading) return <p>Cargando estadísticas...</p>;
   if (error) return <p>Error al cargar estadísticas</p>;

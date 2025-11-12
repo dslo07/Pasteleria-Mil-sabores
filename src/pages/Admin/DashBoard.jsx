@@ -5,7 +5,7 @@ import { FaBars } from "react-icons/fa6";
 
 const DashBoard = () => {
   const rol = JSON.parse(localStorage.getItem("rol"));
-  if (rol !== "admin") {
+  if (rol == "admin") {
       return <Navigate to="/notfound" />; // redirige si no es admin
   } 
     return (

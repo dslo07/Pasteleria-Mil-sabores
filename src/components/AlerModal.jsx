@@ -3,7 +3,7 @@ import React from "react";
 const AlertModal = ({ setModal, titulo, desc }) => {
   // Función para cerrar el modal
   const handleClose = () => {
-    setModal(false); // ✅ Solo se llama en un evento, no en el render
+    setModal(false);
   };
 
   return (

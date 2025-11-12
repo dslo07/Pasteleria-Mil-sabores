@@ -7,8 +7,10 @@ import useMutation from "../../hooks/useMutation";
 const PerfilUsuario = () => {
   const idUsuario = localStorage.getItem("id");
   const navigate = useNavigate();
+  const url = `${import.meta.env.VITE_PAGINA_USER_PERFIL_USUARIO}${idUsuario}`;
+  const urlActua = `${import.meta.env.VITE_PAGINA_USER_PERFIL_USUARIO_ACTUALIZAR}${idUsuario}`;
 
-  const { data, loading, error } = useFetch(`http://localhost:5174/api/usuario/${idUsuario}`);
+  const { data, loading, error } = useFetch(url);
 
   const [rol, setRol] = useState(null);
   const [mostrar, setMostrar] = useState(false);
@@ -67,7 +69,7 @@ const PerfilUsuario = () => {
   const handleGuardar = async (e) => {
     e.preventDefault();
     const result = await actualizarUsuario(
-      `http://localhost:5174/api/usuario/actualizar-usuario/${idUsuario}`,
+      urlActua,
       "PUT",
       usuario
     );  

@@ -7,6 +7,7 @@ const CardUserTabla = ({ usuario }) => {
   const correo = usuario.email_cliente || "Sin correo";
   const rol = usuario.rol || "Cliente";
   const activo = usuario.activo
+  const url = `${import.meta.env.VITE_COMPONENTE_ADMIN_USER_TABLA}${usuario.id_usuario}`;
 
   return (
     
@@ -56,7 +57,7 @@ const CardUserTabla = ({ usuario }) => {
 
       {/*  Derecha botones */}
       <div className="text-end">
-        <Link to={`/admin/usuarios/editar-usuario/${usuario.id_usuario}`}>
+        <Link to={url}>
           <button
             className="btn btn-outline-success btn-sm d-flex align-items-center gap-1"
             style={{

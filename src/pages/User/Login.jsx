@@ -3,6 +3,54 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../../img/nombre-logo.png";
 import { userContext } from "../../context/user/userContext";
 
+  const API_URL = `${import.meta.env.VITE_PAGINA_USER_LOGIN}`;
+
+async function loginUsuario({ correo, contrasena }) {
+  const resp = await fetch(`${API_URL}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ correo, contrasena }),
+  });
+
+  const raw = await resp.text();
+  let data;
+  try { data = JSON.parse(raw); } catch { data = {}; }
+
+  if (!resp.ok) {
+    const message = data.msg || data.error || raw || `Error ${resp.status}`;
+    const err = new Error(message);
+    err.status = resp.status;
+    err.body = raw;
+    console.error("Login error:", { status: resp.status, body: raw });
+    throw err;
+  }
+
+  // Espera: backend devuelve SOLO { token }
+  return data; // { token }
+}
+
+async function fetchMe(token) {
+  const resp = await fetch(`${API_URL}/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const raw = await resp.text();
+  let data;
+  try { data = JSON.parse(raw); } catch { data = {}; }
+
+  if (!resp.ok) {
+    const message = data.msg || data.error || raw || `Error ${resp.status}`;
+    const err = new Error(message);
+    err.status = resp.status;
+    err.body = raw;
+    console.error("ME error:", { status: resp.status, body: raw });
+    throw err;
+  }
+
+  // backend: { id, rol }
+  return data;
+}
+
 const Login = () => {
   const navigate = useNavigate();
   const { setIsLogin } = useContext(userContext);
@@ -11,65 +59,38 @@ const Login = () => {
   const [contrasena, setContrasena] = useState("");
   const [msg, setMsg] = useState("");
 
-  const API_URL = "http://localhost:5174/api/usuario";
-
-  // === Petición al backend ===
- async function loginUsuario({ correo, contrasena }) {
-  const res = await fetch(`${API_URL}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ correo, contrasena }),
-  });
-
-  const raw = await res.text(); // lee siempre como texto
-  let data;
-  try { data = JSON.parse(raw); } catch { data = {}; }
-
-  if (!res.ok) {
-    const message = data.msg || data.error || raw || `Error ${res.status}`;
-    const error = new Error(message);
-    error.status = res.status;
-    error.body = raw;
-    console.error("Login error:", { status: res.status, body: raw }); // <-- clave
-    throw error;
-  }
-
-  return data;
-}
-
-  // === Manejador del formulario ===
   const onSubmit = async (e) => {
     e.preventDefault();
     setMsg("");
 
     try {
-      const data = await loginUsuario({ correo, contrasena });
-      const { token, user } = data;
-
+      // 1) Login: recibe solo el token
+      const { token } = await loginUsuario({ correo, contrasena });
       console.log("Token:", token);
 
+      // 2) Consultar /me para obtener { id, rol }
+      const { id, rol } = await fetchMe(token);
+      console.log("ID:", id, "Rol:", rol);
+
+      // 3) Guardar sesión
       setIsLogin(true);
-      setMsg("Inicio de sesión exitoso ✅");
+      setMsg("Inicio de sesión exitoso");
+      // localStorage.setItem("token", String(token));
+      // localStorage.setItem("id", String(id));
+      // localStorage.setItem("rol", String(rol));
 
-      // Guardar datos en localStorage
-      localStorage.setItem("id", String(user.id));
-      localStorage.setItem("rol", String(user.rol));
-      localStorage.setItem("token", String(token));
-
-      // Redirección según rol
-      if (user.rol === "admin") {
+      // 4) Redirección según rol
+      if (rol === "admin") {
         navigate("/admin");
       } else {
-        navigate("/"); // Cliente u otros
+        // navigate("/");
       }
-
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
-
       if (err.status === 400) {
-        setMsg("Correo o contraseña inválidos ❌");
+        setMsg("Correo o contraseña inválidos");
       } else if (err.status === 500) {
-        setMsg("Error interno del servidor. Inténtalo más tarde ⚠️");
+        setMsg("Error interno del servidor. Inténtalo más tarde");
       } else {
         setMsg(err.message || "No se pudo iniciar sesión");
       }
