@@ -20,8 +20,8 @@ function Register() {
     const { id, value } = e.target;             
     setForm((prev) => ({ ...prev, [id]: value }));
   };
+  const API_URL = `${import.meta.env.VITE_PAGINA_USER_REGISTER}`;
 
-  const API_URL = "http://localhost:5174/api/usuario";
 
   async function registrarUsuario(payload) {
     const res = await fetch(`${API_URL}/crear`, {

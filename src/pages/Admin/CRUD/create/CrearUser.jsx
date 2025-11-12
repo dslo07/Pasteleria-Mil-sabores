@@ -26,23 +26,24 @@ const CrearUsuario = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const url = `${import.meta.env.VITE_PAGINA_ADMIN_CRUD_CREAR_USER}`;
 
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("⚠️ No se encontró el token de autenticación");
+      toast.error("No se encontró el token de autenticación");
       return;
     }
 
     try {
       const resultado = await execute(
-        "http://localhost:5174/api/usuario/crear-empleado",
+        url,
         "POST",
         usuario,
         token
       );
 
       if (resultado) {
-        toast.success(`✅ Usuario "${usuario.nombres}" creado correctamente`);
+        toast.success(`Usuario "${usuario.nombres}" creado correctamente`);
 
         // Reset del formulario
         setUsuario({
@@ -56,11 +57,11 @@ const CrearUsuario = () => {
           estado: true,
         });
       } else {
-        toast.error(error || "❌ No se pudo crear el usuario");
+        toast.error(error || "No se pudo crear el usuario");
       }
     } catch (err) {
       console.error(err);
-      toast.error("💥 Error inesperado al crear el usuario");
+      toast.error("Error inesperado al crear el usuario");
     }
   };
 

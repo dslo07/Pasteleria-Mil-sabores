@@ -6,10 +6,9 @@ import useMutation from "../../../../hooks/useMutation";
 const EditarCat = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const url = `${import.meta.env.VITE_PAGINA_ADMIN_CRUD_EDITAR_CAT}`;
 
-  const { data: categoria, loading: loadingFetch, error } = useFetch(
-    `http://localhost:5174/api/categorias/${id}`
-  );
+  const { data: categoria, loading: loadingFetch, error } = useFetch(`${url}${id}`);
 
   const { execute, loading: loadingMutation } = useMutation();
   const [nombre, setNombre] = useState("");

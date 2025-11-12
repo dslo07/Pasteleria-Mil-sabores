@@ -6,16 +6,14 @@ import useFetch from "../../../../hooks/useFetch";
 function EditarProd() {
   const { codigo_producto } = useParams();
   const navigate = useNavigate();
+  const urlProd = import.meta.env.VITE_PAGINA_ADMIN_CRUD_EDITAR_PROD;
+  const urlCat = import.meta.env.VITE_PAGINA_ADMIN_CRUD_EDITAR_CAT;
 
   //  Cargar producto desde la API
-  const { data, loading, error } = useFetch(
-    `http://localhost:5174/api/productos/${codigo_producto}`
-  );
+  const { data, loading, error } = useFetch(`${urlProd}${codigo_producto}`);
 
   // Cargar todas las categorías
-  const { data: categorias = [], loading: loadingCats, error: errorCats } = useFetch(
-    "http://localhost:5174/api/categorias"
-  );
+  const { data: categorias = [], loading: loadingCats, error: errorCats } = useFetch(urlCat);
 
   // Estado local 
   const [producto, setProducto] = useState(null);
@@ -49,7 +47,7 @@ function EditarProd() {
       const token = JSON.parse(localStorage.getItem("token"));
 
       const response = await fetch(
-        `http://localhost:5174/api/productos/${producto.codigo_producto}`,
+        `${urlProd}${producto.codigo_producto}`,
         {
           method: "PUT",
           headers: {
@@ -58,7 +56,7 @@ function EditarProd() {
           },
           body: JSON.stringify({
             nombre_producto: producto.nombre_producto,
-            descripcion_producto: producto.descripcion_producto, // ✅ corregido
+            descripcion_producto: producto.descripcion_producto,
             precio_producto: Number(producto.precio_producto),
             imagen_producto: producto.imagen_producto,
             id_categoria: Number(producto.id_categoria),
@@ -73,7 +71,7 @@ function EditarProd() {
       navigate("/admin/productos");
     } catch (err) {
       console.error("Error al guardar producto:", err);
-      toast.error("❌ No se pudo guardar el producto");
+      toast.error("No se pudo guardar el producto");
     }
   };
 
@@ -157,7 +155,7 @@ function EditarProd() {
             <label className="form-label">Descripción</label>
             <textarea
               className="form-control"
-              name="descripcion_producto" // ✅ corregido
+              name="descripcion_producto"
               value={producto.descripcion_producto || ""}
               onChange={handleChange}
               rows={5}

@@ -1,26 +1,22 @@
-import pg from 'pg';
-import { config } from 'dotenv';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-config();
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-config({ path: path.join(__dirname, '.env') });
+import pg from "pg";
+import "dotenv/config"; // carga automáticamente el .env
 
 const { Pool } = pg;
-console.log(process.env.DATABASE_URL);
 
+// Crear el pool de conexiones
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
 });
 
-
+// Test rápido de conexión al iniciar
 (async () => {
   try {
-    const res = await pool.query('SELECT NOW()');
-    console.log('Conexión OK:', res.rows[0].now);
+    const res = await pool.query("SELECT NOW()");
+    console.log("Conexión a PostgreSQL exitosa:", res.rows[0].now);
   } catch (err) {
-    console.error('Error al conectar:', err.message);
+    console.error(" Error al conectar a PostgreSQL:", err.message);
   }
 })();
+
 export default pool;

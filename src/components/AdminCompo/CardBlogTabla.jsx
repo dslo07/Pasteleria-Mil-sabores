@@ -2,12 +2,6 @@ import React from "react";
 
 const CardBlogTabla = ({ blog }) => {
 
-
-
-
-
-
-
   return (
     
     <div className="border rounded shadow-sm p-3 bg-white">

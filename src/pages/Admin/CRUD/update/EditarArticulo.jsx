@@ -7,8 +7,9 @@ import useMutation from "../../../../hooks/useMutation";
 function EditarArticulo() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const url = `${import.meta.env.VITE_PAGINA_ADMIN_CRUD_EDITAR_ART}`;
 
-  const { data: articulo, loading, error } = useFetch(`http://localhost:5174/api/blogs/${id}`);
+  const { data: articulo, loading, error } = useFetch(`${url}${id}`);
   const { execute, isLoading } = useMutation();
 
   const [formData, setFormData] = useState({

@@ -5,11 +5,12 @@ import emailjs from 'emailjs-com';
 import AlertModal from '../AlerModal';
 
 const Footer = ({ nombre }) => {
-  const serviceID = import.meta.env.VITE_ServicesID;
-  const templateID = import.meta.env.VITE_TempleteID;
-  const publicKey = import.meta.env.VITE_EmailApiKey;
+  const serviceID = import.meta.env.VITE_EMAIL_SERVICE_ID;
+  const templateID = import.meta.env.VITE_EMAIL_TEMPLATE_ID;
+  const publicKey = import.meta.env.VITE_EMAIL_API_KEY;
+  const url = `${import.meta.env.VITE_COMPONENTE_USUR_FOOTER}`;
 
-  const { data: categorias, loading } = useFetch("http://localhost:5174/api/categorias");
+  const { data: categorias, loading } = useFetch(url);
   const [email, setEmail] = useState("");
   const [modal, setModal] = useState(false);
   const [tituloModal, setTituloModal] = useState("Te hemos enviado un correo de confirmación!");

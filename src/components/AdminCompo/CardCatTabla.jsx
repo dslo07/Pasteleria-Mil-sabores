@@ -12,26 +12,28 @@ const CardCatTabla = ({ categoria, onDelete }) => {
     const num = Math.floor(Math.random() * 900) + 100;
     const confirmacion = prompt(`Ingrese el número ${num} para confirmar la eliminación:`);
 
+    const url = `${import.meta.env.VITE_COMPONENTE_ADMIN_ARTICULO_CARD}${id_categoria}`;
+
     if (confirmacion !== String(num)) {
-      alert("❌ No se eliminó la categoría.");
+      alert("No se eliminó la categoría.");
       return;
     }
 
     try {
       const res = await execute(
-        `http://localhost:5174/api/categorias/borrar-categoria/${id_categoria}`,
-        "DELETE"
+        url,
+        "DELETE",
       );
-
+      
       if (res?.msg) {
-        alert(`✅ ${res.msg}`);
+        alert(`${res.msg}`);
         window.location.reload()
       } else {
-        alert("❌ No se pudo eliminar la categoría.");
+        alert("No se pudo eliminar la categoría.");
       }
     } catch (err) {
       console.error("Error al eliminar:", err);
-      alert("⚠️ Error al intentar eliminar la categoría.");
+      alert("Error al intentar eliminar la categoría.");
     }
   };
 

@@ -4,7 +4,9 @@ import ArticuloCard from "../../components/AdminCompo/ArticuloCard";
 import useFetch from "../../hooks/useFetch";
 
 const AdminBlog = () => {
-  const { data: blogs } = useFetch("http://localhost:5174/api/blogs");
+  const url = `${import.meta.env.VITE_PAGINA_ADMIN_BLOG}`;
+
+  const { data: blogs } = useFetch(url);
 
   return (
     <div>
@@ -13,7 +15,7 @@ const AdminBlog = () => {
           {blogs && blogs.map((blog) => (
             <div className="col-md-6 mb-4" key={blog.id_blogs}>
               <ArticuloCard
-                blog={blog} // Pasamos todo el objeto blog
+                blog={blog}
               />
             </div>
           ))}
