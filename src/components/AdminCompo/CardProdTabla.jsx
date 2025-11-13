@@ -6,18 +6,18 @@ import useMutation from "../../hooks/useMutation";
 import AlertModal from "../../components/AlerModal";
 
 function CardProdTabla({ producto }) {
-  const { execute, loading, error } = useMutation();
+  const { execute, loading, error, response } = useMutation();
   const [modal, setModal] = useState(null);
 
-  const url = `${import.meta.env.VITE_COMPONENTE_ADMIN_CARD_PROD_TABLA}${codigo}`;
+  const url = `${import.meta.env.VITE_COMPONENTE_ADMIN_CARD_PROD_TABLA}${producto.codigo_producto}`;
 
-  const eliminarProd = async (codigo) => {
+  const eliminarProd = async (codigo_producto) => {
     const respuesta = prompt(
-      `Ingrese el código del producto para confirmar eliminación: "${codigo}"`
+      `Ingrese el código del producto para confirmar eliminación: "${codigo_producto}"`
     );
 
     if (!respuesta) return;
-    if (respuesta !== codigo) {
+    if (respuesta !== codigo_producto) {
       alert("Código incorrecto. No se eliminó el producto.");
       return;
     }
@@ -27,10 +27,8 @@ function CardProdTabla({ producto }) {
     );
     if (!confirm) return;
 
-    const res = await execute(
-        url,
-        "DELETE",
-      );
+    // Ejecutamos la mutación DELETE
+    const res = await execute(url, "DELETE");
 
     if (res && res.msg) {
       alert(`Producto "${producto.nombre_producto}" eliminado correctamente.`);

@@ -28,7 +28,7 @@ const verificarToken = (req, res, next) => {
 
 // Middleware para verificar que el usuario sea admin
 const soloAdmin = (req, res, next) => {
-  if (req.user.role !== "admin") {
+  if (req.user.rol !== "admin") {
     return res.status(403).json({ error: "Acceso denegado. Solo admins." });
   }
   next();

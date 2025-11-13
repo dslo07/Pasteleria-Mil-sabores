@@ -193,7 +193,7 @@ router.get("/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
 
   // solo permitir ver su propio perfil o admin
-  if (req.user.role !== "admin" && parseInt(req.user.id) !== parseInt(id)) {
+  if (req.user.role !== "Admin" && parseInt(req.user.id) !== parseInt(id)) {
     return res.status(403).json({ msg: "Acceso denegado" });
   }
 

@@ -4,6 +4,7 @@ import ProductosMain from "./ProductosMain";
 import { carContext } from "../../context/carrito/carContext";
 
 const VistaProducto = () => {
+  
   const { agregarProd, productos } = useContext(carContext);
   const { codigo_producto } = useParams();
   const location = useLocation();
