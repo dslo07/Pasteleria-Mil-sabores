@@ -16,7 +16,7 @@ const AdminProd = () => {
       setListaProductos(productos);
     }
   }, [productos]);
-
+  
   // Manejar cambios en el input 
   const handleBuscar = (e) => {
     const texto = e.target.value.toLowerCase();

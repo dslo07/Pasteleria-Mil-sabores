@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+  
+import { Link,Navigate, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import AlertModal from "../../components/AlerModal";
 import ModalPerfilUser from "../../components/UserCompo/ModalPerfilUser";
@@ -8,6 +9,7 @@ import useMutation from "../../hooks/useMutation";
 import PerfilUsuarioSKL from "../../../skeletons/PerfilUsuarioSKL.jsx";
 
 const PerfilUsuario = () => {
+  const idUsuario = localStorage.getItem("id");
   const navigate = useNavigate();
 
   // Estados
@@ -24,6 +26,28 @@ const PerfilUsuario = () => {
   const [rol, setRol] = useState(null);
   const [mostrar, setMostrar] = useState(false);
   const [modal, setModal] = useState(false);
+
+  const {
+    execute: actualizarUsuario,
+    loading: cargandoUpdate,
+    error: errorUpdate,
+    response: respuestaUpdate,
+  } = useMutation();
+
+  // Estado y handler para el botón "Historial de Pedidos"
+  const [cargandoHist, setCargandoHist] = useState(false);
+  
+  const handleHistorialClick = () => {
+    setCargandoHist(true);
+    setTimeout(() => {
+      navigate("/historial-pedido");
+    }, 1000);
+  };
+
+  useEffect(() => {
+    const rolGuardado = localStorage.getItem("rol");
+    setRol(rolGuardado ? rolGuardado.trim().toLowerCase() : null);
+  }, []);
 
   //  desmontar token 
   useEffect(() => {
@@ -49,7 +73,7 @@ const PerfilUsuario = () => {
   const { data, loading, error } = useFetch(url);
 
   useEffect(() => {
-    if (data && (data.usuario || data.nombres_cliente)) {
+    if (data) {
       const u = data.usuario || data;
       setUsuario({
         nombres_cliente: u.nombres_cliente || "",
@@ -64,7 +88,7 @@ const PerfilUsuario = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUsuario({ ...usuario, [name]: value });
+    setUsuario((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleGuardar = async (e) => {
@@ -82,9 +106,7 @@ const PerfilUsuario = () => {
 
   const cerrarSesion = () => {
     setModal(true);
-    localStorage.removeItem("id");
-    localStorage.removeItem("rol");
-    localStorage.removeItem("token");
+    localStorage.clear(); // En el siguiente render te mandará a /login
   };
 
   //  Si no hay token se redirige
@@ -179,7 +201,7 @@ const PerfilUsuario = () => {
         </div>
 
         {/* Tarjeta lateral */}
-        <div className="col-md-5 my-4">
+        <div className="col-md-5">
           <div className="card shadow-sm rounded-4 text-center px-4 py-4">
             <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3">
               <div className="mb-2 mb-sm-0">
@@ -198,7 +220,7 @@ const PerfilUsuario = () => {
             </div>
 
             <img
-              src="https://avatars.githubusercontent.com/u/147568951?s=400"
+              src="https://avatars.githubusercontent.com/u/147568951?s=400&u=2f8703b990535553a8b915da8db89f4a11115349&v=4"
               alt={`Foto de perfil de ${usuario.nombres_cliente}`}
               className="rounded-circle border border-3 mx-auto mb-3"
               width="120"
@@ -267,7 +289,9 @@ const PerfilUsuario = () => {
         </div>
       </div>
 
-      {mostrar && <ModalPerfilUser usuario={usuario} handleChange={handleChange} />}
+      {mostrar && (
+        <ModalPerfilUser usuario={usuario} handleChange={handleChange} />
+      )}
     </div>
   );
 };
