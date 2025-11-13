@@ -1,37 +1,42 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 
-function useFetch(url) {
+export function useFetch(url) {
   const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!url) return;
+
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        setLoading(true);
+        const response = await fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        });
 
-        // Tomar el token guardado en localStorage
-        const token = localStorage.getItem("token");
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
 
-        const config = token
-          ? { headers: { Authorization: `Bearer ${token}` } }
-          : {};
-
-        const response = await axios.get(url, config);
-        setData(response.data);
-      } catch (e) {
-        console.error("Error en useFetch:", e);
-        setError(e.response?.data?.message || e.message);
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [url]);
+  }, [url]); // Se vuelve a ejecutar si cambia la URL
 
   return { data, loading, error };
 }
-
 export default useFetch;

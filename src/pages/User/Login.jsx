@@ -75,16 +75,9 @@ const Login = () => {
       // 3) Guardar sesión
       setIsLogin(true);
       setMsg("Inicio de sesión exitoso");
-      // localStorage.setItem("token", String(token));
-      // localStorage.setItem("id", String(id));
-      // localStorage.setItem("rol", String(rol));
-
-      // 4) Redirección según rol
-      if (rol === "admin") {
-        navigate("/admin");
-      } else {
-        // navigate("/");
-      }
+        localStorage.setItem("token", token);
+        navigate("/");
+      
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
       if (err.status === 400) {

@@ -10,7 +10,7 @@ const AdminStats = () => {
   const url = `${import.meta.env.VITE_PAGINA_ADMIN_STATS}`;
 
   const { data, loading, error } = useFetch(url);
-
+  console.log(data);  
   if (loading) return <p>Cargando estadísticas...</p>;
   if (error) return <p>Error al cargar estadísticas</p>;
 

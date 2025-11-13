@@ -1,22 +1,16 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // corregido
+import { jwtDecode } from "jwt-decode";
 import AlertModal from "../../components/AlerModal";
 import ModalPerfilUser from "../../components/UserCompo/ModalPerfilUser";
 import useFetch from "../../hooks/useFetch";
 import useMutation from "../../hooks/useMutation";
+import PerfilUsuarioSKL from "../../../skeletons/PerfilUsuarioSKL.jsx";
 
 const PerfilUsuario = () => {
   const navigate = useNavigate();
-  const url = `${import.meta.env.VITE_PAGINA_USER_PERFIL_USUARIO}${idUsuario}`;
-  const urlActua = `${import.meta.env.VITE_PAGINA_USER_PERFIL_USUARIO_ACTUALIZAR}${idUsuario}`;
 
-  const { data, loading, error } = useFetch(url);
-
-  const [rol, setRol] = useState(null);
-  const [mostrar, setMostrar] = useState(false);
-  const [modal, setModal] = useState(false);
-
+  // Estados
   const [usuario, setUsuario] = useState({
     nombres_cliente: "",
     appat_cliente: "",
@@ -25,10 +19,13 @@ const PerfilUsuario = () => {
     fecha_nacimiento: "",
     telefono_cliente: "",
   });
+  const [idUsuario, setIdUsuario] = useState(null);
+  const [compras, setCompras] = useState([]);
+  const [rol, setRol] = useState(null);
+  const [mostrar, setMostrar] = useState(false);
+  const [modal, setModal] = useState(false);
 
-  const { execute: actualizarUsuario, loading: cargandoUpdate, error: errorUpdate } = useMutation();
-
-  // Detectar rol e id desde token JWT
+  //  desmontar token 
   useEffect(() => {
     try {
       const token = localStorage.getItem("token");
@@ -40,16 +37,17 @@ const PerfilUsuario = () => {
         console.warn("No hay token guardado");
       }
     } catch (error) {
-      console.error(" Error al decodificar token:", error);
+      console.error("Error al decodificar token:", error);
     }
   }, []);
 
-  // Traer datos del usuario solo si idUsuario existe
-  const { data, loading, error } = useFetch(
-    idUsuario ? `http://localhost:5174/api/usuario/${idUsuario}` : null
-  );
+  //  si no hay idUsuario no hacer fetch   
+  const url = idUsuario ? `${import.meta.env.VITE_PAGINA_USER_PERFIL_USUARIO}${idUsuario}` : null;
+  const urlActua = idUsuario? `${import.meta.env.VITE_PAGINA_USER_PERFIL_USUARIO_ACTUALIZAR}${idUsuario}`: null;
 
-  // Cargar datos del usuario
+  const { execute: actualizarUsuario, loading: cargandoUpdate, error: errorUpdate } = useMutation();
+  const { data, loading, error } = useFetch(url);
+
   useEffect(() => {
     if (data && (data.usuario || data.nombres_cliente)) {
       const u = data.usuario || data;
@@ -59,7 +57,7 @@ const PerfilUsuario = () => {
         apmat_cliente: u.apmat_cliente || "",
         email_cliente: u.email_cliente || "",
         fecha_nacimiento: u.fecha_nacimiento || "",
-        telefono_cliente: u.telefono_cliente || ""
+        telefono_cliente: u.telefono_cliente || "",
       });
     }
   }, [data]);
@@ -68,14 +66,13 @@ const PerfilUsuario = () => {
     const { name, value } = e.target;
     setUsuario({ ...usuario, [name]: value });
   };
-  
+
   const handleGuardar = async (e) => {
     e.preventDefault();
-    const result = await actualizarUsuario(
-      urlActua,
-      "PUT",
-      usuario
-    );  
+    if (!urlActua) return;
+
+    const result = await actualizarUsuario(urlActua, "PUT", usuario);
+
     if (result) {
       alert("Perfil actualizado correctamente");
     } else if (errorUpdate) {
@@ -90,8 +87,10 @@ const PerfilUsuario = () => {
     localStorage.removeItem("token");
   };
 
+  //  Si no hay token se redirige
   if (!localStorage.getItem("token")) return <Navigate to="/login" />;
-  if (loading) return <p>Cargando...</p>;
+  if (!idUsuario) return <PerfilUsuarioSKL />; // evita render antes de tener ID
+  if (loading) return <PerfilUsuarioSKL />;
   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -189,7 +188,7 @@ const PerfilUsuario = () => {
                 </button>
               </div>
 
-              {rol === "Admin" && (
+              {rol === "admin" && (
                 <div>
                   <button onClick={() => navigate("/admin")} className="btn btn-success">
                     Panel de admin
@@ -212,44 +211,59 @@ const PerfilUsuario = () => {
             <hr />
             <p className="text-muted">Nacimiento: {usuario.fecha_nacimiento}</p>
 
-            {/*btn para resposive | mostar pestaña de edicio*/}
+            {/* Botón responsive */}
             <div>
-                <button onClick={() => setMostrar(!mostrar)} className="btn btn-comprar w-100 mt-3 d-md-none">
-                    Editar Perfil
-                </button>
+              <button
+                onClick={() => setMostrar(!mostrar)}
+                className="btn btn-comprar w-100 mt-3 d-md-none"
+              >
+                Editar Perfil
+              </button>
             </div>
 
-          {/* Acordeon de carrito de compras */}
+            {/* Acordeón de historial */}
             <div className="accordion py-3" id="accordionExample">
-                <div className="accordion-item">
-                  <h2 name="accordion-header" id="headingOne">
-                    <button className="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                      Ver historial de compras
-                    </button>
-                  </h2>
-                  <div id="collapseOne" className="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                    <div className="accordion-body d-flex flex-column align-items-center ">
-                      {
-                        compras.length === 0 ? (
-                            <>
-                                <strong>No has realizado compras.</strong> 
-                                <iframe src="https://lottie.host/embed/173ad0fe-4a69-4496-a7f3-e543032e27f1/iEaCF6Nuqj.lottie" style={{ border: 'none', width: '100px', height: '100px' }}></iframe>
-                                <div className="py-2">
-                                    <button onClick={() => navigate("/tienda")} className="btn btn-success">
-                                        Realizar Mi Primer Compra
-                                    </button>
-                                </div>
-                            </>
-                        ) : ( 
-                          <> </>
-                        )
-                      }
-                    </div>
+              <div className="accordion-item">
+                <h2 id="headingOne">
+                  <button
+                    className="accordion-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne"
+                    aria-expanded="false"
+                    aria-controls="collapseOne"
+                  >
+                    Ver historial de compras
+                  </button>
+                </h2>
+                <div
+                  id="collapseOne"
+                  className="accordion-collapse collapse"
+                  aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div className="accordion-body d-flex flex-column align-items-center">
+                    {compras.length === 0 ? (
+                      <>
+                        <strong>No has realizado compras.</strong>
+                        <iframe
+                          src="https://lottie.host/embed/173ad0fe-4a69-4496-a7f3-e543032e27f1/iEaCF6Nuqj.lottie"
+                          style={{ border: "none", width: "100px", height: "100px" }}
+                        ></iframe>
+                        <div className="py-2">
+                          <button onClick={() => navigate("/tienda")} className="btn btn-success">
+                            Realizar Mi Primer Compra
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
-            </div>  
+              </div>
+            </div>
           </div>
-          
         </div>
       </div>
 
