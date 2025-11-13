@@ -9,11 +9,7 @@ import { FaUserCheck } from "react-icons/fa6";
 function NavBar() {
   const { isLogin } = useContext(userContext);
   const { total } = useContext(carContext);
-  const url = `${import.meta.env.VITE_COMPONENTE_USUR_NAVBAR}`;
 
-
-  const { data: categorias, loading } = useFetch(url);
-  const rol = localStorage.getItem("rol");
   return (
     <nav className="navbar navbar-expand-lg bg-white fixed-top">
       <div className="container">

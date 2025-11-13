@@ -6,7 +6,6 @@ import { IoSearchSharp } from "react-icons/io5";
 
 const AdminProd = () => {
   const url = `${import.meta.env.VITE_PAGINA_ADMIN_PROD}`;
-
   const { data: productos } = useFetch(url);
   const [listaProductos, setListaProductos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
