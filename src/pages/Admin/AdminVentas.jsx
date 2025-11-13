@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { IoSearchSharp } from "react-icons/io5";
 
-// borrar de pues, es un fetch de mentias
+// API FALSA
 const fakeFetchVentas = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -11,14 +12,14 @@ const fakeFetchVentas = () => {
           contacto: "otilio777@gmail.com",
           direccion: "Av. España #777",
           productos: ["Torta de chocolate", "Torta de vainilla", "Torta de zanahoria"],
-          estado: "En preparación",
+          estado: "Preparación",
         },
         {
           id: 2,
           nombre: "María",
           contacto: "maria@gmail.com",
           direccion: "Calle Sol #123",
-          productos: ["Torta de frutilla", "Torta selva negra", "Torta de coco", "Torta de nuez", "Torta de durazno"],
+          productos: ["Torta de frutilla", "Torta selva negra", "Torta de coco"],
           estado: "Entregado",
         },
         {
@@ -26,21 +27,28 @@ const fakeFetchVentas = () => {
           nombre: "Carlos",
           contacto: "carlos123@hotmail.com",
           direccion: "Av. Libertad #45",
-          productos: ["Torta de limón", "Torta de manzana"],
-          estado: "Pendiente",
+          productos: ["Torta de limón", "Torta de manzana", "Torta de chocolate", "Torta de vainilla"],
+          estado: "Despachado",
+        },
+        {
+          id: 4,
+          nombre: "Lucía",
+          contacto: "lucia@gmail.com",
+          direccion: "Calle Norte #22",
+          productos: ["Torta tres leches"],
+          estado: "Cancelado",
         },
       ]);
     }, 1000);
   });
 };
-// Modal para mostrar el detalle 
+
 const ModalDetalleVenta = ({ venta, onClose }) => {
   if (!venta) return null;
 
   return (
     <div className="modal-backdrop">
       <div className="modal-content position-relative">
-        {/* 🔹 Botón "X" de cierre arriba a la derecha */}
         <button
           onClick={onClose}
           className="btn-close position-absolute"
@@ -49,66 +57,76 @@ const ModalDetalleVenta = ({ venta, onClose }) => {
         ></button>
 
         <h2>Detalle de la Venta</h2>
-        
         <hr />
-        <p>
-          <strong>Nombre:</strong> {venta.nombre}
-        </p>
-        <p>
-          <strong>Contacto:</strong> {venta.contacto}
-        </p>
-        <p>
-          <strong>Dirección:</strong> {venta.direccion}
-        </p>
-        <p>
-          <strong>Productos:</strong>
-        </p>
+        <p><strong>Nombre:</strong> {venta.nombre}</p>
+        <p><strong>Contacto:</strong> {venta.contacto}</p>
+        <p><strong>Dirección:</strong> {venta.direccion}</p>
+        <p><strong>Productos:</strong></p>
         <ul>
           {venta.productos.map((producto, i) => (
             <li key={i}>{producto}</li>
           ))}
         </ul>
-        <p>
-          <strong>Cantidad total:</strong> {venta.productos.length}
-        </p>
-        <p>
-          <strong>Estado:</strong> {venta.estado}
-        </p>
-        <div className="d-flex justify-content-between">
-          <p>
-            <strong>Marcar orden como:</strong>
-          </p>
-          <select name="" id="">
-            <option value="Pendiente">Pendiente</option>
-            <option value="En preparación">En preparación</option>
-            <option value="Entregado">Entregado</option>
-          </select>
-        </div>
-        
+        <p><strong>Cantidad total:</strong> {venta.productos.length}</p>
+        <p><strong>Estado:</strong> {venta.estado}</p>
         <hr />
-
         <button onClick={onClose} className="btn btn-comprar mt-3">
-          Guardar
+          Cerrar
         </button>
       </div>
     </div>
   );
 };
 
-
-
 const AdminVentas = () => {
   const [ventas, setVentas] = useState([]);
+  const [listaVentas, setListaVentas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [busqueda, setBusqueda] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("Todos");
+  const [ordenCantidad, setOrdenCantidad] = useState("default");
   const [ventaSeleccionada, setVentaSeleccionada] = useState(null);
 
-  // Cargar datos 
+  // Cargar datos
   useEffect(() => {
     fakeFetchVentas().then((data) => {
       setVentas(data);
+      setListaVentas(data);
       setLoading(false);
     });
   }, []);
+
+  // Filtro combinado (texto + estado + orden)
+  useEffect(() => {
+    let filtradas = [...ventas];
+
+    // Filtrar por texto
+    if (busqueda.trim() !== "") {
+      const texto = busqueda.toLowerCase();
+      filtradas = filtradas.filter(
+        (v) =>
+          v.nombre.toLowerCase().includes(texto) ||
+          v.contacto.toLowerCase().includes(texto) ||
+          v.direccion.toLowerCase().includes(texto)
+      );
+    }
+
+    // Filtrar por estado
+    if (filtroEstado !== "Todos") {
+      filtradas = filtradas.filter(
+        (v) => v.estado.toLowerCase() === filtroEstado.toLowerCase()
+      );
+    }
+
+    // Ordenar por cantidad de productos
+    if (ordenCantidad === "mayor") {
+      filtradas.sort((a, b) => b.productos.length - a.productos.length);
+    } else if (ordenCantidad === "menor") {
+      filtradas.sort((a, b) => a.productos.length - b.productos.length);
+    }
+
+    setListaVentas(filtradas);
+  }, [busqueda, filtroEstado, ordenCantidad, ventas]);
 
   return (
     <div className="container my-5">
@@ -118,10 +136,49 @@ const AdminVentas = () => {
           <small className="text-light">Administrador</small>
         </div>
 
-        <div className="table-responsive">
+        {/* Filtros */}
+        <div className="d-flex flex-column flex-md-row align-items-md-center gap-3 mt-3 mx-3 flex-wrap">
+          {/*  Buscador */}
+          <div className="d-flex align-items-center border rounded bg-white px-2 py-1 flex-grow-1">
+            <IoSearchSharp className="me-2 text-muted" />
+            <input
+              type="text"
+              placeholder="Buscar por nombre, contacto o dirección..."
+              className="form-control border-0 shadow-none"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+            />
+          </div>
+
+          {/* Filtro por estado */}
+          <select
+            className="form-select w-auto"
+            value={filtroEstado}
+            onChange={(e) => setFiltroEstado(e.target.value)}
+          >
+            <option value="Todos">Todos</option>
+            <option value="Preparación">Preparación</option>
+            <option value="Despachado">Despachado</option>
+            <option value="Entregado">Entregado</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+
+          {/* Filtro por cantidad */}
+          <select
+            className="form-select w-auto"
+            value={ordenCantidad}
+            onChange={(e) => setOrdenCantidad(e.target.value)}
+          >
+            <option value="default">Ordenar por cantidad</option>
+            <option value="mayor">Mayor a menor</option>
+            <option value="menor">Menor a mayor</option>
+          </select>
+        </div>
+
+        <div className="table-responsive mt-3">
           {loading ? (
             <p className="text-center my-3">Cargando ventas...</p>
-          ) : (
+          ) : listaVentas.length > 0 ? (
             <table className="table table-hover align-middle">
               <thead className="table-light">
                 <tr>
@@ -135,7 +192,7 @@ const AdminVentas = () => {
                 </tr>
               </thead>
               <tbody>
-                {ventas.map((venta, index) => (
+                {listaVentas.map((venta, index) => (
                   <tr key={venta.id}>
                     <th scope="row">{index + 1}</th>
                     <td>{venta.nombre}</td>
@@ -143,7 +200,9 @@ const AdminVentas = () => {
                     <td>{venta.direccion}</td>
                     <td>{venta.productos.length} productos</td>
                     <td>
-                      <span className="badge-brown bg-warning text-dark">
+                      <span
+                        className="badge-brown"
+                      >
                         {venta.estado}
                       </span>
                     </td>
@@ -159,11 +218,15 @@ const AdminVentas = () => {
                 ))}
               </tbody>
             </table>
+          ) : (
+            <p className="text-center my-4 text-muted">
+              No se encontraron ventas con los filtros aplicados.
+            </p>
           )}
         </div>
       </div>
 
-      {/* Modal de detalle */}
+      {/*  Modal de detalle */}
       <ModalDetalleVenta
         venta={ventaSeleccionada}
         onClose={() => setVentaSeleccionada(null)}

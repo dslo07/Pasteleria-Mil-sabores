@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import NavBar from "../../components/UserCompo/NavBar";
 import useFetch from "../../hooks/useFetch";
 import CardProd from "../../components/UserCompo/CardProd";
-import Footer from "../../components/UserCompo/Footer";
+import CardProdTablaSKL from "../../components/skeletons/CardProdTablaSKL";
 
 const Tienda = () => {
 
@@ -134,9 +134,14 @@ const categorias = Array.isArray(categoriasData) ? categoriasData : [];
           </div>
         </div>
 
-        <div className="row productos-grid py-5">
+        <div className="row productos-grid ">
           {loading ? (
-            <p>Cargando productos...</p>
+            <>
+              <CardProdTablaSKL/>
+              <CardProdTablaSKL/>
+              <CardProdTablaSKL/>
+              <CardProdTablaSKL/>
+            </>
           ) : productosFiltrados.length > 0 ? (
             productosFiltrados.map((prod) => (
               <div key={prod.codigo_producto}>
