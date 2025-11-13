@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-  
+import DireccionUser from "../../components/UserCompo/DireccionUser.jsx";
 import { Link,Navigate, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import AlertModal from "../../components/AlerModal";
@@ -122,7 +122,7 @@ const PerfilUsuario = () => {
           desc="Su sesión ha terminado con éxito"
           setModal={setModal}
         />
-      )}
+      )}  
 
       <div className="row g-4">
         {/* Formulario principal */}
@@ -187,7 +187,6 @@ const PerfilUsuario = () => {
                   onChange={handleChange}
                 />
               </div>
-
               <button
                 type="submit"
                 className="btn btn-comprar w-100 mt-3"
@@ -291,6 +290,8 @@ const PerfilUsuario = () => {
       {mostrar && (
         <ModalPerfilUser usuario={usuario} handleChange={handleChange} />
       )}
+
+      <DireccionUser onSubmit={handleGuardar} />      
     </div>
   );
 };

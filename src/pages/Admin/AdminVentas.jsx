@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
-
+import TableSKL from "../../components/skeletons/TableSKL";
 // API FALSA
 const fakeFetchVentas = () => {
   return new Promise((resolve) => {
@@ -177,7 +177,7 @@ const AdminVentas = () => {
 
         <div className="table-responsive mt-3">
           {loading ? (
-            <p className="text-center my-3">Cargando ventas...</p>
+            <TableSKL/>
           ) : listaVentas.length > 0 ? (
             <table className="table table-hover align-middle">
               <thead className="table-light">
