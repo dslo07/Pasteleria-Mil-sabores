@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-  
+import DireccionUser from "../../components/UserCompo/DireccionUser.jsx";
 import { Link,Navigate, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import AlertModal from "../../components/AlerModal";
 import ModalPerfilUser from "../../components/UserCompo/ModalPerfilUser";
 import useFetch from "../../hooks/useFetch";
 import useMutation from "../../hooks/useMutation";
-import PerfilUsuarioSKL from "../../../skeletons/PerfilUsuarioSKL.jsx";
+import PerfilUsuarioSKL from "../../components/skeletons/PerfilUsuarioSKL.jsx";
 
 const PerfilUsuario = () => {
-  const idUsuario = localStorage.getItem("id");
+  const idstorage = localStorage.getItem("id");
   const navigate = useNavigate();
 
   // Estados
@@ -69,7 +69,6 @@ const PerfilUsuario = () => {
   const url = idUsuario ? `${import.meta.env.VITE_PAGINA_USER_PERFIL_USUARIO}${idUsuario}` : null;
   const urlActua = idUsuario? `${import.meta.env.VITE_PAGINA_USER_PERFIL_USUARIO_ACTUALIZAR}${idUsuario}`: null;
 
-  const { execute: actualizarUsuario, loading: cargandoUpdate, error: errorUpdate } = useMutation();
   const { data, loading, error } = useFetch(url);
 
   useEffect(() => {
@@ -123,7 +122,7 @@ const PerfilUsuario = () => {
           desc="Su sesión ha terminado con éxito"
           setModal={setModal}
         />
-      )}
+      )}  
 
       <div className="row g-4">
         {/* Formulario principal */}
@@ -188,7 +187,6 @@ const PerfilUsuario = () => {
                   onChange={handleChange}
                 />
               </div>
-
               <button
                 type="submit"
                 className="btn btn-comprar w-100 mt-3"
@@ -203,7 +201,7 @@ const PerfilUsuario = () => {
         {/* Tarjeta lateral */}
         <div className="col-md-5">
           <div className="card shadow-sm rounded-4 text-center px-4 py-4">
-            <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3">
+            <div className="d-flex flex-column flex-sm-row justify-content-between alignr-items-start align-items-sm-center mb-3">
               <div className="mb-2 mb-sm-0">
                 <button onClick={cerrarSesion} className="btn btn-danger">
                   Cerrar
@@ -292,6 +290,8 @@ const PerfilUsuario = () => {
       {mostrar && (
         <ModalPerfilUser usuario={usuario} handleChange={handleChange} />
       )}
+
+      <DireccionUser onSubmit={handleGuardar} />      
     </div>
   );
 };

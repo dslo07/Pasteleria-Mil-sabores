@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { userContext } from '../../context/user/userContext';
 import { carContext } from '../../context/carrito/carContext';
-import useFetch from '../../hooks/useFetch';
 import logoPasteleria from '../../img/nombre-logo.png';
 import { FaUserCheck } from "react-icons/fa6";
 
