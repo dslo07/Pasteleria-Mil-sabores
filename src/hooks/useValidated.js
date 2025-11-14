@@ -14,4 +14,3 @@ export function isTokenExpired(token) {
     return true; // token inválido se considera expirado
   }
 }
- 
