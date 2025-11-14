@@ -13,7 +13,7 @@ const CardCatTabla = ({ categoria, onDelete, loading }) => {
     const num = Math.floor(Math.random() * 900) + 100;
     const confirmacion = prompt(`Ingrese el número ${num} para confirmar la eliminación:`);
 
-    const url = `${import.meta.env.VITE_COMPONENTE_ADMIN_ARTICULO_CARD}${id_categoria}`;
+    const url = `${import.meta.env.VITE_COMPONENTE_ADMIN_CARD_CAT_TABLA}${id_categoria}`;
 
     if (confirmacion !== String(num)) {
       alert("No se eliminó la categoría.");

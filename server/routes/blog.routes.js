@@ -115,9 +115,8 @@ blogRouter.get("/:id", async (req, res) => {
 // actualizar categoria
 blogRouter.put("/actualizar-blog/:id", async (req, res) => {
   const { id } = req.params;
-  const { titulo_blogs, descripcion_blogs, imagen_blogs } = req.body;
+  const { titulo_blogs, descripcion_blogs, imagen } = req.body;
 
-  // Validación
   if (!titulo_blogs?.trim()) {
     return res.status(400).json({ error: "El título del blog es obligatorio" });
   }
@@ -127,10 +126,10 @@ blogRouter.put("/actualizar-blog/:id", async (req, res) => {
       `UPDATE blogs SET 
         titulo_blogs = $1,
         descripcion_blogs = $2,
-        imagen_blogs = $3
+        imagen_blogs = COALESCE($3, imagen_blogs)
        WHERE id_blogs = $4
        RETURNING *`,
-      [titulo_blogs, descripcion_blogs, imagen_blogs, id]
+      [titulo_blogs, descripcion_blogs, imagen, id]
     );
 
     if (result.rows.length === 0) {
@@ -139,10 +138,10 @@ blogRouter.put("/actualizar-blog/:id", async (req, res) => {
 
     res.json({ msg: "Blog actualizado", blog: result.rows[0] });
   } catch (err) {
-    console.error("Error al actualizar blog:", err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 // borrar categoria 

@@ -65,12 +65,6 @@ const PerfilUsuario = () => {
     }
   }, []);
 
-  // Obtener rol
-  useEffect(() => {
-    const rolGuardado = localStorage.getItem("rol");
-    setRol(rolGuardado ? rolGuardado.trim().toLowerCase() : null);
-  }, []);
-
   // Actualizar usuario con datos del fetch
   useEffect(() => {
     if (data) {
