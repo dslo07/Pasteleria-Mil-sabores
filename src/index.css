@@ -280,8 +280,6 @@ height: 100%;
     color: var(--color-boton);
 }
 
-
-
 .skeleton {
   background: #e0e0e0;
   border-radius: 4px;
@@ -310,4 +308,61 @@ height: 100%;
   100% {
     background-color: #e0e0e0;
   }
+}
+
+
+/* estilos pagina Nosotros */
+.info-empresa .info-card {
+  background-color: #ffe4ec; /* Rosa suave */
+}
+
+.info-empresa .btn-primary {
+  background-color: #8b4513;
+  border: none;
+}
+
+.info-empresa .btn-primary:hover {
+  background-color: #6f3610;
+}
+
+.logo-img {
+  max-width: 280px;
+}
+.hero-nosotros {
+  background: url("src/img/pasteles-banner.jpg") center/cover no-repeat;
+  height: 60vh;
+}
+
+.valor-card, .proceso-card {
+  background: #ffe4ec;
+  border-radius: 12px;
+  transition: transform 0.2s;
+}
+
+.valor-card:hover, .proceso-card:hover {
+  transform: translateY(-5px);
+}
+
+.team-photo {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.stats-section {
+  background-color: #fff3f7;
+}
+
+.mapa {
+  width: 100%;
+  height: 350px;
+  border: none;
+}
+
+.cta-nosotros {
+  background: #8b4513;
+}
+
+.cta-nosotros .btn {
+  border-radius: 8px;
 }
