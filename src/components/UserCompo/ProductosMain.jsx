@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import CardProd from './CardProd';
+import CardProdTablaSKL from '../../components/skeletons/CardProdTablaSKL';
 
 function ProductosMain() {
   const url = `${import.meta.env.VITE_COMPONENTE_USUR_PRODUCTO_MAIN}`;
-
 
   const { data, loading, error } = useFetch(url);
   const productos = Array.isArray(data) ? data : [];
@@ -35,11 +35,20 @@ function ProductosMain() {
       </div>
 
       <div className="productos-grid mt-4">
-        {loading && <p>Cargando productos...</p>}
-        {error && <p>Error al cargar productos.</p> }
+        {loading && (
+          <>
+            <CardProdTablaSKL />
+            <CardProdTablaSKL />
+            <CardProdTablaSKL />
+            <CardProdTablaSKL />
+          </>
+        )}
+        {error && <p>Error al cargar productos.</p>}
+
         {!loading && !error && productos.length === 0 && (
           <p>No hay productos disponibles.</p>
         )}
+
         {!loading &&
           !error &&
           productos.slice(0, 4).map((prod) => (

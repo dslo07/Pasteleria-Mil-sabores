@@ -44,7 +44,7 @@ function EditarProd() {
     }
 
     try {
-      const token = JSON.parse(localStorage.getItem("token"));
+      const token = localStorage.getItem("token");
 
       const response = await fetch(
         `${urlProd}${producto.codigo_producto}`,

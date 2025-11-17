@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 import useMutation from "../../../../hooks/useMutation";
+import useFetch from "../../../../hooks/useFetch";
 
 const API_URL = import.meta.env.VITE_PAGINA_ADMIN_CRUD_EDITAR_USER;
 
@@ -12,35 +13,33 @@ function EditarUser() {
 
   const { execute, loading, error } = useMutation();
 
-  // 🔹 Cargar usuario con useMutation
-  useEffect(() => {
     const fetchUsuario = async () => {
-      const result = await execute(`${API_URL}/${id}`, "GET");
+      const result =  useFetch(`${API_URL}/${id}`);
+      console.log(result);
+
       if (result && result.usuario) {
         setUsuario(result.usuario);
+        
       } else {
         toast.error("No se pudo cargar el usuario.");
       }
     };
 
     fetchUsuario();
-  }, [id]);
 
-  // 🔹 Mostrar spinner mientras carga
-  if (!usuario) {
+  if (loading) {
     return (
       <div
         className="d-flex justify-content-center align-items-center"
         style={{ height: "50vh" }}
       >
         <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Cargando...</span>
+          <span className="visually-hidden">no encontraron...</span>
         </div>
       </div>
     );
   }
 
-  // 🔹 Manejar cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUsuario((prev) => ({
@@ -50,7 +49,6 @@ function EditarUser() {
     }));
   };
 
-  // 🔹 Guardar cambios
   const handleSave = async () => {
     const result = await execute(
       `${API_URL}/actualizar-usuario/${id}`,
@@ -66,7 +64,6 @@ function EditarUser() {
     }
   };
 
-  //  Desactivar usuario
   const eliminarUser = async () => {
     const confirm = prompt(
       `Escriba el nombre del usuario para desactivarlo: "${usuario.nombres_cliente}"`
@@ -205,14 +202,14 @@ function EditarUser() {
             >
               {loading ? "Guardando..." : "Guardar Cambios"}
             </button>
-{/* 
+          
             <button
               className="btn btn-danger btn-sm"
               onClick={eliminarUser}
               disabled={loading}
             >
               {loading ? "Eliminando..." : "Usuario Eliminado"}
-            </button> */}
+            </button> 
           </div>
         </div>
       </div>

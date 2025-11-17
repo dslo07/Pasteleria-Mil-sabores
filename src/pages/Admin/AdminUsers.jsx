@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import useMutation from "../../hooks/useMutation"; 
 import CardUserTabla from "../../components/AdminCompo/CardUserTabla";
 import CompoContent from "../../components/AdminCompo/CompoContent";
+import UserCardSKL from "../../components/skeletons//UserCardSKL";
+
 import { IoSearchSharp } from "react-icons/io5";
 
   const API_URL = `${import.meta.env.VITE_PAGINA_ADMIN_USER}`;
@@ -61,7 +63,7 @@ const AdminUsers = () => {
         </div>
 
         {loading && (
-          <p className="text-center mt-4 text-muted">Cargando usuarios...</p>
+          <UserCardSKL/>
         )}
 
         {!loading && filtrados.length > 0 ? (
