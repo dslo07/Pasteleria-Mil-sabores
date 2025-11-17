@@ -1,13 +1,25 @@
 import { Link } from "react-router-dom";
 import { FaUsers } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
-
+import useMutation from "../../hooks/useMutation";
+import { use } from "react";
 const CardUserTabla = ({ usuario }) => {
   const nombreCompleto = `${usuario.nombres_cliente || ""} ${usuario.appat_cliente || ""} ${usuario.apmat_cliente || ""}`.trim();
   const correo = usuario.email_cliente || "Sin correo";
   const rol = usuario.rol || "Cliente";
   const activo = usuario.activo
-  const url = `${import.meta.env.VITE_COMPONENTE_ADMIN_USER_TABLA}${usuario.id_usuario}`;
+  const { execute, loading, error } = useMutation();
+
+
+  const elimiarUser = () =>{
+    let url = import.meta.env.VITE_COMPONENTE_ADMIN_CARD_PROD_TABLA_BORRAR+usuario.id_usuario
+    execute(url, "DELETE")
+    .then(() => alert("Usuario eliminado correctamente"))
+    .catch(() => alert("Error al eliminar el usuario"));
+
+    window.location.reload()
+  }
+
 
   return (
     
@@ -56,8 +68,7 @@ const CardUserTabla = ({ usuario }) => {
       </div>
 
       {/*  Derecha botones */}
-      <div className="text-end">
-        <Link to={url}>
+      <div className="d-flex justify-content-end gap-3">
           <button
             className="btn btn-outline-success btn-sm d-flex align-items-center gap-1"
             style={{
@@ -66,9 +77,21 @@ const CardUserTabla = ({ usuario }) => {
               whiteSpace: "nowrap",
             }}
           >
-            <CiEdit size={18} /> Editar
+            <Link to={`editar-usuario/${usuario.id_usuario}`}>
+                <CiEdit size={18} /> Editar
+            </Link>
           </button>
-        </Link>
+          <button
+          onClick={elimiarUser}
+            className="btn btn-outline-danger  btn-sm d-flex align-items-center gap-1"
+            style={{
+              fontSize: "0.9rem",
+              borderRadius: "0.5rem",
+              whiteSpace: "nowrap",
+            }}
+          >
+                <CiEdit size={18} /> Borrar
+          </button>
       </div>
     </div>
   );

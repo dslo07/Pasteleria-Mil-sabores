@@ -16,7 +16,7 @@ function EditarArticulo() {
   const [formData, setFormData] = useState({
     titulo_blogs: "",
     descripcion_blogs: "",
-    imagen: "",
+    imagen_blogs: "",
   });
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function EditarArticulo() {
       setFormData({
         titulo_blogs: articulo.titulo_blogs || "",
         descripcion_blogs: articulo.descripcion_blogs || "",
-        imagen: articulo.imagen || "",
+        imagen_blogs: articulo.imagen_blogs || "",
       });
     }
   }, [articulo]);
@@ -114,9 +114,9 @@ function EditarArticulo() {
           <div className="mb-4">
             <label className="form-label fw-semibold">Imagen actual / URL nueva</label>
             <div className="d-flex justify-content-center align-items-center mb-3">
-              {formData.imagen ? (
+              {formData.imagen_blogs ? (
                 <img
-                  src={formData.imagen}
+                  src={formData.imagen_blogs}
                   alt="Vista previa"
                   style={{
                     width: "100%",
@@ -155,7 +155,7 @@ function EditarArticulo() {
             {/* Input de URL */}
             <input
               type="url"
-              name="imagen"
+              name="imagen_blogs"
               value={formData.imagen}
               onChange={handleChange}
               className="form-control shadow-sm"
@@ -182,6 +182,7 @@ function EditarArticulo() {
 
           <button
             type="submit"
+            onClick={()=>console.log(formData)}
             className="btn btn-comprar rounded-pill px-4 py-2"
             disabled={isLoading}
           >

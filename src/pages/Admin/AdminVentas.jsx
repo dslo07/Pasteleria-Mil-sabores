@@ -68,7 +68,14 @@ const ModalDetalleVenta = ({ venta, onClose }) => {
           ))}
         </ul>
         <p><strong>Cantidad total:</strong> {venta.productos.length}</p>
-        <p><strong>Estado:</strong> {venta.estado}</p>
+        <div>
+          <label className="fw-bold">Estado Actual:</label> <br/>
+          <select name="estado" className="form-control">
+            <option value="">En Preparación</option>
+            <option value="">Despachado</option>
+            <option value="">Cancelado</option>
+          </select>
+        </div>
         <hr />
         <button onClick={onClose} className="btn btn-comprar mt-3">
           Cerrar
@@ -77,6 +84,11 @@ const ModalDetalleVenta = ({ venta, onClose }) => {
     </div>
   );
 };
+
+
+
+
+
 
 const AdminVentas = () => {
   const [ventas, setVentas] = useState([]);

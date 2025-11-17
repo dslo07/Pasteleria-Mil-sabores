@@ -10,7 +10,7 @@ const BotonesAccion = ({ cerrarSesion, rol, navigate }) => {
       </button>
       {rol == "admin" && (
         <button onClick={() => navigate("/admin")} className="btn btn-success">
-          Panel de admin
+          Dashboard
         </button>
       )}
     </div>

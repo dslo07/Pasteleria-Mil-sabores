@@ -40,5 +40,11 @@
   * Swagger: http://localhost:5174/docs
 
 
+CRUD Productos: funciona completo,
+CRUD Categorias: funciona completo,
+CRUD BLOG: funciona completo,
+CRUD Usuario: falta Editar 
+    NOTA Usuario: Eliminar SI BORRA DE LA DB NO LO *DESACTIVA*, 
+                  si se va a cambiar, solo cambiar las query del endpoint.
 
-
+CRUD ventas: solo vista | falta desarrollar endpoints | Falta empezar 
