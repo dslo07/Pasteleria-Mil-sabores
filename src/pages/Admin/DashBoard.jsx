@@ -1,13 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../../components/AdminCompo/SideBar";
-import { Outlet, NavLink,Navigate } from "react-router-dom";
+import { Outlet, NavLink, Navigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa6";
+import { fetchMe } from "../../hooks/fetchMe.js";
+
 
 const DashBoard = () => {
-  const rol = localStorage.getItem("rol");
-  if (rol == "Admin") {
-      return <Navigate to="/notfound" />; // redirige si no es admin
-  } 
+  const [rol, setRol] = useState(null);
+  const [cargando, setCargando] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return setCargando(false);  
+
+    const cargarRol = async () => {
+      try {
+        const data = await fetchMe(token);  
+        setRol(data.rol);
+      } catch (error) {
+        console.error("Error obteniendo rol:", error);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarRol();
+  }, []);
+
+  //Esperar a cargar /me
+  if (cargando) return <p>Cargando...</p>;
+
+  //Sin token → no puede entrar
+  if (!localStorage.getItem("token")) return <Navigate to="/login" />;
+
+  // Usuario NO es admin → se bloquea
+  if (rol !== "admin") return <Navigate to="/notfound" />;
+
     return (
     <main className="d-flex vh-100 position-relative bg-light">
       {/* Sidebar fijo en desktop */}

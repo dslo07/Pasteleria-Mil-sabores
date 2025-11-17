@@ -71,7 +71,7 @@ const Login = () => {
       // 2) Consultar /me para obtener { id, rol }
       const { id, rol } = await fetchMe(token);
       console.log("ID:", id, "Rol:", rol);
-
+        
       // 3) Guardar sesión
       setIsLogin(true);
       setMsg("Inicio de sesión exitoso");

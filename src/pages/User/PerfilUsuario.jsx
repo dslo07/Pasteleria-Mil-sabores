@@ -11,6 +11,7 @@ import PerfilUsuarioSKL from "../../components/skeletons/PerfilUsuarioSKL.jsx";
 
 import useFetch from "../../hooks/useFetch";
 import useMutation from "../../hooks/useMutation";
+import { fetchMe } from "../../hooks/fetchMe.js";
 
 import FormularioEdicion from "../../components//UserCompo/PerfilUsuario/FormularioEdicion";
 import TarjetaPerfil from "../../components//UserCompo/PerfilUsuario/TarjetaPerfil";
@@ -29,7 +30,7 @@ const PerfilUsuario = () => {
 
   const [usuario, setUsuario] = useState(INITIAL_USER_STATE);
   const [idUsuario, setIdUsuario] = useState(null);
-  const [rol, setRol] = useState(null);
+  const [rol, setRol] = useState(null);        
   const [compras, setCompras] = useState([]);
   const [mostrar, setMostrar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -51,21 +52,32 @@ const PerfilUsuario = () => {
 
   const { data, loading, error } = useFetch(url);
 
-  // Decodificar token
+  // Obtener id y rol desde /me usando fetchMe
   useEffect(() => {
-    try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const decoded = jwtDecode(token);
-        setRol(decoded.rol);
-        setIdUsuario(decoded.id);
-      }
-    } catch (error) {
-      console.error("Error al decodificar token:", error);
-    }
-  }, []);
+    const token = localStorage.getItem("token");
+    if (!token) return; // abajo igual validas token con Navigate
 
-  // Actualizar usuario con datos del fetch
+    const cargarDatosBasicos = async () => {
+      try {
+        const { id, rol } = await fetchMe(token); 
+        setIdUsuario(id);
+        setRol(rol);
+      } catch (err) {
+        console.error("Error al obtener id/rol desde /me:", err);
+        // si el token está roto o expiró, lo limpiamos y mandamos a login
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    };
+
+    cargarDatosBasicos();
+  }, [navigate]);
+
+// console.log("Rol del usuario en PerfilUsuario:", rol);
+// console.log("ID del usuario en PerfilUsuario:", idUsuario);
+  
+
+// Actualizar usuario con datos del fetch
   useEffect(() => {
     if (data) {
       const u = data.usuario || data;
@@ -111,7 +123,6 @@ const PerfilUsuario = () => {
   if (!localStorage.getItem("token")) return <Navigate to="/login" />;
   if (!idUsuario || loading) return <PerfilUsuarioSKL />;
   if (error) return <p>Error: {error}</p>;
-
   return (
     <div className="container mt-5 p-4">
       {modal && (
