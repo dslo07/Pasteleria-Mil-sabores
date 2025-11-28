@@ -105,10 +105,7 @@ const CrearArticulo = () => {
           <button type="submit" className="btn btn-comprar">
             Guardar Artículo
           </button>
-          <button onClick={()=>{console.log(articulo);
-          }} className="btn btn-success">
-            LOG
-          </button>
+
         </div>
       </form>
     </div>

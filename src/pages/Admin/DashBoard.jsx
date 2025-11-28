@@ -1,12 +1,14 @@
-import React from "react";
 import SideBar from "../../components/AdminCompo/SideBar";
 import { Outlet, NavLink,Navigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa6";
+import { isAdmin } from "../../hooks/useValidated";
 
 const DashBoard = () => {
-  const rol = localStorage.getItem("rol");
-  if (rol == "Admin") {
-      return <Navigate to="/notfound" />; // redirige si no es admin
+  const token = localStorage.getItem("token");
+  const acceso = isAdmin(token);
+
+  if (!acceso) {
+    return <Navigate to="/notfound" />; // redirige si no es admin
   } 
     return (
     <main className="d-flex vh-100 position-relative bg-light">

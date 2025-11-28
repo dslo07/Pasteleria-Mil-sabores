@@ -66,13 +66,8 @@ const Login = () => {
     try {
       // 1) Login: recibe solo el token
       const { token } = await loginUsuario({ correo, contrasena });
-      console.log("Token:", token);
 
-      // 2) Consultar /me para obtener { id, rol }
-      const { id, rol } = await fetchMe(token);
-      console.log("ID:", id, "Rol:", rol);
-
-      // 3) Guardar sesión
+      // 2) Guardar sesión
       setIsLogin(true);
       setMsg("Inicio de sesión exitoso");
         localStorage.setItem("token", token);

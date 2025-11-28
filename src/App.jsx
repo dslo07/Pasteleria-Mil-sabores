@@ -88,7 +88,7 @@ function App() {
       reverseOrder={false}
       //configuracion
       toastOptions={{
-        duration: 1200,
+        duration: 1800,
         removeDelay: 500,
         style: {
           background: '#8B4513',

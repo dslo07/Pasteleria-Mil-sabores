@@ -3,7 +3,7 @@ import useMutation from "../../../../hooks/useMutation";
 import toast from "react-hot-toast";
 
 const CrearUsuario = () => {
-  const { execute, isLoading, error } = useMutation();
+  const { execute, loading } = useMutation();
 
   const [usuario, setUsuario] = useState({
     nombres: "",
@@ -12,15 +12,24 @@ const CrearUsuario = () => {
     correo: "",
     contrasena: "",
     nacimiento: "",
-    rol: "2", // por defecto Admin
-    estado: true,
   });
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setUsuario({
       ...usuario,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
+    });
+  };
+
+  const resetForm = () => {
+    setUsuario({
+      nombres: "",
+      apellidoPaterno: "",
+      apellidoMaterno: "",
+      correo: "",
+      contrasena: "",
+      nacimiento: "",
     });
   };
 
@@ -28,40 +37,32 @@ const CrearUsuario = () => {
     e.preventDefault();
     const url = `${import.meta.env.VITE_PAGINA_ADMIN_CRUD_CREAR_USER}`;
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error("No se encontró el token de autenticación");
-      return;
-    }
+    const payload = {
+      nombres: usuario.nombres.trim(),
+      apellidoPaterno: usuario.apellidoPaterno.trim(),
+      apellidoMaterno: usuario.apellidoMaterno.trim(),
+      correo: usuario.correo.trim().toLowerCase(),
+      contrasena: usuario.contrasena,
+      nacimiento: usuario.nacimiento,
+    };
 
     try {
-      const resultado = await execute(
-        url,
-        "POST",
-        usuario,
-        token
-      );
-
-      if (resultado) {
-        toast.success(`Usuario "${usuario.nombres}" creado correctamente`);
-
-        // Reset del formulario
-        setUsuario({
-          nombres: "",
-          apellidoPaterno: "",
-          apellidoMaterno: "",
-          correo: "",
-          contrasena: "",
-          nacimiento: "",
-          rol: "2",
-          estado: true,
-        });
-      } else {
-        toast.error(error || "No se pudo crear el usuario");
-      }
+      await execute(url, "POST", payload);
+      toast.success(`Usuario "${usuario.nombres}" creado correctamente`);
+      resetForm();
     } catch (err) {
-      console.error(err);
-      toast.error("Error inesperado al crear el usuario");
+      let errorMessage = err?.error || err?.message || "Error al crear el usuario";
+
+      // Mejorar mensajes de errores comunes
+      if (errorMessage.includes("duplicate key") && errorMessage.toLowerCase().includes("email")) {
+        errorMessage = "Este correo electrónico ya está registrado";
+      } else if (errorMessage.includes("violates not-null constraint")) {
+        errorMessage = "Faltan campos obligatorios";
+      } else if (errorMessage.includes("invalid input syntax")) {
+        errorMessage = "Formato de datos inválido";
+      }
+
+      toast.error(errorMessage);
     }
   };
 
@@ -78,25 +79,14 @@ const CrearUsuario = () => {
           {/* Columna izquierda */}
           <div className="col-12 col-md-6">
             <div className="mb-3">
-              <label className="form-label fw-semibold">Correo</label>
-              <input
-                type="email"
-                className="form-control"
-                name="correo"
-                placeholder="ej: HectorLavoe@milsabores.cl"
-                value={usuario.correo}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Nombres</label>
+              <label className="form-label fw-semibold">
+                Nombres <span className="text-danger">*</span>
+              </label>
               <input
                 type="text"
                 className="form-control"
                 name="nombres"
-                placeholder="Ej: Juanito  "
+                placeholder="Ej: Juan"
                 value={usuario.nombres}
                 onChange={handleChange}
                 required
@@ -104,55 +94,14 @@ const CrearUsuario = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label fw-semibold">Apellido Materno</label>
-              <input
-                type="text"
-                className="form-control"
-                name="apellidoMaterno"
-                placeholder="Ej: Soto"
-                value={usuario.apellidoMaterno}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Rol</label>
-              <select
-                className="form-select"
-                name="rol"
-                value={usuario.rol}
-                onChange={handleChange}
-              >
-                <option value="2">Administrador</option>
-                <option value="3">Vendedor</option>
-                <option value="4">Supervisor</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Columna derecha */}
-          <div className="col-12 col-md-6">
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Contraseña</label>
-              <input
-                type="password"
-                className="form-control"
-                name="contrasena"
-                placeholder="***********"
-                value={usuario.contrasena}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Apellido Paterno</label>
+              <label className="form-label fw-semibold">
+                Apellido Paterno <span className="text-danger">*</span>
+              </label>
               <input
                 type="text"
                 className="form-control"
                 name="apellidoPaterno"
-                placeholder="Ej: Alimaña"
+                placeholder="Ej: Pérez"
                 value={usuario.apellidoPaterno}
                 onChange={handleChange}
                 required
@@ -160,7 +109,59 @@ const CrearUsuario = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label fw-semibold">Fecha de nacimiento</label>
+              <label className="form-label fw-semibold">
+                Apellido Materno <span className="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="apellidoMaterno"
+                placeholder="Ej: González"
+                value={usuario.apellidoMaterno}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          {/* Columna derecha */}
+          <div className="col-12 col-md-6">
+            <div className="mb-3">
+              <label className="form-label fw-semibold">
+                Correo <span className="text-danger">*</span>
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                name="correo"
+                placeholder="usuario@milsabores.cl"
+                value={usuario.correo}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label fw-semibold">
+                Contraseña <span className="text-danger">*</span>
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                name="contrasena"
+                placeholder="Mínimo 6 caracteres"
+                value={usuario.contrasena}
+                onChange={handleChange}
+                required
+                minLength={6}
+              />
+              <small className="text-muted">Mínimo 6 caracteres</small>
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label fw-semibold">
+                Fecha de nacimiento <span className="text-danger">*</span>
+              </label>
               <input
                 type="date"
                 className="form-control"
@@ -168,6 +169,7 @@ const CrearUsuario = () => {
                 value={usuario.nacimiento}
                 onChange={handleChange}
                 required
+                max={new Date().toISOString().split("T")[0]}
               />
             </div>
           </div>
@@ -178,9 +180,20 @@ const CrearUsuario = () => {
           <button
             type="submit"
             className="btn btn-success rounded-pill px-4 py-2"
-            disabled={isLoading}
+            disabled={loading}
           >
-            {isLoading ? "Guardando..." : "Guardar Usuario"}
+            {loading ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                Guardando...
+              </>
+            ) : (
+              "Guardar Usuario"
+            )}
           </button>
         </div>
       </form>

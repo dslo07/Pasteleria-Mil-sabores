@@ -25,3 +25,5 @@ node_modules
 env.js
 .env
 footer.jsx
+.editorconfig
+.gitignore

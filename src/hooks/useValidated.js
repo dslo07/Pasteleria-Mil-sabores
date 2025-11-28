@@ -14,3 +14,12 @@ export function isTokenExpired(token) {
     return true; // token inválido se considera expirado
   }
 }
+
+export function isAdmin(token) {
+  const datosUser = jwtDecode(token);
+  if(datosUser.rol == 'admin'){
+    return true;
+  }else{
+    return false;
+  }
+}
