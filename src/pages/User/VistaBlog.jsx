@@ -47,7 +47,6 @@ function VistaBlog() {
 
       {/* Contenido */}
       <div
-        className="mx-auto"
         style={{
           maxWidth: "800px",
           lineHeight: "1.8",
