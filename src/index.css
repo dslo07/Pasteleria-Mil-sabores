@@ -127,13 +127,13 @@ h1, h2, h3, h4, h5, h6 {
 /* Ajustes responsive */
 @media (max-width: 768px) {
     .productos-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(2, minmax(150px, 1fr));
     }
 }
 
 @media (max-width: 480px) {
     .productos-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        grid-template-columns: repeat(1, minmax(120px, 1fr));
     }
 }
 /*Estilos para el login del usuario*/
@@ -190,6 +190,7 @@ height: 100%;
     height: 80vh !important;
     background-size:cover;
     background-position-y: left;
+    background-position: center;
 }
 .bg-header{
         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0, 0, 0, 0.61)), 

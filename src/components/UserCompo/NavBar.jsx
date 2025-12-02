@@ -43,19 +43,17 @@ function NavBar() {
                 Inicio
               </NavLink>
             </li>
-
-            <li className="nav-item ">
+            <li className="nav-item">
               <NavLink
                 to="/tienda"
-                className="nav-link "
-                role="button"
-                data-bs-toggle=""
-                aria-expanded="false"
+                className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
+                end
               >
                 Tienda
               </NavLink>
+            </li>
 
-</li>
+
 
             <li className="nav-item">
               <NavLink

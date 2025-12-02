@@ -2,7 +2,7 @@ import BotonesAccion from "../../BotonesAccion";
 import InfoUsuario from "./InfoUsuario";
 import HistorialCompras from "./HistorialCompras";
 
-const TarjetaPerfil = ({ usuario, rol, compras, cerrarSesion, setMostrar, navigate }) => {
+const TarjetaPerfil = ({ usuario, rol, compras, cerrarSesion, navigate }) => {
   
   return (
     <div className="col-md-5">

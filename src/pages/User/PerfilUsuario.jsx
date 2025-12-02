@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -14,6 +13,7 @@ import useMutation from "../../hooks/useMutation";
 import FormularioEdicion from "../../components//UserCompo/PerfilUsuario/FormularioEdicion";
 import TarjetaPerfil from "../../components//UserCompo/PerfilUsuario/TarjetaPerfil";
 
+// ✅ Eliminar id_rol del estado inicial
 const INITIAL_USER_STATE = {
   nombres_cliente: "",
   appat_cliente: "",
@@ -75,6 +75,7 @@ const PerfilUsuario = () => {
         email_cliente: u.email_cliente || "",
         fecha_nacimiento: u.fecha_nacimiento || "",
         telefono_cliente: u.telefono_cliente || "",
+        // ✅ NO incluir id_rol aquí
       });
     }
   }, [data]);
@@ -84,11 +85,24 @@ const PerfilUsuario = () => {
     setUsuario((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ✅ Filtrar solo los campos que deben actualizarse
   const handleGuardar = async (e) => {
     e.preventDefault();
     if (!urlActua) return;
 
-    const result = await actualizarUsuario(urlActua, "PUT", usuario);
+    // ✅ Enviar SOLO los datos del perfil, sin id_rol ni activo
+    const datosActualizar = {
+      nombres_cliente: usuario.nombres_cliente,
+      appat_cliente: usuario.appat_cliente,
+      apmat_cliente: usuario.apmat_cliente,
+      email_cliente: usuario.email_cliente,
+      fecha_nacimiento: usuario.fecha_nacimiento,
+      telefono_cliente: usuario.telefono_cliente,
+    };
+
+    console.log("📤 Enviando datos:", datosActualizar);
+
+    const result = await actualizarUsuario(urlActua, "PUT", datosActualizar);
 
     if (result) {
       alert("Perfil actualizado correctamente");
