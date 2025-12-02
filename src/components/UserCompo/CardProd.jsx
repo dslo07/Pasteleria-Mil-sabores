@@ -39,7 +39,7 @@ function CardProd({ producto }) {
             <button
               className="btn btn-comprar w-100"
               onClick={() =>
-                navigate(`/producto/${producto.codigo_producto}`, { state: { producto } })
+                navigate(`/producto/${producto.codigo_producto}`, { state: { producto } }, window.location.reload)
               }
             >
               Ver <span className="d-none d-md-flex">Producto</span>

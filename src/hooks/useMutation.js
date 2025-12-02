@@ -8,7 +8,9 @@ const useMutation = () => {
   const execute = async (url, method = "POST", body = null) => {
     setLoading(true);
     setError(null);
+    setResponse(null);
     const token = localStorage.getItem("token");
+    
     try {
       const res = await fetch(url, {
         method,
@@ -20,12 +22,27 @@ const useMutation = () => {
       });
 
       const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Error en la peticion");
+      
+      if (!res.ok) {
+        // Crear error con la respuesta completa del servidor
+        const errorObj = {
+          message: json.message || json.error || "Error en la petición",
+          error: json.error,
+          status: res.status,
+          ...json // Incluir toda la respuesta del servidor
+        };
+        setError(errorObj);
+        throw errorObj; 
+      }
 
       setResponse(json);
       return json;
+      
     } catch (err) {
-      setError(err.message);
+      // Si es un error de red o de parsing
+      const errorObj = err.message ? err : { message: "Error de conexión", error: String(err) };
+      setError(errorObj);
+      throw errorObj; 
     } finally {
       setLoading(false);
     }

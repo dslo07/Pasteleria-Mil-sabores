@@ -34,6 +34,7 @@ const CrearArticulo = () => {
       const data = await res.json();
       alert(`Artículo creado con éxito: ${data.blog.titulo_blogs}`);
 
+      
       // Reset formulario
       setArticulo({
         titulo_blogs: "",
@@ -104,6 +105,7 @@ const CrearArticulo = () => {
           <button type="submit" className="btn btn-comprar">
             Guardar Artículo
           </button>
+
         </div>
       </form>
     </div>

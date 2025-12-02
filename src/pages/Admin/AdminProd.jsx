@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import CompoContent from "../../components/AdminCompo/CompoContent";
 import useFetch from "../../hooks/useFetch";
 import CardProdTabla from "../../components/AdminCompo/CardProdTabla";
+import CardProdTablaSKL from "../../components/skeletons/CardProdTablaSKL";  // Importar el skeleton loader
 import { IoSearchSharp } from "react-icons/io5";
 
 const AdminProd = () => {
   const url = `${import.meta.env.VITE_PAGINA_ADMIN_PROD}`;
-  const { data: productos } = useFetch(url);
+  const { data: productos, loading } = useFetch(url);  // Añadir la propiedad loading a useFetch
   const [listaProductos, setListaProductos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
 
@@ -16,15 +17,15 @@ const AdminProd = () => {
       setListaProductos(productos);
     }
   }, [productos]);
-  
-  // Manejar cambios en el input 
+
+  // Manejar cambios en el input de búsqueda
   const handleBuscar = (e) => {
     const texto = e.target.value.toLowerCase();
     setBusqueda(texto);
 
     if (!productos) return;
 
-    //  Filtrado 
+    // Filtrado de productos
     const filtrados = productos.filter((p) => {
       const nombre = (p.nombre_producto || "").toLowerCase();
       const codigo = (p.codigo_producto || "").toString().toLowerCase();
@@ -44,7 +45,7 @@ const AdminProd = () => {
     <CompoContent tipo={"Producto"}>
       <div className="container">
         <div className="row g-4">
-          {/* Input  */}
+          {/* Input de búsqueda */}
           <div className="d-flex align-items-center border rounded mt-4 bg-white px-2">
             <IoSearchSharp className="me-2 text-muted" />
             <input
@@ -56,14 +57,20 @@ const AdminProd = () => {
             />
           </div>
 
-          {/* Renderizar de productos */}
-          {listaProductos.length > 0 ? (
+          {/* Renderizar productos */}
+          {loading ? (
+            // Mostrar skeletons mientras se cargan los productos
+            Array(8) // Mostrar 8 skeletons como ejemplo
+              .fill()
+              .map((_, index) => (
+                <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
+                  <CardProdTablaSKL key={index} />
+                </div>
+              ))
+          ) : listaProductos.length > 0 ? (
             listaProductos.map((producto) => (
-              <div
-                key={producto.id_producto || producto.id}
-                className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex"
-              >
-                <CardProdTabla producto={producto} />
+              <div  className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
+                <CardProdTabla producto={producto} key={producto.id_producto}/>
               </div>
             ))
           ) : (

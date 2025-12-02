@@ -1,14 +1,12 @@
 import { useContext } from 'react'
 import InfoEmpresa from '../../components/UserCompo/InfoEmpresa'
-import NavBar from '../../components/UserCompo/NavBar'
+import Header from '../../components/UserCompo/Header'
 import Slider from '../../components/UserCompo/Slider'
-import Footer from '../../components/UserCompo/Footer'
 function Nosotros() {
   return (
     <>
-      <div className='separador'></div>
+      <Header titulo={"Nuestra Pasteleria"}  desc="Conoce la historia detra de los pasteles favoritos de todo santiago" redi="/tienda" cta="ir a tienda" />
       <InfoEmpresa/>
-      <Slider/>
     </>
   )
 }

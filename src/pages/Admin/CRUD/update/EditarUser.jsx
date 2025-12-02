@@ -2,60 +2,86 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 import useMutation from "../../../../hooks/useMutation";
+import useFetch from "../../../../hooks/useFetch";
 
 const API_URL = import.meta.env.VITE_PAGINA_ADMIN_CRUD_EDITAR_USER;
 
 function EditarUser() {
-  const [usuario, setUsuario] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [usuario, setUsuario] = useState(null);
   const { execute, loading, error } = useMutation();
 
-  // 🔹 Cargar usuario con useMutation
+  // Fetch user
+  const {
+    data: result,
+    loading: fetching,
+    error: fetchError,
+  } = useFetch(`${API_URL}${id}`);
+
+  // Load user into state
   useEffect(() => {
-    const fetchUsuario = async () => {
-      const result = await execute(`${API_URL}/${id}`, "GET");
-      if (result && result.usuario) {
-        setUsuario(result.usuario);
-      } else {
-        toast.error("No se pudo cargar el usuario.");
-      }
-    };
+    if (result && result.usuario) {
+      setUsuario(result.usuario);
+    } else if (fetchError) {
+      toast.error("No se pudo cargar el usuario.");
+    }
+  }, [result, fetchError]);
 
-    fetchUsuario();
-  }, [id]);
-
-  // 🔹 Mostrar spinner mientras carga
-  if (!usuario) {
+  // Show loading spinner while fetching the user
+  if (fetching || !usuario) {
     return (
       <div
         className="d-flex justify-content-center align-items-center"
         style={{ height: "50vh" }}
       >
         <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Cargando...</span>
+          <span className="visually-hidden">Cargando usuario...</span>
         </div>
       </div>
     );
   }
 
-  // 🔹 Manejar cambios en los inputs
+  // Handle form changes
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    let processedValue = value;
+    
+    // Convertir string a boolean para el campo activo
+    if (name === "activo") {
+      processedValue = value === "true";
+    }
+    
+    // Convertir string a number para el campo id_rol
+    if (name === "id_rol") {
+      processedValue = parseInt(value, 10);
+    }
+    
     setUsuario((prev) => ({
       ...prev,
-      [name]:
-        value === "true" ? true : value === "false" ? false : value,
+      [name]: processedValue,
     }));
   };
 
-  // 🔹 Guardar cambios
+  // Save changes
   const handleSave = async () => {
+    const payload = {
+      nombres_cliente: usuario.nombres_cliente,
+      appat_cliente: usuario.appat_cliente,
+      apmat_cliente: usuario.apmat_cliente,
+      email_cliente: usuario.email_cliente,
+      fecha_nacimiento: usuario.fecha_nacimiento,
+      telefono_cliente: usuario.telefono_cliente,
+      activo: usuario.activo,
+      id_rol: usuario.id_rol,
+    };
+
     const result = await execute(
-      `${API_URL}/actualizar-usuario/${id}`,
+      `${API_URL}actualizar-usuario/${id}`,
       "PUT",
-      usuario
+      payload
     );
 
     if (result) {
@@ -66,20 +92,29 @@ function EditarUser() {
     }
   };
 
-  //  Desactivar usuario
+  // Disable user
   const eliminarUser = async () => {
-    const confirm = prompt(
+    const confirmacion = prompt(
       `Escriba el nombre del usuario para desactivarlo: "${usuario.nombres_cliente}"`
     );
-    if (confirm !== usuario.nombres_cliente) {
+
+    if (confirmacion !== usuario.nombres_cliente) {
       toast.error("Usuario no desactivado");
       return;
     }
 
-    const result = await execute(`${API_URL}/${id}`, "PUT", {
-      ...usuario,
+    const payload = {
+      nombres_cliente: usuario.nombres_cliente,
+      appat_cliente: usuario.appat_cliente,
+      apmat_cliente: usuario.apmat_cliente,
+      email_cliente: usuario.email_cliente,
+      fecha_nacimiento: usuario.fecha_nacimiento,
+      telefono_cliente: usuario.telefono_cliente,
       activo: false,
-    });
+      id_rol: usuario.id_rol,
+    };
+
+    const result = await execute(`${API_URL}/${id}`, "PUT", payload);
 
     if (result) {
       toast.success("Usuario desactivado con éxito");
@@ -205,13 +240,13 @@ function EditarUser() {
             >
               {loading ? "Guardando..." : "Guardar Cambios"}
             </button>
-{/* 
-            <button
+
+            {/* <button
               className="btn btn-danger btn-sm"
               onClick={eliminarUser}
               disabled={loading}
             >
-              {loading ? "Eliminando..." : "Usuario Eliminado"}
+              {loading ? "Eliminando..." : "Desactivar Usuario"}
             </button> */}
           </div>
         </div>

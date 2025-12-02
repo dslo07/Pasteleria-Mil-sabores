@@ -3,6 +3,8 @@ import { Router } from "express";
 import pool from "../bd.js";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
 import { signToken, verifyToken, isAdmin } from "./auth.js"; // <-- usa el isAdmin de auth.js
 dotenv.config();
 
@@ -118,7 +120,7 @@ router.post("/login", async (req, res) => {
         WHERE ur.id_usuario = $1`,
       [user.id_usuario]
     );
-    const rolUser = rolesRows[0]?.descripcion_rol?.toLowerCase() ?? "cliente";
+    const rolUser = rolesRows[0].descripcion_rol?.toLowerCase();
 
     // 4) Token con { id, rol }
     const token = signToken({ id: user.id_usuario, rol: rolUser });
@@ -193,9 +195,6 @@ router.get("/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
 
   // solo permitir ver su propio perfil o admin
-  if (req.user.role !== "Admin" && parseInt(req.user.id) !== parseInt(id)) {
-    return res.status(403).json({ msg: "Acceso denegado" });
-  }
 
   try {
     const result = await pool.query(`
@@ -350,50 +349,60 @@ router.post("/crear-empleado", async (req, res) => {
 
     const { nombres, apellidoPaterno, apellidoMaterno, correo, contrasena, nacimiento } = req.body;
 
+    // LOG PARA DEBUG
+    console.log("Datos recibidos:", { nombres, apellidoPaterno, apellidoMaterno, correo, nacimiento });
+
     const hashedPassword = await bcrypt.hash(contrasena, 10);
+    console.log("Password hasheado correctamente");
 
     const usuario = await client.query(
       `INSERT INTO usuario (email_usuario, contrasena_usuario) VALUES ($1, $2) RETURNING id_usuario AS user_id`,
       [correo, hashedPassword]
     );
+    console.log("Usuario creado con ID:", usuario.rows[0].user_id);
 
     const cliente = await client.query(
       "INSERT INTO cliente (nombres_cliente, appat_cliente, apmat_cliente) VALUES ($1, $2, $3) RETURNING id_cliente AS client_id",
       [nombres, apellidoPaterno, apellidoMaterno]
     );
+    console.log("Cliente creado con ID:", cliente.rows[0].client_id);
 
     await client.query(
       "INSERT INTO usuario_rol (id_usuario, id_rol) VALUES ($1, $2)",
       [usuario.rows[0].user_id, "2"]
     );
+    console.log("Rol asignado");
 
     await client.query(
       "INSERT INTO cliente_usuario (id_usuario, id_cliente) VALUES ($1, $2)",
       [usuario.rows[0].user_id, cliente.rows[0].client_id]
     );
+    console.log("Cliente-Usuario vinculado");
 
     await client.query(
       "INSERT INTO datos_cliente (id_cliente, email_cliente, fecha_nacimiento) VALUES ($1, $2, $3)",
       [cliente.rows[0].client_id, correo, nacimiento]
     );
+    console.log("Datos cliente insertados");
 
     const datos_cliente = await client.query(`SELECT
-    c.nombres_cliente as nombres,
-    c.appat_cliente as apellidoPaterno,
-    c.apmat_cliente as apellidoMaterno,
-    c.rut_cliente as rut,
-    dc.fecha_nacimiento as nacimiento,
-(d.calle_direccion || ' ' || d.comuna_direccion || ' ' || d.numero_direccion || ' ' || d.region_direccion) AS direccion
-FROM usuario
-as u JOIN cliente_usuario as cs on (u.id_usuario = cs.id_usuario)
-JOIN cliente as c on (c.id_cliente = cs.id_cliente)
-JOIN datos_cliente as dc on (c.id_cliente = dc.id_cliente)
-LEFT JOIN direccion_cliente as direc on (c.id_cliente = direc.id_cliente)
-LEFT JOIN direccion as d on (d.id_direccion = direc.id_direccion)
-WHERE u.id_usuario = $1;`,
+            c.nombres_cliente as nombres,
+            c.appat_cliente as apellidoPaterno,
+            c.apmat_cliente as apellidoMaterno,
+            c.rut_cliente as rut,
+            dc.fecha_nacimiento as nacimiento,
+            (d.calle_direccion || ' ' || d.comuna_direccion || ' ' || d.numero_direccion || ' ' || d.region_direccion) AS direccion
+            FROM usuario
+            as u JOIN cliente_usuario as cs on (u.id_usuario = cs.id_usuario)
+            JOIN cliente as c on (c.id_cliente = cs.id_cliente)
+            JOIN datos_cliente as dc on (c.id_cliente = dc.id_cliente)
+            LEFT JOIN direccion_cliente as direc on (c.id_cliente = direc.id_cliente)
+            LEFT JOIN direccion as d on (d.id_direccion = direc.id_direccion)
+            WHERE u.id_usuario = $1;`,
         [usuario.rows[0].user_id]);
 
     await client.query("COMMIT");
+    console.log("Transacción completada");
 
     const token = jwt.sign(
       { id: usuario.rows[0].user_id, role: "user" },
@@ -404,6 +413,9 @@ WHERE u.id_usuario = $1;`,
     res.status(201).json({ msg: "Usuario creado", user: usuario.rows[0], token });
   } catch (err) {
     await client.query("ROLLBACK");
+    console.error("❌ ERROR COMPLETO:", err); // MÁS DETALLE
+    console.error("Mensaje:", err.message);
+    console.error("Stack:", err.stack);
     res.status(500).json({ error: err.message });
   } finally {
     client.release();
@@ -507,6 +519,122 @@ router.put("/actualizar-perfil/:id", verifyToken, async (req, res) => {
     client.release();
   }
 });
+
+// cambiar la direccion del usuario
+router.put("/actualizar-direccion/:id", verifyToken, async (req, res) => {
+  const { id } = req.params; // id del usuario
+  const { calle_direccion, numero_direccion, comuna_direccion, region_direccion } = req.body;
+
+  if (!calle_direccion || !numero_direccion || !comuna_direccion || !region_direccion) {
+    return res.status(400).json({
+      error: "Faltan datos obligatorios",
+      details: "Todos los datos son requeridos"
+    });
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    // Obtener id_cliente asociado al id_usuario
+    const clienteResult = await client.query(
+      `SELECT clu.id_cliente
+       FROM cliente_usuario AS clu
+       WHERE clu.id_usuario = $1`,
+      [id]
+    );
+
+    if (clienteResult.rows.length === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Cliente no encontrado para el usuario" });
+    }
+
+    const id_cliente = clienteResult.rows[0].id_cliente;
+
+    // Insertar la nueva direccion y obtener su id
+    const direccionResult = await client.query(
+      `INSERT INTO direccion (calle_direccion, numero_direccion, comuna_direccion, region_direccion)
+       VALUES ($1, $2, $3, $4) RETURNING id_direccion`,
+      [calle_direccion, numero_direccion, comuna_direccion, region_direccion]
+    );
+
+    const id_direccion = direccionResult.rows[0].id_direccion;
+
+    // Asociar la dirección con el cliente
+    await client.query(
+      `INSERT INTO direccion_cliente (id_cliente, id_direccion)
+       VALUES ($1, $2)`,
+      [id_cliente, id_direccion]
+    );
+
+    await client.query("COMMIT");
+
+    res.json({
+      success: true,
+      msg: "Dirección actualizada correctamente",
+      updatedUser: { calle_direccion, numero_direccion, comuna_direccion, region_direccion },
+    });
+
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error al actualizar perfil:", err);
+    res.status(500).json({
+      error: "No se pudo actualizar la dirección del perfil",
+      details: err.message,
+    });
+  } finally {
+    client.release();
+  }
+});
+
+
+// obtener  direccion
+router.get("/direccion/:id", verifyToken, async (req, res) => {
+  const { id } = req.params; // id del usuario
+
+  const client = await pool.connect();
+
+  try {
+    const result = await client.query(
+      `SELECT 
+          d.id_direccion,
+          d.calle_direccion,
+          d.numero_direccion,
+          d.comuna_direccion,
+          d.region_direccion
+        FROM usuario AS u
+        JOIN cliente_usuario AS cu
+            ON u.id_usuario = cu.id_usuario
+        JOIN cliente AS c
+            ON cu.id_cliente = c.id_cliente
+        JOIN direccion_cliente AS dc
+            ON c.id_cliente = dc.id_cliente
+        JOIN direccion AS d
+            ON dc.id_direccion = d.id_direccion
+        WHERE u.id_usuario = $1`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No se encontraron direcciones para este usuario" });
+    }
+
+    // Enviar solo las direcciones como array
+    res.json(result.rows);
+
+  } catch (err) {
+    console.error("Error al obtener direcciones:", err);
+    res.status(500).json({
+      error: "No se pudo obtener las direcciones",
+      details: err.message
+    });
+  } finally {
+    client.release();
+  }
+});
+
+
 
 
 export default router;

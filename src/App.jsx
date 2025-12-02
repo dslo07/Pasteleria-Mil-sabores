@@ -32,7 +32,7 @@ import EditarCat from './pages/Admin/CRUD/update/EditarCat'
 import EditarUser from './pages/Admin/CRUD/update/EditarUser'
 import EditarArticulo from './pages/Admin/CRUD/update/EditarArticulo'
 // Toast (alert)
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -88,7 +88,7 @@ function App() {
       reverseOrder={false}
       //configuracion
       toastOptions={{
-        duration: 1200,
+        duration: 1800,
         removeDelay: 500,
         style: {
           background: '#8B4513',
