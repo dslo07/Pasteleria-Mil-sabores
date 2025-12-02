@@ -12,15 +12,7 @@ const TarjetaPerfil = ({ usuario, rol, compras, cerrarSesion, setMostrar, naviga
           rol={rol} 
           navigate={navigate} 
         />
-
         <InfoUsuario usuario={usuario} />
-
-        <button
-          onClick={() => setMostrar((prev) => !prev)}
-          className="btn btn-comprar w-100 mt-3 d-md-none"
-        >
-          Editar Perfil
-        </button>
 
         <HistorialCompras compras={compras} navigate={navigate} />
       </div>

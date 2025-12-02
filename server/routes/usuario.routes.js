@@ -520,5 +520,121 @@ router.put("/actualizar-perfil/:id", verifyToken, async (req, res) => {
   }
 });
 
+// cambiar la direccion del usuario
+router.put("/actualizar-direccion/:id", verifyToken, async (req, res) => {
+  const { id } = req.params; // id del usuario
+  const { calle_direccion, numero_direccion, comuna_direccion, region_direccion } = req.body;
+
+  if (!calle_direccion || !numero_direccion || !comuna_direccion || !region_direccion) {
+    return res.status(400).json({
+      error: "Faltan datos obligatorios",
+      details: "Todos los datos son requeridos"
+    });
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    // Obtener id_cliente asociado al id_usuario
+    const clienteResult = await client.query(
+      `SELECT clu.id_cliente
+       FROM cliente_usuario AS clu
+       WHERE clu.id_usuario = $1`,
+      [id]
+    );
+
+    if (clienteResult.rows.length === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Cliente no encontrado para el usuario" });
+    }
+
+    const id_cliente = clienteResult.rows[0].id_cliente;
+
+    // Insertar la nueva direccion y obtener su id
+    const direccionResult = await client.query(
+      `INSERT INTO direccion (calle_direccion, numero_direccion, comuna_direccion, region_direccion)
+       VALUES ($1, $2, $3, $4) RETURNING id_direccion`,
+      [calle_direccion, numero_direccion, comuna_direccion, region_direccion]
+    );
+
+    const id_direccion = direccionResult.rows[0].id_direccion;
+
+    // Asociar la dirección con el cliente
+    await client.query(
+      `INSERT INTO direccion_cliente (id_cliente, id_direccion)
+       VALUES ($1, $2)`,
+      [id_cliente, id_direccion]
+    );
+
+    await client.query("COMMIT");
+
+    res.json({
+      success: true,
+      msg: "Dirección actualizada correctamente",
+      updatedUser: { calle_direccion, numero_direccion, comuna_direccion, region_direccion },
+    });
+
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error al actualizar perfil:", err);
+    res.status(500).json({
+      error: "No se pudo actualizar la dirección del perfil",
+      details: err.message,
+    });
+  } finally {
+    client.release();
+  }
+});
+
+
+// obtener  direccion
+router.get("/direccion/:id", verifyToken, async (req, res) => {
+  const { id } = req.params; // id del usuario
+
+  const client = await pool.connect();
+
+  try {
+    const result = await client.query(
+      `SELECT 
+          d.id_direccion,
+          d.calle_direccion,
+          d.numero_direccion,
+          d.comuna_direccion,
+          d.region_direccion
+        FROM usuario AS u
+        JOIN cliente_usuario AS cu
+            ON u.id_usuario = cu.id_usuario
+        JOIN cliente AS c
+            ON cu.id_cliente = c.id_cliente
+        JOIN direccion_cliente AS dc
+            ON c.id_cliente = dc.id_cliente
+        JOIN direccion AS d
+            ON dc.id_direccion = d.id_direccion
+        WHERE u.id_usuario = $1`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No se encontraron direcciones para este usuario" });
+    }
+
+    // Enviar solo las direcciones como array
+    res.json(result.rows);
+
+  } catch (err) {
+    console.error("Error al obtener direcciones:", err);
+    res.status(500).json({
+      error: "No se pudo obtener las direcciones",
+      details: err.message
+    });
+  } finally {
+    client.release();
+  }
+});
+
+
+
 
 export default router;

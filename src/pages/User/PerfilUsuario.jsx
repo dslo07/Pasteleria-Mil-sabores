@@ -5,7 +5,6 @@ import { jwtDecode } from "jwt-decode";
 import { FaArrowAltCircleRight, FaArrowAltCircleLeft } from "react-icons/fa";
 
 import AlertModal from "../../components/AlerModal";
-import ModalPerfilUser from "../../components/UserCompo/ModalPerfilUser";
 import DireccionUser from "../../components/UserCompo/PerfilUsuario/DireccionUser.jsx";
 import PerfilUsuarioSKL from "../../components/skeletons/PerfilUsuarioSKL.jsx";
 
@@ -123,7 +122,7 @@ const PerfilUsuario = () => {
       )}
 
       <div className="row g-4">
-        <div className="col-md-7 d-none d-md-block">
+        <div className="col-md-7 ">
           <div className="card shadow-sm rounded-4 p-4">
             {/* Header con título y botón de navegación */}
             <div className="d-flex justify-content-between align-items-center mb-3">
@@ -154,7 +153,7 @@ const PerfilUsuario = () => {
                 cargandoUpdate={cargandoUpdate}
               />
             ) : (
-              <DireccionUser onSubmit={handleGuardar} />
+              <DireccionUser onSubmit={handleGuardar} idUsuario={idUsuario} />
             )}
           </div>
         </div>
@@ -169,7 +168,6 @@ const PerfilUsuario = () => {
         />
       </div>
 
-      {mostrar && <ModalPerfilUser usuario={usuario} handleChange={handleChange} />}
     </div>
   );
 };

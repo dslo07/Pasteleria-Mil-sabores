@@ -42,8 +42,7 @@ const fakeFetchVentas = () => {
     }, 1000);
   });
 };
-
-const ModalDetalleVenta = ({ venta, onClose }) => {
+const ModalDetalleVenta = ({ venta, onClose, actualizarEstado }) => {
   if (!venta) return null;
 
   return (
@@ -63,17 +62,23 @@ const ModalDetalleVenta = ({ venta, onClose }) => {
         <p><strong>Dirección:</strong> {venta.direccion}</p>
         <p><strong>Productos:</strong></p>
         <ul>
-          {venta.productos.map((producto, i) => (
-            <li key={i}>{producto}</li>
+          {venta.productos.map((producto) => (
+            <li key={producto}>{producto}</li>
           ))}
         </ul>
         <p><strong>Cantidad total:</strong> {venta.productos.length}</p>
         <div>
           <label className="fw-bold">Estado Actual:</label> <br/>
-          <select name="estado" className="form-control">
-            <option value="">En Preparación</option>
-            <option value="">Despachado</option>
-            <option value="">Cancelado</option>
+          <select
+            name="estado"
+            className="form-control"
+            value={venta.estado}
+            onChange={(e) => actualizarEstado(venta.id, e.target.value)}
+          >
+            <option value="Preparación">En Preparación</option>
+            <option value="Despachado">Despachado</option>
+            <option value="Entregado">Entregado</option>
+            <option value="Cancelado">Cancelado</option>
           </select>
         </div>
         <hr />
@@ -84,9 +89,6 @@ const ModalDetalleVenta = ({ venta, onClose }) => {
     </div>
   );
 };
-
-
-
 
 
 

@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CampoTexto from "../../CampoTexto";
+import useFetch from "../../../hooks/useFetch";
 
-const DireccionUser = ({ onSubmit }) => {
+const DireccionUser = ({ onSubmit, idUsuario }) => {
+  // Estados
   const [formData, setFormData] = useState({
     calle_direccion: "",
     numero_direccion: "",
@@ -9,31 +11,63 @@ const DireccionUser = ({ onSubmit }) => {
     region_direccion: "",
     predeterminada: false,
   });
-
   const [errors, setErrors] = useState({});
   const [cargando, setCargando] = useState(false);
 
+  // Fetch de datos
+  const url = idUsuario
+    ? `${import.meta.env.VITE_PAGINA_PERFIL_CRUD_GET_DIRECCION}${idUsuario}`
+    : null;
+
+  const { data, loading, error } = useFetch(url);
+
+  // Cargar datos existentes cuando lleguen del fetch
+  useEffect(() => {
+    if (data) {
+      // Si data es un array, tomar el primer elemento
+      const direccion = Array.isArray(data) ? data[0] : data.direccion || data;
+      
+      if (direccion) {
+        setFormData({
+          calle_direccion: direccion.calle_direccion || "",
+          numero_direccion: direccion.numero_direccion || "",
+          comuna_direccion: direccion.comuna_direccion || "",
+          region_direccion: direccion.region_direccion || "",
+          predeterminada: direccion.predeterminada || false,
+        });
+      }
+    }
+  }, [data]);
+
+  // Handlers
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    const newValue = type === "checkbox" ? checked : value;
 
-    // Validación simple
-    if (value.trim() === "") {
-      setErrors({ ...errors, [name]: "Este campo es obligatorio" });
+    setFormData((prev) => ({
+      ...prev,
+      [name]: newValue,
+    }));
+
+    // Validación en tiempo real
+    if (type !== "checkbox" && value.trim() === "") {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "Este campo es obligatorio",
+      }));
     } else {
-      const newErrors = { ...errors };
-      delete newErrors[name];
-      setErrors(newErrors);
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
-    
+
     // Validar campos obligatorios
     Object.keys(formData).forEach((key) => {
       if (key !== "predeterminada" && formData[key].trim() === "") {
@@ -47,15 +81,39 @@ const DireccionUser = ({ onSubmit }) => {
     }
 
     setCargando(true);
-    
-    if (onSubmit) {
-      await onSubmit(formData);
+
+    try {
+      if (onSubmit) {
+        await onSubmit(formData);
+      }
+      console.log("Datos enviados:", formData);
+    } catch (error) {
+      console.error("Error al guardar dirección:", error);
+    } finally {
+      setCargando(false);
     }
-    
-    console.log("Datos enviados:", formData);
-    setCargando(false);
   };
 
+  // Loading y error states
+  if (loading) {
+    return (
+      <div className="text-center p-4">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Error al cargar la dirección: {error}
+      </div>
+    );
+  }
+
+  // Render principal
   return (
     <form onSubmit={handleSubmit}>
       <CampoTexto
@@ -98,16 +156,37 @@ const DireccionUser = ({ onSubmit }) => {
         placeholder="Ej: Región Metropolitana"
         error={errors.region_direccion}
       />
+
+      <div className="form-check mb-3">
+        <input
+          className="form-check-input"
+          type="checkbox"
+          name="predeterminada"
+          id="predeterminada"
+          checked={formData.predeterminada}
+          onChange={handleChange}
+        />
+        <label className="form-check-label" htmlFor="predeterminada">
+          Establecer como dirección predeterminada
+        </label>
+      </div>
+
       <button
         type="submit"
         className="btn btn-comprar w-100 mt-3"
         disabled={cargando}
       >
-        {cargando ? "Guardando..." : "Guardar Dirección"}
+        {cargando ? (
+          <>
+            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Guardando...
+          </>
+        ) : (
+          "Guardar Dirección"
+        )}
       </button>
     </form>
   );
 };
 
 export default DireccionUser;
-
