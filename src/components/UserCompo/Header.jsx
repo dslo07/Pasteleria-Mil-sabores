@@ -5,7 +5,7 @@ const Header = ({titulo, desc, redi, cta}) => {
   return (
     <header className='bg-header d-flex align-items-center py-5 mt-5'>
       <div className="container ">
-        <div className="row  align-items-center text-center text-white text-lg-start">
+        <div className="row text-white text-lg-start">
           <div className="col-lg-6">
             <h1 className=" lh-1 ">
               {titulo}

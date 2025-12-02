@@ -11,7 +11,7 @@ function ProductosMain() {
 
   return (
     <section className="container py-5">
-      <div className="d-flex justify-content-between">
+      <div>
         <div>
           <h2 className="lh-1 mb-3">Nuestros Productos</h2>
           <p>
@@ -24,12 +24,13 @@ function ProductosMain() {
         <div className="d-flex align-items-end">
           <Link to="/tienda" className="text-decoration-none">
             <button
-              className="btn btn-general"
+              className="btn btn-general d-block d-md-inline-block"
               id="ver-todos-btn"
               style={{ marginBottom: "16px" }}
             >
               Ver Tienda
             </button>
+
           </Link>
         </div>
       </div>

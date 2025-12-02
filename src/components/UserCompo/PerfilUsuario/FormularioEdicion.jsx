@@ -5,7 +5,7 @@ const FormularioEdicion = ({
   handleChange, 
   handleGuardar, 
   cargandoUpdate,
-  onToggleDireccion 
+  
 }) => {
   return (
 

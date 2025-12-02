@@ -31,10 +31,7 @@ const Carrito = () => {
                 <p className='m-0'>Total de productos:</p>
                 <span>{total}</span>
               </div>
-              <div className='d-flex justify-content-between py-2 border-bottom border-2'>
-                <p className='m-0'>Descuento aplicado:</p>
-                <span>{useConvert(cupon.descuento)}</span>
-              </div>
+
               <div className='d-flex justify-content-between py-2 border-bottom border-2'>
                 <p className='m-0'>Total de la compra:</p>
                 <span>{useConvert(costo)}</span>
