@@ -27,3 +27,6 @@ env.js
 footer.jsx
 .editorconfig
 .gitignore
+
+# swagger
+swagger.json

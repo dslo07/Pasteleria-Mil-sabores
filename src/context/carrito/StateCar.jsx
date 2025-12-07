@@ -101,7 +101,7 @@ import toast from 'react-hot-toast';
       toast.success("Cupón aplicado: 10% de descuento");
     } else if (codigo === "FELICES50") {
       setCuponFELICES50(true);
-      toast.success("Cupón FELICES50 aplicado: 10% de descuento de por vida!");
+      toast.success("Cupon FELICES50 aplicado");
     } else {
       setCupon({ codigo: null, descuento: 0 });
       toast.error("Cupón inválido");

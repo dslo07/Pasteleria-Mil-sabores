@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes,Route, Router } from 'react-router-dom'
-//Rutas para el uso Usuario
+// Pagos
+import PagoExitoso from './pages/User/pagos/PagoExitoso'
+import PagoFallido from './pages/User/pagos/PagoFallido'
+// Rutas para el uso Usuario
 import Layout from './pages/User/Layout'
 import Principal from './pages/User/Principal'
 import Register from './pages/User/Register'
@@ -37,7 +40,6 @@ import { Toaster } from 'react-hot-toast';
 function App() {
   return (
     <>
-
     <BrowserRouter>
       <Routes>
           <Route path='/login' element={<Login/>}/>
@@ -53,6 +55,9 @@ function App() {
           <Route path='/tienda' element={<Tienda/>}/>
           <Route path='/producto/:id' element={<VistaProducto/>}/>
           <Route path='/my-car' element={<Carrito/>}/>
+          {/*Confirmacion de pagos */}
+          <Route path='/pago-exitoso' element={<PagoExitoso/>}/>
+          <Route path='/pago-fallido' element={<PagoFallido/>}/>
           <Route path='*' element={<NotFound/>}/>
         </Route>
         {/*rutas del Admin*/}
