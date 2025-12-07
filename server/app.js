@@ -9,6 +9,7 @@ import productoRouter from "./routes/producto.routes.js";
 import dashboardRouter from "./routes/dashboard.routes.js";
 import blogRouter from "./routes/blog.routes.js";
 import ventaRoutes from "./routes/venta.routes.js";
+import webpay from "./routes/webpay.routes.js";
 
 //documentacion con swagger
 import swaggerUiExpress from "swagger-ui-express";
@@ -52,6 +53,7 @@ app.use("/api/productos", productoRouter);
 app.use("/api/blogs", blogRouter);
 app.use("/api/estadisticas", dashboardRouter);
 app.use("/api/ventas", ventaRoutes);
+app.use("/api/webpay", webpay);
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
