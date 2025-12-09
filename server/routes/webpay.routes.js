@@ -1,5 +1,7 @@
 import { Router } from "express";
 import pkg from "transbank-sdk";
+import dotenv from 'dotenv'
+dotenv.config()
 
 const {
   Environment,
@@ -17,6 +19,11 @@ const webpayOptions = new Options(
   Environment.Integration
 );
 
+// Variables
+let PagoExitosoURL = process.env.VITE_URL_PAGO_EXITOSO;
+let PagoFallidoURL = process.env.VITE_URL_PAGO_FALLIDO;
+let returnUrl = process.env.VITE_URL_WEBPAY_CONFIRM
+
 router.post("/create", async (req, res) => {
   const { amount, buyOrder, sessionId } = req.body;
 
@@ -26,8 +33,6 @@ router.post("/create", async (req, res) => {
 
   try {
     const tx = new WebpayPlus.Transaction(webpayOptions);
-
-    const returnUrl = "http://localhost:5174/api/webpay/confirm";
 
     const response = await tx.create(
       buyOrder,
@@ -65,14 +70,14 @@ router.get("/confirm", async (req, res) => {
       result.vci === "TSY";
 
     if (autorizado) {
-      return res.redirect("http://localhost:5173/pago-exitoso");
+      return res.redirect(PagoExitosoURL);
     }
 
-    return res.redirect("http://localhost:5173/pago-fallido");
+    return res.redirect(PagoFallidoURL);
 
   } catch (err) {
     console.error("Error confirmando pago:", err);
-    return res.redirect("http://localhost:5173/pago-fallido");
+    return res.redirect(PagoFallidoURL);
   }
 });
 
