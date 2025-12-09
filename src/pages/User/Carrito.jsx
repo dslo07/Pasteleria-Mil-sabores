@@ -5,7 +5,13 @@ import { userContext } from '../../context/user/userContext';
 import { useConvert } from '../../hooks/useConvert';
 import toast from 'react-hot-toast';
 
+
+
 const Carrito = () => {
+  const crearPago = import.meta.env.VITE_URL_CREAR_PAGO; 
+  
+  console.log(crearPago);
+  
   const { total, costo,  aplicarCupon, vaciarCarrito } = useContext(carContext);
   const { isLogin } = useContext(userContext);
   
@@ -23,10 +29,10 @@ const pagar = async () => {
   const body = {
     amount,
     buyOrder: "orden-" + Date.now(),
-    sessionId: "sess-" + crypto.randomUUID()
+    sessionId: "sess-" +  Date.now()
   };
 
-  const res = await fetch("http://localhost:5174/api/webpay/create", {
+  const res = await fetch(crearPago, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
